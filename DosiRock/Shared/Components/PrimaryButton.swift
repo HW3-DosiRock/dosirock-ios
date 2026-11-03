@@ -21,10 +21,9 @@ struct PrimaryButton: View {
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 8) {
+            HStack(spacing: 12) {
                 if isLoading {
-                    ProgressView()
-                        .tint(Color.appOnPrimary)
+                    LoadingSpinner(color: .appOnPrimary, size: 15, lineWidth: 2)
                 } else if let icon {
                     Image(systemName: icon)
                 }
