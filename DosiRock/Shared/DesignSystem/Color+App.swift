@@ -42,3 +42,44 @@ extension Color {
     // 딤 (모달 뒤 배경)
     static let appDim = Color(red: 43/255, green: 26/255, blue: 16/255, opacity: 0.4)
 }
+
+#Preview("색상 팔레트") {
+    let colors: [(String, Color)] = [
+        ("background", .appBackground),
+        ("surface", .appSurface),
+        ("surfaceSubtle", .appSurfaceSubtle),
+        ("border", .appBorder),
+        ("textPrimary", .appTextPrimary),
+        ("textSecondary", .appTextSecondary),
+        ("primary", .appPrimary),
+        ("primaryPressed", .appPrimaryPressed),
+        ("disabled", .appDisabled),
+        ("success", .appSuccess),
+        ("successBackground", .appSuccessBackground),
+        ("attention", .appAttention),
+        ("attentionBorder", .appAttentionBorder),
+        ("attentionBackground", .appAttentionBackground),
+        ("info", .appInfo),
+        ("infoBackground", .appInfoBackground),
+    ]
+
+    ScrollView {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: Spacing.m) {
+            ForEach(colors, id: \.0) { name, color in
+                VStack(spacing: Spacing.xs) {
+                    RoundedRectangle(cornerRadius: Radius.small)
+                        .fill(color)
+                        .frame(height: 56)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: Radius.small)
+                                .stroke(Color.black.opacity(0.08))
+                        )
+                    Text(name)
+                        .appFont(.caption)
+                        .foregroundStyle(Color.appTextPrimary)
+                }
+            }
+        }
+        .padding(Spacing.screenHorizontal)
+    }
+}
