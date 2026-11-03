@@ -25,7 +25,7 @@ struct PrimaryButton: View {
         Button(action: action) {
             HStack(spacing: 12) {
                 if isLoading {
-                    LoadingSpinner(color: textColor, size: 15, lineWidth: 2)
+                    LoadingSpinner(color: textColor, size: Size.Spinner.small, lineWidth: Size.Spinner.smallLineWidth)
                 } else if let icon {
                     Image(systemName: icon)
                 }
@@ -34,9 +34,9 @@ struct PrimaryButton: View {
             .font(.headline)
             .foregroundStyle(textColor)
             .frame(maxWidth: .infinity)
-            .frame(height: 52)
+            .frame(height: Size.buttonHeight)
             .background(isDisabled ? bgColor.opacity(0.4) : bgColor)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.small))
         }
         .disabled(isDisabled)
     }

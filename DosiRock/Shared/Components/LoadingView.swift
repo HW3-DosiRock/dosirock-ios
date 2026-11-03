@@ -12,7 +12,7 @@ struct LoadingView: View {
 
     var body: some View {
         VStack(spacing: Spacing.m) {
-            LoadingSpinner(size: 30, lineWidth: 4)
+            LoadingSpinner(size: Size.Spinner.large, lineWidth: Size.Spinner.largeLineWidth)
             if let message {
                 Text(message)
                     .appFont(.subbody)

@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct LoadingSpinner: View {
+    
     var color: Color = .appPrimary
-    var size: CGFloat = 18
+    var size: CGFloat = Size.Spinner.small
     var lineWidth: CGFloat = 2.5
 
     @State private var isRotating = false
