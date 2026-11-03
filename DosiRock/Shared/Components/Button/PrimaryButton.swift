@@ -25,21 +25,51 @@ struct PrimaryButton: View {
         Button(action: action) {
             HStack(spacing: 12) {
                 if isLoading {
-                    LoadingSpinner(color: textColor, size: Size.Spinner.small, lineWidth: Size.Spinner.smallLineWidth)
+                    LoadingSpinner(
+                        color: textColor,
+                        size: Size.Spinner.small,
+                        lineWidth: Size.Spinner.smallLineWidth
+                    )
                 } else if let icon {
                     Image(systemName: icon)
                 }
                 Text(title)
             }
+
+        }
+        .buttonStyle(
+            PrimaryButtonStyle(
+                textColor: textColor,
+                bgColor: bgColor,
+                isDisabled: isDisabled
+            )
+        )
+        .disabled(isDisabled)
+    }
+}
+
+private struct PrimaryButtonStyle: ButtonStyle {
+
+    let textColor: Color
+    let bgColor: Color
+    let isDisabled: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
             .font(.headline)
             .foregroundStyle(textColor)
             .frame(maxWidth: .infinity)
             .frame(height: Size.buttonHeight)
             .background(isDisabled ? bgColor.opacity(0.4) : bgColor)
+            .overlay(
+                Color.black.opacity(
+                    configuration.isPressed && !isDisabled ? 0.2 : 0
+                )
+            )
             .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-        }
-        .disabled(isDisabled)
+            .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
+
 }
 
 #Preview {
