@@ -19,6 +19,7 @@ enum Size {
         static let small: CGFloat = 16
         static let medium: CGFloat = 20
         static let large: CGFloat = 24
+        static let xLarge: CGFloat = 48
     }
 
     // 로딩 스피너
