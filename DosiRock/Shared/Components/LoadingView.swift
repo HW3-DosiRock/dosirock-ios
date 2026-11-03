@@ -8,11 +8,22 @@
 import SwiftUI
 
 struct LoadingView: View {
+    var message: String? = nil
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: Spacing.m) {
+            LoadingSpinner(size: 30, lineWidth: 4)
+            if let message {
+                Text(message)
+                    .appFont(.subbody)
+                    .foregroundStyle(Color.appTextSecondary)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)   // 화면 가운데
+        .background(Color.appBackground)
     }
 }
 
 #Preview {
-    LoadingView()
+    LoadingView(message: "로딩 중..")
 }
