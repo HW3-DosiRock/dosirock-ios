@@ -1,5 +1,5 @@
 //
-//  IngredientTile.swift
+//  DayTile.swift
 //  DosiRock
 //
 //  Created by Admin on 11/3/26.
@@ -7,99 +7,80 @@
 
 import SwiftUI
 
-struct IngredientTile: View {
+struct DayTile: View {
 
-    let label: String
-    let imageName: String
-    var isChecked: Bool = false
+    let dayOfWeek: String
+    let day: String
+    var isDone: Bool = false
+    var isClicked: Bool = false
     var action: () -> Void = {}
-
-    // 에셋에 있으면 그 이름, 없으면 기본 그림
-    private var resolvedImage: Image {
-        if UIImage(named: imageName) != nil {
-            return Image(imageName)
-        }
-        return Image(systemName: "questionmark.circle")  // 대체 이미지 (임시)
-    }
 
     var body: some View {
 
         Button(action: action) {
-            VStack(spacing: Spacing.s) {
-                resolvedImage
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Size.Icon.xLarge, height: Size.Icon.xLarge)
-                    .foregroundStyle(Color.appDisabled)
+            ZStack(alignment: .topTrailing) {
+                VStack(spacing: Spacing.s) {
 
-                Text(label)
-                    .appFont(.subbody)
-                    .foregroundStyle(Color.appTextPrimary)
-                    .lineLimit(1)
-            }
-            .padding(Spacing.m)
-            .frame(maxWidth: .infinity)
-            .background(Color.appSurface)
-            .clipShape(RoundedRectangle(cornerRadius: Radius.medium))
-            .overlay(
-                RoundedRectangle(cornerRadius: Radius.medium)
-                    .stroke(Color.appBorder, lineWidth: 1)
-            )
-            .overlay(alignment: .topTrailing) {
-                if isChecked {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: Size.Icon.medium))
-                        .foregroundStyle(Color.appSurface, Color.appSuccess)
+                    Text(dayOfWeek)
+                        .appFont(.heading)
+                        .lineLimit(1)
+
+                    Text(day)
+                        .appFont(.caption)
+                        .lineLimit(1)
+
+                }
+                .foregroundStyle(
+                    isClicked ? Color.appSurface : Color.appTextPrimary
+                )
+                .padding(Spacing.s)
+                .frame(maxWidth: .infinity)
+                .background(
+                    isClicked ? Color.appPrimary : Color.appSurface
+                )
+                .clipShape(RoundedRectangle(cornerRadius: Radius.medium))
+                .overlay(
+                    RoundedRectangle(cornerRadius: Radius.medium)
+                        .stroke(Color.appBorder, lineWidth: 1)
+                )
+                .animation(.easeOut(duration: 0.15), value: isClicked)
+
+                if isDone {
+                    Circle()
+                        .fill(isClicked ? Color.appSurface : Color.appSuccess)
+                        .frame(width: 4, height: 4)
                         .padding(Spacing.s)
-                        .transition(.scale.combined(with: .opacity))
                 }
             }
-            .animation(.easeOut(duration: 0.15), value: isChecked)
+
         }
         .buttonStyle(TilePressStyle())
     }
-    private struct TilePressStyle: ButtonStyle {
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .scaleEffect(configuration.isPressed ? 0.97 : 1)
-                .opacity(configuration.isPressed ? 0.85 : 1)
-                .animation(
-                    .easeOut(duration: 0.1),
-                    value: configuration.isPressed
-                )
-        }
-    }
+    
 }
 
 #Preview {
-    @Previewable @State var selected: Set<String> = [
-        "ingredient_vegetable_carrot"
+    @Previewable @State var selectedDay = "11/5"
+
+    let week = [
+        ("월", "11/3", true),
+        ("화", "11/4", true),
+        ("수", "11/5", false),
+        ("목", "11/6", false),
+        ("금", "11/7", false),
+        ("토", "11/8", false),
+        ("일", "11/9", false),
     ]
 
-    let items = [
-        ("당근", "ingredient_vegetable_carrot"),
-        ("애호박", "ingredient_vegetable_zucchini"),
-        ("알 수 없음", "dragonfruit"),
-    ]
-
-    LazyVGrid(
-        columns: Array(
-            repeating: GridItem(.flexible(), spacing: Spacing.s),
-            count: 3
-        ),
-        spacing: Spacing.s
-    ) {
-        ForEach(items, id: \.1) { name, code in
-            IngredientTile(
-                label: name,
-                imageName: code,
-                isChecked: selected.contains(code)
+    HStack(spacing: Spacing.xs) {
+        ForEach(week, id: \.1) { dayOfWeek, day, isDone in
+            DayTile(
+                dayOfWeek: dayOfWeek,
+                day: day,
+                isDone: isDone,
+                isClicked: selectedDay == day
             ) {
-                if selected.contains(code) {
-                    selected.remove(code)
-                } else {
-                    selected.insert(code)
-                }
+                selectedDay = day  // 누른 날짜로 선택 변경
             }
         }
     }
