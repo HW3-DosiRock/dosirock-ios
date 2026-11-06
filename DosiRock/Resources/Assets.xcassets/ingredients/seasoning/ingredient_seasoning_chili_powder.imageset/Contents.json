@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ingredient_seasoning_chili_powder.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
