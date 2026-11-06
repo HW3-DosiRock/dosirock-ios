@@ -16,49 +16,7 @@ struct RecipeCard: View {
     var body: some View {
 
         Button(action: action) {
-            HStack(spacing: Spacing.xl) {
-
-                //아이콘(최대 2개)
-                VStack {
-                    ForEach(recipe.ingredients.prefix(2)) { ingredient in
-                        IngredientImage(
-                            code: ingredient.code,
-                            size: Size.Icon.large
-                        )
-                    }
-                }
-                .frame(width: Size.Icon.large)  // 아이콘 개수와 무관하게 텍스트 시작 위치 고정
-                //정보 (이름 , 시간 , 메인 재료 , 밷지)
-                VStack(alignment: .leading, spacing: Spacing.s) {
-                    Text(recipe.name)
-                        .appFont(.heading)
-                        .lineLimit(1)
-                        .foregroundStyle(Color.appTextPrimary)
-                    Text(recipe.subTitle)
-                        .appFont(.subbody)
-                        .foregroundStyle(Color.appTextSecondary)
-                        .lineLimit(1)
-
-                    if !isDone {
-                        HStack {
-                            ForEach(recipe.badges, id: \.self) {
-                                RecipeBadge(type: $0)
-                            }
-                        }
-                    }
-
-                }
-                Spacer()
-                //arrow
-                Image("chevron-right")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Size.Icon.medium, height: Size.Icon.medium)
-                    .foregroundStyle(Color.appDisabled)
-                    .accessibilityHidden(true)
-
-            }
+            row
             .padding(Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(isDone ? Color.appBorder : Color.appSurface)
@@ -70,6 +28,27 @@ struct RecipeCard: View {
         }
         .buttonStyle(TilePressStyle())
         .accessibilityElement(children: .combine)  //보이스오버가 한번에 읽도록 (접근성)
+    }
+
+    // 완료 상태에서는 뱃지를 숨긴다 (빈 뱃지 영역이 간격을 만들지 않도록 분기)
+    @ViewBuilder
+    private var row: some View {
+        let codes = recipe.ingredients.map(\.code)
+        if isDone {
+            ListRow(
+                iconCodes: codes,
+                title: recipe.name,
+                subtitle: recipe.subTitle
+            )
+        } else {
+            ListRow(
+                iconCodes: codes,
+                title: recipe.name,
+                subtitle: recipe.subTitle
+            ) {
+                ForEach(recipe.badges, id: \.self) { RecipeBadge(type: $0) }
+            }
+        }
     }
 }
 
