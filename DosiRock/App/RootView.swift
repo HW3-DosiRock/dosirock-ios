@@ -3,12 +3,20 @@ import SwiftUI
 struct RootView: View {
 
     @State private var isReady = false
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
     var body: some View {
         ZStack {
             if isReady {
-                Text("Hello, world!")
+                if hasSeenOnboarding {
+                    Text("Hello, world!")  // 나중에 로그인 / 메인 화면
+                        .transition(.opacity)
+                } else {
+                    OnboardingView(pages: OnboardingPage.samples) {
+                        withAnimation { hasSeenOnboarding = true }
+                    }
                     .transition(.opacity)
+                }
             } else {
                 SplashView()
                     .transition(.opacity)
