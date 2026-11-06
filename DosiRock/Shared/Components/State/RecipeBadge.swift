@@ -52,15 +52,14 @@ struct RecipeBadge: View {
     var body: some View {
         
         Text(type.title)
+            .lineLimit(1)
+            .fixedSize(horizontal: true, vertical: false)  // 뱃지 안에서 줄바꿈·잘림 방지
             .padding(.horizontal, Spacing.s)
             .padding(.vertical, Spacing.xs)
             .appFont(.caption)
             .foregroundStyle(type.foreground)
             .background(type.background)
             .clipShape(Capsule())
-//            .clipShape(RoundedRectangle(cornerRadius: Radius.full))
-        
-
     }
 }
 

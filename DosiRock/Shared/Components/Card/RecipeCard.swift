@@ -27,6 +27,7 @@ struct RecipeCard: View {
                         )
                     }
                 }
+                .frame(width: Size.Icon.large)  // 아이콘 개수와 무관하게 텍스트 시작 위치 고정
                 //정보 (이름 , 시간 , 메인 재료 , 밷지)
                 VStack(alignment: .leading, spacing: Spacing.s) {
                     Text(recipe.name)
@@ -38,7 +39,7 @@ struct RecipeCard: View {
                         .foregroundStyle(Color.appTextSecondary)
                         .lineLimit(1)
 
-                    if isDone {
+                    if !isDone {
                         HStack {
                             ForEach(recipe.badges, id: \.self) {
                                 RecipeBadge(type: $0)
@@ -49,17 +50,18 @@ struct RecipeCard: View {
                 }
                 Spacer()
                 //arrow
-                Image(systemName: "chevron.right")
-                    .font(
-                        .system(size: Size.Icon.medium * 0.7, weight: .semibold)
-                    )
+                Image("chevron-right")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: Size.Icon.medium, height: Size.Icon.medium)
                     .foregroundStyle(Color.appDisabled)
                     .accessibilityHidden(true)
 
             }
             .padding(Spacing.l)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(isDone ? Color.appSurface : Color.appBorder)
+            .background(isDone ? Color.appBorder : Color.appSurface)
             .clipShape(RoundedRectangle(cornerRadius: Radius.medium))
             .overlay(
                 RoundedRectangle(cornerRadius: Radius.medium)
@@ -67,7 +69,7 @@ struct RecipeCard: View {
             )
         }
         .buttonStyle(TilePressStyle())
-        .accessibilityElement(children: .combine)   //보이스오버가 한번에 읽도록 (접근성)
+        .accessibilityElement(children: .combine)  //보이스오버가 한번에 읽도록 (접근성)
     }
 }
 
@@ -92,6 +94,22 @@ struct RecipeCard: View {
                 badges: [RecipeState.useSoon]
             ),
             isDone: true
+        )
+
+        RecipeCard(
+            recipe: Recipe(
+                id: 0,
+                name: "당근볶음",
+                cookTime: 15,
+                ingredients: [
+                    Ingredient(
+                        code: "ingredient_vegetable_carrot",
+                        name: "당근"
+                    ),
+                ],
+                badges: [RecipeState.useSoon]
+            ),
+            isDone: false
         )
         
         RecipeCard(

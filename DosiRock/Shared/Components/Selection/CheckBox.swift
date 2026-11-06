@@ -37,15 +37,22 @@ struct CheckBox: View {
     @ViewBuilder
     private var checkIcon: some View {
         if isChecked {
-            Image(systemName: "checkmark.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .foregroundStyle(Color.appSurface, Color.appSuccess)  //체크(흰색) , 원(초록)
-        } else {
-            Circle()
-                .fill(Color.appSurface)
-                .stroke(Color.appDisabled, lineWidth: 1)
-        }
+                Circle()
+                    .fill(Color.appSuccess)                    // 배경 초록
+                    .overlay(
+                        Image("check-agree")
+                            .renderingMode(.template)          // 색을 입히려면 필요
+                            .resizable()
+                            .scaledToFit()
+                            .padding(Spacing.xs)               // 원 안쪽 여백
+                            .foregroundStyle(Color.appSurface) // 체크 흰색
+                            .accessibilityHidden(true)
+                    )
+            } else {
+                Circle()
+                    .fill(Color.appSurface)
+                    .stroke(Color.appDisabled, lineWidth: 1)
+            }
     }
 }
 
