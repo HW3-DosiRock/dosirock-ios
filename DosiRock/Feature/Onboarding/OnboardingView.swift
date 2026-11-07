@@ -24,6 +24,7 @@ struct OnboardingView: View {
                 TextLinkButton(
                     title: "건너뛰기",
                     textColor: .appTextSecondary,
+                    textStyle: .heading,
                     action: onFinish
                 )
                 .opacity(isLast ? 0 : 1)  // 지우지 않고 투명하게 (자리 유지)
@@ -42,6 +43,7 @@ struct OnboardingView: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))  // 기본 점은 숨김
+            .padding()
 
             PageIndicator(count: pages.count, current: current)
 
