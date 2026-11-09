@@ -10,9 +10,12 @@ import SwiftUI
 struct AuthFlowView: View {
 
     @State private var router = Router<AuthRoute>()
+    
     @State private var loginVM: LoginViewModel
 
     init(onLoginSuccess: @escaping () -> Void) {
+        
+        //로그인
         let vm = LoginViewModel(service: AppEnvironment.makeAuthService())
         vm.onSuccess = onLoginSuccess        // 로그인 성공 시 RootView가 준 동작 실행
         _loginVM = State(initialValue: vm)  //처음 들어갈 값을 직접 넣어 주는 코드
@@ -24,7 +27,11 @@ struct AuthFlowView: View {
                 .navigationDestination(for: AuthRoute.self) { route in
                     switch route {
                     case .signUp: Text("회원가입")
-                    case .findPassword: Text("비밀번호 찾기")
+                    // 화면에 들어갈 때마다 새 ViewModel을 만들어 이전 상태가 남지 않게 함
+                    case .findPassword:
+                        FoundPasswordView(
+                            vm: .init(service: AppEnvironment.makeAuthService())
+                        )
                     }
                 }
         }

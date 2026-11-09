@@ -36,6 +36,10 @@
             try await simulate()
         }
 
+        func requestPasswordReset(email: String) async throws {
+            try await simulate()
+        }
+
         private func simulate() async throws {
 
             switch scenario {
