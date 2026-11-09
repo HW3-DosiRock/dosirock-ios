@@ -19,8 +19,8 @@ struct SignUpView: View {
     var body: some View {
         VStack {
             NavigationHeader(
-                title: "회원가입",
-                leadingTitle: "이전",
+                title: String(localized: "sign_up_header_title"),
+                leadingTitle: String(localized: "sign_up_header_back"),
                 trailingText:
                     "\(vm.step.rawValue + 1)/\(SignUpViewModel.Step.allCases.count)",
                 onLeadingTap: { router.pop() }  //TODO 알림 추가
