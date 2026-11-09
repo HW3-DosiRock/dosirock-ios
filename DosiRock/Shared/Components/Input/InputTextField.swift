@@ -16,6 +16,7 @@ struct InputTextField: View {
     var suffix: String? = nil  // ← 추가: "원", "개", "g" 등 단위
     var errorMsg: String? = nil
     var infoMsg: String? = nil
+    var reserveMessageSpace = false  // 문구가 없을 때도 한 줄 높이를 비워 둠
 
     // 스타일 (기본값 = 기존 모습)
     var labelColor: Color = .appTextSecondary
@@ -53,6 +54,8 @@ struct InputTextField: View {
                 Text(infoMsg)
                     .appFont(.subbody)
                     .foregroundStyle(Color.appTextSecondary)
+            } else if reserveMessageSpace {
+                Text(" ").appFont(.subbody)
             }
 
         }

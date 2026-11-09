@@ -5,6 +5,9 @@
 //  Created by Admin on 11/9/26.
 //
 
+import Observation
+
+@Observable
 final class Router<Route: Hashable> {
 
     var path: [Route] = []
