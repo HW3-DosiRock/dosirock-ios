@@ -17,6 +17,11 @@ struct InputTextField: View {
     var errorMsg: String? = nil
     var infoMsg: String? = nil
 
+    // 스타일 (기본값 = 기존 모습)
+    var labelColor: Color = .appTextSecondary
+    var bgColor: Color = .appSurface
+    var height: CGFloat = Size.buttonHeight
+
     @FocusState private var isFocused: Bool
 
     // 상태별 테두리 색: 에러 > 포커스 > 기본
@@ -34,7 +39,7 @@ struct InputTextField: View {
             if let label {
                 Text(label)
                     .appFont(.heading)
-                    .foregroundStyle(Color.appTextSecondary)
+                    .foregroundStyle(labelColor)
             }
             //입력
             fieldBox
@@ -69,8 +74,8 @@ struct InputTextField: View {
             }
         }
         .padding(.horizontal, Spacing.l)
-        .frame(height: Size.buttonHeight)
-        .background(Color.appSurface)
+        .frame(height: height)
+        .background(bgColor)
         .clipShape(RoundedRectangle(cornerRadius: Radius.small))
         .overlay(
             RoundedRectangle(cornerRadius: Radius.small)

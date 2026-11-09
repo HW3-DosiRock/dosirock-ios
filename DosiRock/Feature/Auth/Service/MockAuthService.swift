@@ -6,26 +6,52 @@
 //
 
 #if DEBUG
-struct MockAuthService : AuthService{
-    
-    enum Scenario { case success, network, slow ,server}
-    
-    func login(email: String, password: String) async throws {
-        <#code#>
+    struct MockAuthService: AuthService {
+
+        enum Scenario { case success, network, slow, server }
+
+        let scenario: Scenario
+
+        init(scenario: Scenario = .success) {
+            self.scenario = scenario
+        }
+
+        func login(email: String, password: String) async throws {
+            try await simulate()
+        }
+
+        func requestVerificationNumber(email: String) async throws {
+            try await simulate()
+        }
+        
+        func checkVerificationNumber(email: String, vNumber: String)
+            async throws
+        {
+            try await simulate()
+        }
+
+        func signUp(email: String, password: String, nickName: String)
+            async throws
+        {
+            try await simulate()
+        }
+
+        private func simulate() async throws {
+
+            switch scenario {
+            case .success:
+                try await Task.sleep(for: .milliseconds(500))
+            case .slow:
+                try await Task.sleep(for: .seconds(5))
+            case .network:
+                try await Task.sleep(for: .milliseconds(500))
+                throw AuthError.network
+            case .server:
+                try await Task.sleep(for: .milliseconds(500))
+                throw AuthError.server
+            }
+        }
+
     }
-    
-    func requestVerificationNumber(email: String) async throws {
-        <#code#>
-    }
-    
-    func checkVerificationNumber(email: String, vNumber: String) async throws {
-        <#code#>
-    }
-    
-    func signUp(email: String, password: String, nickName: String) async throws {
-        <#code#>
-    }
-    
-}
 
 #endif
