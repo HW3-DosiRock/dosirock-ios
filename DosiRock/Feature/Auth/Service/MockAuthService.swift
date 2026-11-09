@@ -8,7 +8,7 @@
 #if DEBUG
     struct MockAuthService: AuthService {
 
-        enum Scenario { case success, network, slow, server }
+        enum Scenario { case success, network, slow, server, failure(AuthError) }
 
         let scenario: Scenario
 
@@ -49,6 +49,9 @@
             case .server:
                 try await Task.sleep(for: .milliseconds(500))
                 throw AuthError.server
+            case .failure(let error):
+                try await Task.sleep(for: .milliseconds(500))
+                throw error
             }
         }
 
