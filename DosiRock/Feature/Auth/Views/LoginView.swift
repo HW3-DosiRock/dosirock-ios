@@ -14,8 +14,12 @@ struct LoginView: View {
         static let logoWidth: CGFloat = 72
     }
 
-    @State private var email: String = ""
-    @State private var password: String = ""
+    @Environment(Router<AuthRoute>.self) private var router
+    @State private var vm: LoginViewModel
+
+    init(vm: LoginViewModel) {
+        _vm = State(initialValue: vm)
+    }
 
     var body: some View {
 
@@ -52,7 +56,7 @@ struct LoginView: View {
             InputTextField(
                 label: "이메일",
                 placeHolder: "이메일을 입력해주세요",
-                text: $email,
+                text: $vm.email,
                 inputType: .email,
                 labelColor: .appTextPrimary
             )
@@ -60,13 +64,21 @@ struct LoginView: View {
             InputTextField(
                 label: "비밀번호",
                 placeHolder: "비밀번호를 입력해주세요",
-                text: $password,
+                text: $vm.password,
                 inputType: .password,
+                errorMsg: vm.errorMessage,
+                reserveMessageSpace: true,
                 labelColor: .appTextPrimary
             )
 
-            PrimaryButton(title: "로그인") {
-                //todo
+            PrimaryButton(
+                title: "로그인",
+                isEnable: vm.canSubmit,
+                isLoading: vm.isLoading
+            ) {
+                Task {
+                    await vm.login()
+                }
             }
         }
     }
@@ -78,7 +90,7 @@ struct LoginView: View {
                 textColor: .appPrimary,
                 textStyle: .subbody
             ) {
-                //todo
+                router.push(.findPassword)
             }
 
             Rectangle()
@@ -90,13 +102,23 @@ struct LoginView: View {
                 textColor: .appPrimary,
                 textStyle: .subbody
             ) {
-                //todo
+                router.push(.signUp)
             }
         }
-        .frame(width: .infinity)
     }
 }
 
-#Preview {
-    LoginView()
+#Preview("성공") {
+    LoginView(vm: .init(service: MockAuthService(scenario: .success)))
+        .environment(Router<AuthRoute>())
+}
+#Preview("실패") {
+    LoginView(
+        vm: .init(
+            service: MockAuthService(
+                scenario: .failure(AuthError.invalidCredentials)
+            )
+        )
+    )
+    .environment(Router<AuthRoute>())
 }

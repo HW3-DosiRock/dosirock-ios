@@ -3,14 +3,21 @@ import SwiftUI
 struct RootView: View {
 
     @State private var isReady = false
+    @State private var isLoggedIn = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
     var body: some View {
         ZStack {
             if isReady {
                 if hasSeenOnboarding {
-                    Text("Hello, world!")  // 나중에 로그인 / 메인 화면
+                    if isLoggedIn {
+                        Text("메인")
+                    } else {
+                        AuthFlowView(onLoginSuccess: {
+                            withAnimation { isLoggedIn = true }
+                        })
                         .transition(.opacity)
+                    }
                 } else {
                     OnboardingView(pages: OnboardingPage.samples) {
                         withAnimation { hasSeenOnboarding = true }
