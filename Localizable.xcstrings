@@ -503,6 +503,61 @@
         }
       }
     },
+    "sign_up_button_resend" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재전송"
+          }
+        }
+      }
+    },
+    "sign_up_button_send" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전송"
+          }
+        }
+      }
+    },
+    "sign_up_email_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일"
+          }
+        }
+      }
+    },
+    "sign_up_email_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일을 입력해주세요"
+          }
+        }
+      }
+    },
+    "sign_up_email_section_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일 인증"
+          }
+        }
+      }
+    },
     "sign_up_header_back" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -532,6 +587,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "약관동의"
+          }
+        }
+      }
+    },
+    "sign_up_verification_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입력한 이메일로 전송된 6자리 인증번호를 입력해주세요"
+          }
+        }
+      }
+    },
+    "sign_up_verification_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "인증번호"
+          }
+        }
+      }
+    },
+    "sign_up_verification_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "인증번호 6자리를 입력해주세요"
           }
         }
       }
@@ -635,10 +723,19 @@
         }
       }
     },
+    "가입한 이메일" : {
+
+    },
+    "가입한 이메일로 재설정 링크를 보내드려요" : {
+
+    },
     "건너뛰기" : {
 
     },
     "꺼짐" : {
+
+    },
+    "다음" : {
 
     },
     "도시락 : 하루를 살아가는 도시의 돌멩이" : {
@@ -648,6 +745,9 @@
 
     },
     "로그인" : {
+
+    },
+    "로그인으로" : {
 
     },
     "메인" : {
@@ -665,7 +765,28 @@
     "보기" : {
 
     },
+    "비밀번호" : {
+
+    },
     "비밀번호 찾기" : {
+
+    },
+    "비밀번호를 입력해주세요" : {
+
+    },
+    "시작하기" : {
+
+    },
+    "이메일" : {
+
+    },
+    "이메일을 입력해 주세요" : {
+
+    },
+    "이메일을 입력해주세요" : {
+
+    },
+    "재설정 링크 받기" : {
 
     },
     "직장인을 위한 도시락 준비·절약 기록" : {

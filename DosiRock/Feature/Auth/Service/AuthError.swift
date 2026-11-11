@@ -35,7 +35,7 @@ enum AuthError: LocalizedError {
         case .invalidNumber:
             "인증번호가 일치하지 않아요"
         case .verificationTimeout:
-            "인증시간이 지났어요. 인증번호를 다시 요청해주세요"
+            "인증 시간이 지났어요. 인증번호를 다시 요청해주세요."
         case .network:
             "네트워크 연결을 확인해 주세요"
         case .server:

@@ -10,39 +10,47 @@
 
         enum Scenario { case success, network, slow, server, failure(AuthError) }
 
-        let scenario: Scenario
+        nonisolated enum Method: Hashable {
+            case login, requestVerificationNumber, checkVerificationNumber
+            case signUp, requestPasswordReset
+        }
 
-        init(scenario: Scenario = .success) {
+        let scenario: Scenario
+        // 메서드별로 다른 시나리오를 쓰고 싶을 때만 지정 (없으면 scenario)
+        let overrides: [Method: Scenario]
+
+        init(scenario: Scenario = .success, overrides: [Method: Scenario] = [:]) {
             self.scenario = scenario
+            self.overrides = overrides
         }
 
         func login(email: String, password: String) async throws {
-            try await simulate()
+            try await simulate(.login)
         }
 
         func requestVerificationNumber(email: String) async throws {
-            try await simulate()
+            try await simulate(.requestVerificationNumber)
         }
         
         func checkVerificationNumber(email: String, vNumber: String)
             async throws
         {
-            try await simulate()
+            try await simulate(.checkVerificationNumber)
         }
 
         func signUp(email: String, password: String, nickName: String)
             async throws
         {
-            try await simulate()
+            try await simulate(.signUp)
         }
 
         func requestPasswordReset(email: String) async throws {
-            try await simulate()
+            try await simulate(.requestPasswordReset)
         }
 
-        private func simulate() async throws {
+        private func simulate(_ method: Method) async throws {
 
-            switch scenario {
+            switch overrides[method] ?? scenario {
             case .success:
                 try await Task.sleep(for: .milliseconds(500))
             case .slow:
