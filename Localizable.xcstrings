@@ -731,6 +731,17 @@
         }
       }
     },
+    "sign_up_toast_completed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원가입 완료"
+          }
+        }
+      }
+    },
     "sign_up_verification_description" : {
       "extractionState" : "manual",
       "localizations" : {

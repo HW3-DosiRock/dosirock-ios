@@ -12,6 +12,7 @@ struct AuthFlowView: View {
     @State private var router = Router<AuthRoute>()
 
     @State private var loginVM: LoginViewModel
+    @State private var toastMessage: LocalizedStringKey?
 
     init(onLoginSuccess: @escaping () -> Void) {
 
@@ -27,9 +28,7 @@ struct AuthFlowView: View {
                 .navigationDestination(for: AuthRoute.self) { route in
                     switch route {
                     case .signUp:
-                        SignUpView(
-                            vm: .init(service: AppEnvironment.makeAuthService())
-                        )
+                        signUpView
                     case .findPassword:
                         FoundPasswordView(
                             vm: .init(service: AppEnvironment.makeAuthService())
@@ -38,5 +37,16 @@ struct AuthFlowView: View {
                 }
         }
         .environment(router)
+        .toast($toastMessage)  // NavigationStack 바깥이라 화면이 pop돼도 유지됨
+    }
+
+    // ViewBuilder 안에서는 대입문을 못 쓰므로 따로 뺌
+    private var signUpView: some View {
+        let vm = SignUpViewModel(service: AppEnvironment.makeAuthService())
+        vm.onCompleted = {
+            router.popToRoot()  // 로그인 화면으로
+            toastMessage = "sign_up_toast_completed"
+        }
+        return SignUpView(vm: vm)
     }
 }
