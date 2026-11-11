@@ -29,7 +29,7 @@ struct SignUpView: View {
             case .terms: SignUpTermsSection(vm: vm)
             case .email: SignUpEmailSection(vm: vm)
             case .password: SignUpPasswordSection(vm: vm)
-            case .nickname: SignUpNicknameSection()
+            case .nickname: SignUpNicknameSection(vm: vm)
             }
             
             Spacer()
@@ -41,7 +41,7 @@ struct SignUpView: View {
                 .padding(.bottom, Spacing.l)  // 선과 버튼 사이 간격
 
             PrimaryButton(
-                title: "다음",
+                title: vm.step == .nickname ? "sign_up_button_complete" : "다음",
                 isEnable: vm.canProceed,
                 isLoading: vm.isLoading
             ) {

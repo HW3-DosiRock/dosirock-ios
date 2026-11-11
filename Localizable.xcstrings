@@ -225,9 +225,6 @@
         }
       }
     },
-    "Hello, World!" : {
-
-    },
     "login_button_submit" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -503,6 +500,17 @@
         }
       }
     },
+    "sign_up_button_complete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "가입 완료"
+          }
+        }
+      }
+    },
     "sign_up_button_resend" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -576,6 +584,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "회원가입"
+          }
+        }
+      }
+    },
+    "sign_up_nickname_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한글, 영문, 숫자만 사용 가능 (2~10자)"
+          }
+        }
+      }
+    },
+    "sign_up_nickname_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "닉네임"
+          }
+        }
+      }
+    },
+    "sign_up_nickname_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "닉네임을 입력해주세요"
+          }
+        }
+      }
+    },
+    "sign_up_nickname_section_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "닉네임 설정"
           }
         }
       }

@@ -8,11 +8,31 @@
 import SwiftUI
 
 struct SignUpNicknameSection: View {
+    
+    @Bindable var vm: SignUpViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .leading) {
+
+            SectionHeader(
+                title: "sign_up_nickname_section_title",
+                titleStyle: .brandEmphasis
+            )
+            .frame(maxWidth: .infinity)
+
+            InputTextField(
+                label: "sign_up_nickname_label",
+                placeHolder: "sign_up_nickname_placeholder",
+                text: $vm.nickName,
+                infoMsg: "sign_up_nickname_description",
+                labelColor: .appTextPrimary
+            )
+        }
     }
 }
 
 #Preview {
-    SignUpNicknameSection()
+    SignUpNicknameSection(vm: .init(service: MockAuthService()))
+        .background(Color.appBackground)
+        .padding()
 }

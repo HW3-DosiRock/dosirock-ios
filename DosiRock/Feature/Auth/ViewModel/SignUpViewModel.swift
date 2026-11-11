@@ -95,6 +95,14 @@ final class SignUpViewModel {
             ? nil : String(localized: "sign_up_password_error_mismatch")
     }
 
+    // 한글·영문·숫자 2~10자 (공백 불가)
+    var isNicknameValid: Bool {
+        trimmedNickName.range(
+            of: #"^[가-힣A-Za-z0-9]{2,10}$"#,
+            options: .regularExpression
+        ) != nil
+    }
+
     var remainingText: String {  // "04:59"
         String(
             format: "%02d:%02d",
@@ -117,7 +125,7 @@ final class SignUpViewModel {
         case .email:
             isEmailValid && isVerificationNumberValid && remainingSeconds > 0
         case .password: isPasswordValid && password == passwordConfirm
-        case .nickname: !trimmedNickName.isEmpty
+        case .nickname: isNicknameValid
         }
     }
 
