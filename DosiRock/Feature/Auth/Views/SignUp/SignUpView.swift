@@ -11,6 +11,7 @@ struct SignUpView: View {
 
     @Environment(Router<AuthRoute>.self) private var router
     @State private var vm: SignUpViewModel
+    @State private var showExitDialog = false
 
     init(vm: SignUpViewModel) {
         _vm = State(initialValue: vm)
@@ -23,7 +24,7 @@ struct SignUpView: View {
                 leadingTitle: "sign_up_header_back",
                 trailingText:
                     "\(vm.step.rawValue + 1)/\(SignUpViewModel.Step.allCases.count)",
-                onLeadingTap: { router.pop() }  //TODO 알림 추가
+                onLeadingTap: { showExitDialog = true }
             )
             switch vm.step {
             case .terms: SignUpTermsSection(vm: vm)
@@ -53,6 +54,14 @@ struct SignUpView: View {
         .background(Color.appBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .dismissKeyboardOnTap()
+        .appDialog(
+            isPresented: $showExitDialog,
+            title: "sign_up_exit_dialog_title",
+            message: "sign_up_exit_dialog_message",
+            cancelTitle: "sign_up_exit_dialog_continue",
+            confirmTitle: "sign_up_exit_dialog_leave",
+            onConfirm: { router.pop() }
+        )
         
         
     }

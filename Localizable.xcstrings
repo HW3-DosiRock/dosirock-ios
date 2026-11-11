@@ -566,6 +566,50 @@
         }
       }
     },
+    "sign_up_exit_dialog_continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속 입력"
+          }
+        }
+      }
+    },
+    "sign_up_exit_dialog_leave" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "나가기"
+          }
+        }
+      }
+    },
+    "sign_up_exit_dialog_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입력한 내용은 저장되지 않아요."
+          }
+        }
+      }
+    },
+    "sign_up_exit_dialog_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원가입을 그만둘까요?"
+          }
+        }
+      }
+    },
     "sign_up_header_back" : {
       "extractionState" : "manual",
       "localizations" : {
