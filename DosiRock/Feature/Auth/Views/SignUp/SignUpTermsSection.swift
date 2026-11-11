@@ -16,8 +16,11 @@ struct SignUpTermsSection: View {
 
         VStack(alignment: .leading) {
 
-            SectionHeader(title: "sign_up_terms_section_title", titleStyle: .brandEmphasis)
-                .frame(maxWidth: .infinity)
+            SectionHeader(
+                title: "sign_up_terms_section_title",
+                titleStyle: .brandEmphasis
+            )
+            .frame(maxWidth: .infinity)
 
             //전체 동의
             HStack {
@@ -42,7 +45,7 @@ struct SignUpTermsSection: View {
 
             //약관 목록
             termsList
-                .padding(.top,Spacing.l)
+                .padding(.top, Spacing.l)
         }
     }
 
@@ -82,7 +85,14 @@ struct SignUpTermsSection: View {
                 .stroke(Color.appBorder)
         )
         .sheet(item: $viewing) { term in
-            if let doc = term.document { TermDocumentView(document: doc) }
+            if let doc = term.document {
+                TermDocumentView(document: doc)
+                    .presentationDetents([.large])  // 높이: .medium, .large, .fraction(0.9)
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(Radius.xLarge)  // 위쪽 모서리
+                    .presentationBackground(Color.appBackground)
+            }
+
         }
     }
 }
@@ -91,5 +101,5 @@ struct SignUpTermsSection: View {
     SignUpTermsSection(vm: .init(service: MockAuthService()))
         .background(Color.appBackground)
         .padding()
-        
+
 }
