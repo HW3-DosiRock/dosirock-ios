@@ -16,6 +16,10 @@ struct InputTextField: View {
     var suffix: LocalizedStringKey? = nil  // ← 추가: "원", "개", "g" 등 단위
     var errorMsg: String? = nil
     var infoMsg: LocalizedStringKey? = nil
+    var showsErrorAfterBlur = false  // true면 한 번 포커스를 잃은 뒤부터 에러 표시 (입력 중 깜빡임 방지)
+    var submitLabel: SubmitLabel = .done  // 키보드 Return 키 모양 (다음/완료)
+    var onSubmit: () -> Void = {}  // Return을 눌렀을 때 (예: 다음 칸으로 이동)
+    var focused: Binding<Bool>? = nil  // 바깥에서 포커스를 옮기고 싶을 때 연결
     var reserveMessageSpace = false  // 문구가 없을 때도 한 줄 높이를 비워 둠
 
     // 스타일 (기본값 = 기존 모습)
@@ -25,10 +29,15 @@ struct InputTextField: View {
     var trailing: AnyView? = nil  // 입력 박스 오른쪽 같은 줄에 붙는 뷰 (예: 전송 버튼)
 
     @FocusState private var isFocused: Bool
+    @State private var hasBlurred = false
+
+    private var shownError: String? {
+        showsErrorAfterBlur && !hasBlurred ? nil : errorMsg
+    }
 
     // 상태별 테두리 색: 에러 > 포커스 > 기본
     private var borderColor: Color {
-        if errorMsg != nil { return .appAttention }
+        if shownError != nil { return .appAttention }
         if isFocused { return .appTextSecondary }
         return .appBorder
     }
@@ -50,8 +59,8 @@ struct InputTextField: View {
             }
 
             // 아래 문구: 에러가 있으면 에러, 없으면 안내
-            if let errorMsg {
-                Text(errorMsg)
+            if let shownError {
+                Text(shownError)
                     .appFont(.subbody)
                     .foregroundStyle(Color.appAttention)
             } else if let infoMsg {
@@ -73,6 +82,8 @@ struct InputTextField: View {
                 .keyboardType(inputType.keyboardType)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
+                .submitLabel(submitLabel)
+                .onSubmit(onSubmit)
 
             if let suffix {
                 Text(suffix)
@@ -91,6 +102,13 @@ struct InputTextField: View {
         .contentShape(Rectangle())
         .onTapGesture { isFocused = true }
         .animation(.easeOut(duration: 0.15), value: isFocused)
+        .onChange(of: isFocused) { _, now in
+            if !now { hasBlurred = true }
+            if focused?.wrappedValue != now { focused?.wrappedValue = now }
+        }
+        .onChange(of: focused?.wrappedValue) { _, want in
+            if let want, want != isFocused { isFocused = want }
+        }
     }
 
     @ViewBuilder
