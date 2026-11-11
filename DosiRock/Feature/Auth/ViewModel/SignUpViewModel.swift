@@ -38,14 +38,7 @@ final class SignUpViewModel {
             }
         }
     }
-    var vNumber = "" {
-        didSet {
-            let digits = String(
-                vNumber.filter { $0.isASCII && $0.isNumber }.prefix(6)
-            )
-            if digits != vNumber { vNumber = digits }
-        }
-    }
+    var vNumber = ""  // 숫자·6자리 제한은 입력칸(InputTextField.maxLength)에서 처리
 
     var password = ""
     var passwordConfirm = ""

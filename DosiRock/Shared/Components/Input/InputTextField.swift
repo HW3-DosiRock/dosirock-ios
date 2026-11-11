@@ -20,6 +20,7 @@ struct InputTextField: View {
     var submitLabel: SubmitLabel = .done  // 키보드 Return 키 모양 (다음/완료)
     var onSubmit: () -> Void = {}  // Return을 눌렀을 때 (예: 다음 칸으로 이동)
     var focused: Binding<Bool>? = nil  // 바깥에서 포커스를 옮기고 싶을 때 연결
+    var maxLength: Int? = nil  // 이 글자 수를 넘는 입력은 바로 잘라냄
     var reserveMessageSpace = false  // 문구가 없을 때도 한 줄 높이를 비워 둠
 
     // 스타일 (기본값 = 기존 모습)
@@ -105,6 +106,13 @@ struct InputTextField: View {
         .onChange(of: isFocused) { _, now in
             if !now { hasBlurred = true }
             if focused?.wrappedValue != now { focused?.wrappedValue = now }
+        }
+        .onChange(of: text) { _, new in
+            // 모델이 아니라 뷰에서 정리해야 입력칸 표시도 같이 되돌아감
+            var cleaned = inputType == .number
+                ? new.filter { $0.isASCII && $0.isNumber } : new
+            if let maxLength { cleaned = String(cleaned.prefix(maxLength)) }
+            if cleaned != new { text = cleaned }
         }
         .onChange(of: focused?.wrappedValue) { _, want in
             if let want, want != isFocused { isFocused = want }

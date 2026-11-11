@@ -49,6 +49,7 @@ struct SignUpEmailSection: View {
                     suffix: LocalizedStringKey(vm.remainingText),
                     errorMsg: vm.errorMessage,
                     infoMsg: "sign_up_verification_description",
+                    maxLength: 6,
                     labelColor: .appTextPrimary,
                 )
             }
