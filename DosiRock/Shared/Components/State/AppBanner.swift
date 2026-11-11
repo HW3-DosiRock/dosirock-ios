@@ -41,7 +41,7 @@ struct AppBanner: View {
 
     let type: BannerType
     let message: String
-    var actionMessage: String? = nil
+    var actionMessage: LocalizedStringKey? = nil
     var action: () -> Void = {}
 
     var body: some View {
