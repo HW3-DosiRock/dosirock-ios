@@ -11,14 +11,15 @@ import SwiftUI
 /// 예) "수량 7        눌러서 수량 추가·수정"
 struct SectionHeader: View {
 
-    let title: String
+    let title: LocalizedStringKey
+    var titleStyle: AppTypography = .heading
     var count: Int? = nil
     var caption: String? = nil
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Spacing.xs) {
             Text(title)
-                .appFont(.heading)
+                .appFont(titleStyle)
                 .foregroundStyle(Color.appTextPrimary)
 
             if let count {

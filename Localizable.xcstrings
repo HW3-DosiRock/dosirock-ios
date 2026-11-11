@@ -1,6 +1,32 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    " " : {
+
+    },
+    "%lld" : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "%lld페이지 중 %lld페이지" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld페이지 중 %2$lld페이지"
+          }
+        }
+      }
+    },
     "auth_error_email_taken" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -198,6 +224,9 @@
           }
         }
       }
+    },
+    "Hello, World!" : {
+
     },
     "login_button_submit" : {
       "extractionState" : "manual",
@@ -507,6 +536,17 @@
         }
       }
     },
+    "signup_total_agree" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전체 동의 "
+          }
+        }
+      }
+    },
     "splash_subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -594,6 +634,48 @@
           }
         }
       }
+    },
+    "건너뛰기" : {
+
+    },
+    "꺼짐" : {
+
+    },
+    "도시락 : 하루를 살아가는 도시의 돌멩이" : {
+
+    },
+    "도시의 돌멩이" : {
+
+    },
+    "로그인" : {
+
+    },
+    "메인" : {
+
+    },
+    "메일 다시 보내기" : {
+
+    },
+    "메일 전송 완료" : {
+
+    },
+    "메일의 링크에서 새 비밀번호를 설정하세요" : {
+
+    },
+    "보기" : {
+
+    },
+    "비밀번호 찾기" : {
+
+    },
+    "직장인을 위한 도시락 준비·절약 기록" : {
+
+    },
+    "켜짐" : {
+
+    },
+    "회원가입" : {
+
     }
   },
   "version" : "1.3"
