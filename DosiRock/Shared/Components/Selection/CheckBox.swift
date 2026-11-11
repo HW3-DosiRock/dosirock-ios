@@ -10,7 +10,7 @@ import SwiftUI
 struct CheckBox: View {
 
     @Binding var isChecked: Bool
-    let message: String
+    let message: LocalizedStringKey
     var appFontStyle: AppTypography = .body
 
     var body: some View {

@@ -9,10 +9,10 @@ import SwiftUI
 
 struct NavigationHeader: View {
 
-    let title: String
-    var leadingTitle: String? = nil  // "마이페이지" / "이전" / "닫기" / "취소"
+    let title: LocalizedStringKey
+    var leadingTitle: LocalizedStringKey? = nil
     var showsBackIcon: Bool = true  // 닫기·취소는 false
-    var trailingText: String? = nil  // "2/4" 등
+    var trailingText: LocalizedStringKey? = nil
     var titleStyle: AppTypography = .brandSubtitle
     var onLeadingTap: () -> Void = {}
 
