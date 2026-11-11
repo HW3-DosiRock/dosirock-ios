@@ -9,19 +9,20 @@ import SwiftUI
 
 struct InputTextField: View {
 
-    var label: String? = nil
-    let placeHolder: String
+    var label: LocalizedStringKey? = nil
+    let placeHolder: LocalizedStringKey
     @Binding var text: String
     var inputType: InputType = .text
-    var suffix: String? = nil  // ← 추가: "원", "개", "g" 등 단위
+    var suffix: LocalizedStringKey? = nil  // ← 추가: "원", "개", "g" 등 단위
     var errorMsg: String? = nil
-    var infoMsg: String? = nil
+    var infoMsg: LocalizedStringKey? = nil
     var reserveMessageSpace = false  // 문구가 없을 때도 한 줄 높이를 비워 둠
 
     // 스타일 (기본값 = 기존 모습)
     var labelColor: Color = .appTextSecondary
     var bgColor: Color = .appSurface
     var height: CGFloat = Size.buttonHeight
+    var trailing: AnyView? = nil  // 입력 박스 오른쪽 같은 줄에 붙는 뷰 (예: 전송 버튼)
 
     @FocusState private var isFocused: Bool
 
@@ -43,7 +44,10 @@ struct InputTextField: View {
                     .foregroundStyle(labelColor)
             }
             //입력
-            fieldBox
+            HStack(spacing: Spacing.s) {
+                fieldBox
+                if let trailing { trailing }
+            }
 
             // 아래 문구: 에러가 있으면 에러, 없으면 안내
             if let errorMsg {

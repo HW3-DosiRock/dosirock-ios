@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PrimaryButton: View {
 
-    let title: String
+    let title: LocalizedStringKey
     var icon: String? = nil
     var textColor: Color = .appSurface
     var bgColor: Color = .appPrimary
