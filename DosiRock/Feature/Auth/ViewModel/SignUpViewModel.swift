@@ -48,6 +48,7 @@ final class SignUpViewModel {
     }
 
     var password = ""
+    var passwordConfirm = ""
     var nickName = ""
 
     // 요청 상태
@@ -83,6 +84,17 @@ final class SignUpViewModel {
         ) != nil
     }
 
+    // 입력 전에는 에러를 숨김. InputTextField.errorMsg가 String이라 번역해서 반환
+    var passwordError: String? {
+        password.isEmpty || isPasswordValid
+            ? nil : String(localized: "sign_up_password_error_invalid")
+    }
+
+    var passwordConfirmError: String? {
+        passwordConfirm.isEmpty || passwordConfirm == password
+            ? nil : String(localized: "sign_up_password_error_mismatch")
+    }
+
     var remainingText: String {  // "04:59"
         String(
             format: "%02d:%02d",
@@ -104,7 +116,7 @@ final class SignUpViewModel {
         case .terms: agreedAll
         case .email:
             isEmailValid && isVerificationNumberValid && remainingSeconds > 0
-        case .password: isPasswordValid
+        case .password: isPasswordValid && password == passwordConfirm
         case .nickname: !trimmedNickName.isEmpty
         }
     }

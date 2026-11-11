@@ -580,6 +580,94 @@
         }
       }
     },
+    "sign_up_password_confirm_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호 확인"
+          }
+        }
+      }
+    },
+    "sign_up_password_confirm_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호를 한 번 더 입력해주세요"
+          }
+        }
+      }
+    },
+    "sign_up_password_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영문, 숫자 포함 8~20자"
+          }
+        }
+      }
+    },
+    "sign_up_password_error_invalid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영문, 숫자 포함 8~20자로 입력해주세요"
+          }
+        }
+      }
+    },
+    "sign_up_password_error_mismatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호가 일치하지 않아요"
+          }
+        }
+      }
+    },
+    "sign_up_password_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호"
+          }
+        }
+      }
+    },
+    "sign_up_password_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호를 입력해주세요"
+          }
+        }
+      }
+    },
+    "sign_up_password_section_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호 설정"
+          }
+        }
+      }
+    },
     "sign_up_terms_section_title" : {
       "extractionState" : "manual",
       "localizations" : {

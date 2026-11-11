@@ -28,7 +28,7 @@ struct SignUpView: View {
             switch vm.step {
             case .terms: SignUpTermsSection(vm: vm)
             case .email: SignUpEmailSection(vm: vm)
-            case .password: SignUpPasswordSection()
+            case .password: SignUpPasswordSection(vm: vm)
             case .nickname: SignUpNicknameSection()
             }
             
@@ -52,6 +52,7 @@ struct SignUpView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.appBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
+        .dismissKeyboardOnTap()
         
         
     }
