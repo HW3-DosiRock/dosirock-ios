@@ -11,13 +11,7 @@ struct RootView: View {
             if isReady {
                 if hasSeenOnboarding {
                     if isLoggedIn {
-                        // TODO 임시: 메인 화면을 만들면 진짜 로그아웃 버튼으로 교체
-                        Button("로그아웃(임시)") {
-                            Task {
-                                try? await AppEnvironment.makeAuthService().logout()
-                                withAnimation { isLoggedIn = false }
-                            }
-                        }
+                        MainTabView()
                     } else {
                         AuthFlowView(onLoginSuccess: {
                             withAnimation { isLoggedIn = true }
