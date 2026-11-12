@@ -115,6 +115,17 @@
         }
       }
     },
+    "find_password_button_complete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호 변경"
+          }
+        }
+      }
+    },
     "find_password_button_login" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -203,6 +214,17 @@
         }
       }
     },
+    "find_password_password_section_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 비밀번호 설정"
+          }
+        }
+      }
+    },
     "find_password_sent_description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -221,6 +243,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "메일 전송 완료"
+          }
+        }
+      }
+    },
+    "find_password_toast_completed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호가 변경됐어요"
           }
         }
       }
@@ -918,12 +951,6 @@
         }
       }
     },
-    "가입한 이메일" : {
-
-    },
-    "가입한 이메일로 재설정 링크를 보내드려요" : {
-
-    },
     "건너뛰기" : {
 
     },
@@ -945,19 +972,7 @@
     "로그인" : {
 
     },
-    "로그인으로" : {
-
-    },
     "메인" : {
-
-    },
-    "메일 다시 보내기" : {
-
-    },
-    "메일 전송 완료" : {
-
-    },
-    "메일의 링크에서 새 비밀번호를 설정하세요" : {
 
     },
     "버전 %@" : {
@@ -981,13 +996,7 @@
     "이메일" : {
 
     },
-    "이메일을 입력해 주세요" : {
-
-    },
     "이메일을 입력해주세요" : {
-
-    },
-    "재설정 링크 받기" : {
 
     },
     "직장인을 위한 도시락 준비·절약 기록" : {

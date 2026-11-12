@@ -12,7 +12,7 @@
 
         nonisolated enum Method: Hashable {
             case login, requestVerificationNumber, checkVerificationNumber
-            case signUp, requestPasswordReset
+            case signUp, resetPassword
         }
 
         let scenario: Scenario
@@ -44,8 +44,8 @@
             try await simulate(.signUp)
         }
 
-        func requestPasswordReset(email: String) async throws {
-            try await simulate(.requestPasswordReset)
+        func resetPassword(email: String, newPassword: String) async throws {
+            try await simulate(.resetPassword)
         }
 
         private func simulate(_ method: Method) async throws {

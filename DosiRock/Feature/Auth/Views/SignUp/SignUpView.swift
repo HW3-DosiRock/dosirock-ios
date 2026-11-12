@@ -28,8 +28,8 @@ struct SignUpView: View {
             )
             switch vm.step {
             case .terms: SignUpTermsSection(vm: vm)
-            case .email: SignUpEmailSection(vm: vm)
-            case .password: SignUpPasswordSection(vm: vm)
+            case .email: EmailVerificationSection(flow: vm.flow)
+            case .password: PasswordSection(fields: vm.passwordFields)
             case .nickname: SignUpNicknameSection(vm: vm)
             }
             
@@ -54,6 +54,7 @@ struct SignUpView: View {
         .background(Color.appBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .dismissKeyboardOnTap()
+        .swipeBackDisabled()
         .appDialog(
             isPresented: $showExitDialog,
             title: "sign_up_exit_dialog_title",
