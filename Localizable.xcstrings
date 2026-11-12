@@ -935,6 +935,17 @@
         }
       }
     },
+    "thisweek_empty_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료를 등록하면\n이번주 레시피를 추천받을 수 있어요"
+          }
+        }
+      }
+    },
     "toggle_state_off" : {
       "extractionState" : "manual",
       "localizations" : {
