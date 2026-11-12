@@ -99,5 +99,7 @@ protocol AuthService {
         agreement: SignUpAgreement
     ) async throws
     func resetPassword(email: String, newPassword: String) async throws
+    func refresh() async throws  // 리프레시 토큰으로 새 토큰 발급·저장
+    func logout() async throws
 
 }

@@ -34,13 +34,18 @@ struct RealAuthService {
 
     private func send<T: Decodable>(
         _ path: String,
-        body: [String : Any],
-        as type : T.Type
+        body: [String: Any],
+        authorized: Bool = false,
+        as type: T.Type
     ) async throws -> T? {
 
         var request = URLRequest(url: baseURL.appending(path: path))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        // 로그인이 필요한 API는 액세스 토큰을 헤더에 붙인다
+        if authorized, let access = TokenStore.read(.access) {
+            request.setValue("Bearer \(access)", forHTTPHeaderField: "Authorization")
+        }
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
         let data: Data
@@ -69,6 +74,12 @@ struct RealAuthService {
         }
 
         return response.data
+    }
+
+    // 로그인 응답의 data
+    nonisolated struct LoginTokenData: Decodable {
+        let accessToken: String
+        let refreshToken: String
     }
 
 }
@@ -124,13 +135,39 @@ extension RealAuthService: AuthService {
     }
 
     func login(email: String, password: String) async throws {
-        _ = try await send(
+
+        let result = try await send(
             "auth/login",
             body: ["email": email, "password": password],
-            as: Empty.self  // TODO 응답의 토큰 2개는 저장 단계에서 사용
+            as: LoginTokenData.self
         )
+
+        guard let tokens = result else { throw AuthError.server }
+
+        TokenStore.save(tokens.accessToken, for: .access)
+        TokenStore.save(tokens.refreshToken, for: .refresh)
     }
-    
+
+    func refresh() async throws {
+        guard let refreshToken = TokenStore.read(.refresh) else {
+            throw AuthError.unknown
+        }
+        let result = try await send(
+            "auth/refresh",
+            body: ["refreshToken": refreshToken],
+            as: LoginTokenData.self
+        )
+        guard let tokens = result else { throw AuthError.server }
+        TokenStore.save(tokens.accessToken, for: .access)
+        TokenStore.save(tokens.refreshToken, for: .refresh)
+    }
+
+    func logout() async throws {
+        // 서버 요청이 성공하든 실패하든 내 기기의 토큰은 지운다
+        defer { TokenStore.clear() }
+        _ = try await send("auth/logout", body: [:], authorized: true, as: Empty.self)
+    }
+
     func resetPassword(email: String, newPassword: String) async throws {
         #if DEBUG
             try await MockAuthService().resetPassword(
