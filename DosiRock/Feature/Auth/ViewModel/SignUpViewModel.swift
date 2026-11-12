@@ -35,6 +35,8 @@ final class SignUpViewModel {
             if Self.trim(email) != Self.trim(oldValue) {
                 isVerificationSent = false
                 stopTimer()
+                emailErrorMessage = nil
+                errorMessage = nil
             }
         }
     }
@@ -49,7 +51,8 @@ final class SignUpViewModel {
     var isVerificationSent = false
     var isCompleted = false  // 가입 완료 후 재요청 방지
     var remainingSeconds = 0  // 인증번호 남은 시간(초). 0이면 타이머 없음/만료
-    var errorMessage: String?
+    var emailErrorMessage: String?  // 인증번호 요청 실패 (예: 이미 가입한 이메일) → 이메일 칸 아래
+    var errorMessage: String?  // 인증번호 확인·만료 등 → 인증번호 칸 아래
 
     // MARK: - Derived
 
@@ -147,9 +150,11 @@ final class SignUpViewModel {
     func sendVerificationNumber() async {
         guard !isLoading, isEmailValid else { return }
         let target = trimmedEmail
-        if await run({
-            try await self.service.requestVerificationNumber(email: target)
-        }), target == trimmedEmail {  // 요청 중 이메일을 바꿨다면 무시
+        if await run(
+            {
+                try await self.service.requestVerificationNumber(email: target)
+            }, errorTo: \.emailErrorMessage
+        ), target == trimmedEmail {  // 요청 중 이메일을 바꿨다면 무시
             isVerificationSent = true
             vNumber = ""
             startTimer()
@@ -224,16 +229,21 @@ final class SignUpViewModel {
         if let n = Step(rawValue: step.rawValue + 1) { step = n }
     }
 
-    // 로딩·에러 처리를 한 곳에서. 성공하면 true
-    private func run(_ work: () async throws -> Void) async -> Bool {
+    // 로딩·에러 처리를 한 곳에서. 성공하면 true. 실패 문구는 errorTo 위치에 담김
+    private func run(
+        _ work: () async throws -> Void,
+        errorTo target: ReferenceWritableKeyPath<SignUpViewModel, String?> =
+            \.errorMessage
+    ) async -> Bool {
         isLoading = true
+        emailErrorMessage = nil
         errorMessage = nil
         defer { isLoading = false }
         do {
             try await work()
             return true
         } catch {
-            errorMessage =
+            self[keyPath: target] =
                 (error as? AuthError)?.errorDescription
                 ?? AuthError.unknown.errorDescription
             return false
