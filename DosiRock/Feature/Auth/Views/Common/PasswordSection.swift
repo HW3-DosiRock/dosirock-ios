@@ -7,16 +7,18 @@
 
 import SwiftUI
 
-struct SignUpPasswordSection: View {
+struct PasswordSection: View {
 
-    @Bindable var vm: SignUpViewModel
+    @Bindable var fields: PasswordFields
+    var title: LocalizedStringKey = "sign_up_password_section_title"
+    var submitError: String? = nil  // 최종 요청 실패 문구 (확인 칸 아래)
     @State private var confirmFocused = false
 
     var body: some View {
         VStack(alignment: .leading) {
 
             SectionHeader(
-                title: "sign_up_password_section_title",
+                title: title,
                 titleStyle: .brandEmphasis
             )
             .frame(maxWidth: .infinity)
@@ -24,9 +26,9 @@ struct SignUpPasswordSection: View {
             InputTextField(
                 label: "sign_up_password_label",
                 placeHolder: "sign_up_password_placeholder",
-                text: $vm.password,
+                text: $fields.password,
                 inputType: .password,
-                errorMsg: vm.passwordError,
+                errorMsg: fields.error,
                 infoMsg: "sign_up_password_description",
                 showsErrorAfterBlur: true,
                 submitLabel: .next,
@@ -37,9 +39,9 @@ struct SignUpPasswordSection: View {
             InputTextField(
                 label: "sign_up_password_confirm_label",
                 placeHolder: "sign_up_password_confirm_placeholder",
-                text: $vm.passwordConfirm,
+                text: $fields.passwordConfirm,
                 inputType: .password,
-                errorMsg: vm.passwordConfirmError,
+                errorMsg: fields.confirmError ?? submitError,
                 showsErrorAfterBlur: true,
                 onSubmit: { confirmFocused = false },
                 focused: $confirmFocused,
@@ -50,7 +52,7 @@ struct SignUpPasswordSection: View {
 }
 
 #Preview {
-    SignUpPasswordSection(vm: .init(service: MockAuthService()))
+    PasswordSection(fields: PasswordFields())
         .background(Color.appBackground)
         .padding()
 }

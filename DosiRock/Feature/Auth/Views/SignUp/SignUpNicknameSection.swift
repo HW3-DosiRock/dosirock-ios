@@ -24,6 +24,7 @@ struct SignUpNicknameSection: View {
                 label: "sign_up_nickname_label",
                 placeHolder: "sign_up_nickname_placeholder",
                 text: $vm.nickName,
+                errorMsg: vm.errorMessage,
                 infoMsg: "sign_up_nickname_description",
                 labelColor: .appTextPrimary
             )

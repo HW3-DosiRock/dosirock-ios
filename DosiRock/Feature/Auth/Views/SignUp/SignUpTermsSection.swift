@@ -38,7 +38,7 @@ struct SignUpTermsSection: View {
                 in: RoundedRectangle(cornerRadius: Radius.large)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: Radius.xLarge)
+                RoundedRectangle(cornerRadius: Radius.large)
                     .stroke(Color.appBorder)
             )
             .contentShape(Rectangle())
