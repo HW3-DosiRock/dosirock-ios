@@ -51,6 +51,6 @@ protocol AuthService {
     func requestVerificationNumber(email : String) async throws
     func checkVerificationNumber(email : String, vNumber : String) async throws
     func signUp(email : String , password : String ,nickName : String) async throws
-    func requestPasswordReset(email : String) async throws
+    func resetPassword(email : String, newPassword : String) async throws
 
 }

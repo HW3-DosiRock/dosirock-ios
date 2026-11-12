@@ -30,9 +30,7 @@ struct AuthFlowView: View {
                     case .signUp:
                         signUpView
                     case .findPassword:
-                        FoundPasswordView(
-                            vm: .init(service: AppEnvironment.makeAuthService())
-                        )
+                        findPasswordView
                     }
                 }
         }
@@ -48,5 +46,14 @@ struct AuthFlowView: View {
             toastMessage = "sign_up_toast_completed"
         }
         return SignUpView(vm: vm)
+    }
+
+    private var findPasswordView: some View {
+        let vm = FoundPasswordViewModel(service: AppEnvironment.makeAuthService())
+        vm.onCompleted = {
+            router.popToRoot()  // 로그인 화면으로
+            toastMessage = "find_password_toast_completed"
+        }
+        return FoundPasswordView(vm: vm)
     }
 }
