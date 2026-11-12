@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "" : {
+
+    },
     " " : {
 
     },
@@ -26,6 +29,9 @@
           }
         }
       }
+    },
+    "00:%lld" : {
+
     },
     "auth_error_email_taken" : {
       "extractionState" : "manual",
