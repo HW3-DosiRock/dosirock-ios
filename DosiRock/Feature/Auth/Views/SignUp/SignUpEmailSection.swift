@@ -25,6 +25,7 @@ struct SignUpEmailSection: View {
                 placeHolder: "sign_up_email_placeholder",
                 text: $vm.email,
                 inputType: .email,
+                errorMsg: vm.emailErrorMessage,
                 labelColor: .appTextPrimary,
                 trailing: AnyView(
                     PrimaryButton(
