@@ -946,6 +946,28 @@
         }
       }
     },
+    "thisweek_ingredient_priority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 사용 우선순위"
+          }
+        }
+      }
+    },
+    "thisweek_show_ingredientPriorityInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "먼저 사용을 켜면\n사용 권장일이 7일 이내인 재료를\n주 초반 메뉴에 먼저 넣어드려요"
+          }
+        }
+      }
+    },
     "toggle_state_off" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -989,7 +1011,16 @@
     "도시의 돌멩이" : {
 
     },
+    "레시피 만드는 중" : {
+
+    },
+    "레시피 목록" : {
+
+    },
     "로그인" : {
+
+    },
+    "로딩 화면" : {
 
     },
     "마이페이지 화면" : {
@@ -1013,6 +1044,9 @@
     "시작하기" : {
 
     },
+    "에러 화면" : {
+
+    },
     "이메일" : {
 
     },
@@ -1020,9 +1054,6 @@
 
     },
     "이번주" : {
-
-    },
-    "이번주 화면" : {
 
     },
     "직장인을 위한 도시락 준비·절약 기록" : {
