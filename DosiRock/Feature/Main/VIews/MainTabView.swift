@@ -23,7 +23,7 @@ struct MainTabView: View {
         .frame(maxWidth: .infinity , maxHeight: .infinity)
         .safeAreaInset(edge: .bottom, spacing: 0 ){
             BottomNavigationBar(activeTab: $activeTab)
-                .background(Color.appBackground)
+                .background(Color.appSurface)
         }
 
     }
