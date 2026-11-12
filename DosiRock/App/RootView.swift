@@ -11,7 +11,13 @@ struct RootView: View {
             if isReady {
                 if hasSeenOnboarding {
                     if isLoggedIn {
-                        Text("메인")
+                        // TODO 임시: 메인 화면을 만들면 진짜 로그아웃 버튼으로 교체
+                        Button("로그아웃(임시)") {
+                            Task {
+                                try? await AppEnvironment.makeAuthService().logout()
+                                withAnimation { isLoggedIn = false }
+                            }
+                        }
                     } else {
                         AuthFlowView(onLoginSuccess: {
                             withAnimation { isLoggedIn = true }
@@ -36,8 +42,20 @@ struct RootView: View {
     }
 
     private func bootstrap() async {
-        // TODO : 임시,  실제 준비 작업(토큰 확인 등)으로 교체
-        try? await Task.sleep(for: .seconds(1))
+        // 저장된 리프레시 토큰이 있으면 로그인된 상태로 시작하고 토큰을 갱신
+        if TokenStore.read(.refresh) != nil {
+            isLoggedIn = true
+            do {
+                try await AppEnvironment.makeAuthService().refresh()
+            } catch let error as AuthError where error.code != nil {
+                // 서버가 토큰을 거부함(만료 등) → 저장된 토큰 삭제 후 로그인 화면
+                TokenStore.clear()
+                isLoggedIn = false
+            } catch {
+                // 네트워크 오류 등은 로그인 상태를 유지
+            }
+        }
+        try? await Task.sleep(for : .seconds(1))    // 스플래시 보여주기 용 대기 시간
     }
 }
 

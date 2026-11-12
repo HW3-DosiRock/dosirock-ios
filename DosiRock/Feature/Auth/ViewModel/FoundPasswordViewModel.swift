@@ -55,7 +55,7 @@ final class FoundPasswordViewModel {
         guard !isLoading, canProceed else { return }
         switch step {
         case .email:
-            if await flow.verify() { step = .password }
+            if await flow.verify() != nil { step = .password }
         case .password:
             await resetPassword()
         }

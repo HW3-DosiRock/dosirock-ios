@@ -36,6 +36,7 @@ final class SignUpViewModel {
     var isSubmitting = false  // 가입 요청 중
     var isCompleted = false  // 가입 완료 후 재요청 방지
     var errorMessage: String?  // 가입 요청 실패 문구 → 닉네임 칸 아래
+    private var signupToken: String?  //회원 가입 인증번호 반환 토큰
 
     // MARK: - Derived
 
@@ -104,7 +105,10 @@ final class SignUpViewModel {
         case .terms, .password:
             advance()
         case .email:
-            if await flow.verify() { advance() }
+            if let token = await flow.verify() {
+                signupToken = token
+                advance()
+            }
         case .nickname:
             await signUp()
         }
@@ -117,6 +121,7 @@ final class SignUpViewModel {
     }
 
     private func signUp() async {
+        guard let token = signupToken else { return }
         isSubmitting = true
         errorMessage = nil
         defer { isSubmitting = false }
@@ -124,14 +129,30 @@ final class SignUpViewModel {
             try await service.signUp(
                 email: flow.trimmedEmail,
                 password: passwordFields.password,
-                nickName: trimmedNickName
+                nickName: trimmedNickName,
+                signupToken: token,
+                agreement: SignUpAgreement(
+                    // shortcut: 약관 파일을 못 읽으면 "1.0"으로 보냄, 약관 버전이 바뀌면 파일 기준으로만 보내도록 수정
+                    serviceTermsVersion: Term.service.document?.version ?? "1.0",
+                    privacyConsentVersion: Term.privacy.document?.version ?? "1.0"
+                )
             )
             isCompleted = true
             onCompleted()
         } catch {
-            errorMessage =
-                (error as? AuthError)?.errorDescription
+            let authError = error as? AuthError
+            let message =
+                authError?.errorDescription
                 ?? AuthError.unknown.errorDescription
+            if authError?.code == "AUTH_SIGNUP_TOKEN_INVALID" {
+                // 토큰 만료 → 이메일 인증부터 다시
+                signupToken = nil
+                flow.reset()
+                flow.emailErrorMessage = message
+                step = .email
+            } else {
+                errorMessage = message
+            }
         }
     }
 }

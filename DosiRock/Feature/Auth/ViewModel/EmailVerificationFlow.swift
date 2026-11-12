@@ -14,7 +14,7 @@ final class EmailVerificationFlow {
     // MARK: - Dependencies
 
     private let request: (String) async throws -> Void  // 인증번호 요청(email)
-    private let check: (String, String) async throws -> Void  // 인증번호 확인(email, 번호)
+    private let check: (String, String) async throws -> String  // 인증번호 확인(email, 번호)
     private var expiresAt: Date?
     private var timerTask: Task<Void, Never>?
 
@@ -35,6 +35,8 @@ final class EmailVerificationFlow {
     var isLoading = false
     var isVerificationSent = false
     var remainingSeconds = 0  // 인증번호 남은 시간(초). 0이면 타이머 없음/만료
+    var resendSeconds = 0  // 재전송 가능까지 남은 시간(초). 0이면 재전송 가능
+    private var resendAt : Date?
     var emailErrorMessage: String?  // 인증번호 요청 실패 → 이메일 칸 아래
     var errorMessage: String?  // 인증번호 확인·만료 → 인증번호 칸 아래
 
@@ -44,7 +46,8 @@ final class EmailVerificationFlow {
     var trimmedEmail: String { Self.trim(email) }
 
     var isEmailValid: Bool {
-        trimmedEmail.range(
+        trimmedEmail.count <= 255  // 서버 최대 길이
+            && trimmedEmail.range(
             of: #"^[^\s@]+@[^\s@]+\.[^\s@]+$"#,
             options: .regularExpression
         ) != nil
@@ -73,7 +76,7 @@ final class EmailVerificationFlow {
 
     init(
         request: @escaping (String) async throws -> Void,
-        check: @escaping (String, String) async throws -> Void
+        check: @escaping (String, String) async throws -> String
     ) {
         self.request = request
         self.check = check
@@ -83,7 +86,7 @@ final class EmailVerificationFlow {
 
     // "전송" / "재전송". 성공했을 때만 타이머 시작
     func sendVerificationNumber() async {
-        guard !isLoading, isEmailValid else { return }
+        guard !isLoading, isEmailValid , resendSeconds == 0  else { return }
         let target = trimmedEmail
         if await run(
             { try await self.request(target) },
@@ -95,16 +98,26 @@ final class EmailVerificationFlow {
         }
     }
 
-    // "다음"에서 호출. 확인에 성공하면 true
-    func verify() async -> Bool {
-        guard !isLoading, canVerify else { return false }
-        let ok = await run {
-            try await self.check(self.trimmedEmail, Self.trim(self.vNumber))
+    // "다음"에서 호출. 확인에 성공하면 signupToken, 실패하면 nil
+    func verify() async -> String? {
+        guard !isLoading, canVerify else { return nil }
+        var token : String?
+        _ = await run {
+            token = try await self.check(self.trimmedEmail,Self.trim(self.vNumber))
         }
-        if ok { stopTimer() }
-        return ok
+        if token != nil { stopTimer() }
+        return token
     }
 
+    // 인증을 처음부터 다시 하도록 상태 초기화 (이메일 입력값은 유지)
+    func reset() {
+        isVerificationSent = false
+        vNumber = ""
+        stopTimer()
+        emailErrorMessage = nil
+        errorMessage = nil
+    }
+    
     // MARK: - Private
 
     // 만료 시각 기준으로 계산해서 백그라운드를 다녀와도 시간이 틀어지지 않음
@@ -112,15 +125,25 @@ final class EmailVerificationFlow {
         timerTask?.cancel()
         expiresAt = Date().addingTimeInterval(300)
         remainingSeconds = 300
+        resendAt = Date().addingTimeInterval(60)
+        resendSeconds = 60
+        
         timerTask = Task { [weak self] in
             while !Task.isCancelled {
+                
                 try? await Task.sleep(for: .seconds(1))
                 guard let self, let end = self.expiresAt, !Task.isCancelled
                 else { return }
+                
                 self.remainingSeconds = max(
                     0,
                     Int(end.timeIntervalSinceNow.rounded(.up))
                 )
+                self.resendSeconds = max(
+                    0,
+                    Int((self.resendAt?.timeIntervalSinceNow ?? 0 ).rounded(.up))
+                )
+                
                 if self.remainingSeconds == 0 {
                     self.errorMessage =
                         AuthError.verificationTimeout.errorDescription
@@ -134,6 +157,8 @@ final class EmailVerificationFlow {
         timerTask?.cancel()
         expiresAt = nil
         remainingSeconds = 0
+        resendAt = nil
+        resendSeconds = 0
     }
 
     private static func trim(_ text: String) -> String {

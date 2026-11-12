@@ -1,5 +1,5 @@
 //
-//  EmailSection.swift
+//  EmailVerificationSection..swift
 //  DosiRock
 //
 //  Created by Admin on 11/9/26.
@@ -26,13 +26,15 @@ struct EmailVerificationSection: View {
                 placeHolder: "sign_up_email_placeholder",
                 text: $flow.email,
                 inputType: .email,
+                suffix: flow.resendSeconds > 0
+                    ? LocalizedStringKey("00:\(flow.resendSeconds)") : "",
                 errorMsg: flow.emailErrorMessage,
                 labelColor: .appTextPrimary,
                 trailing: AnyView(
                     PrimaryButton(
                         title: flow.isVerificationSent
                             ? "sign_up_button_resend" : "sign_up_button_send",
-                        isEnable: flow.isEmailValid,
+                        isEnable: flow.resendSeconds > 0 ? false : flow.isEmailValid,
                         isLoading: flow.isLoading
                     ) {
                         Task { await flow.sendVerificationNumber() }
@@ -61,8 +63,11 @@ struct EmailVerificationSection: View {
 
 #Preview {
     EmailVerificationSection(
-        flow: EmailVerificationFlow(request: { _ in }, check: { _, _ in })
+        flow: EmailVerificationFlow(
+            request: { _ in },
+            check: { _, _ in "token" }
+        )
     )
-        .background(Color.appBackground)
-        .padding()
+    .background(Color.appBackground)
+    .padding()
 }
