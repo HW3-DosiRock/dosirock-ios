@@ -8,12 +8,24 @@
 import SwiftUI
 
 struct MainTabView: View {
+
+    @State var activeTab: Navigation = Navigation.thisweek
+
     var body: some View {
-        
-        VStack{
-//            BottomNavigationBar()
+
+        Group {
+            switch activeTab {
+            case .thisweek: ThisWeekView()
+            case .fridge: RefrigeratorView()
+            case .mypage: MyPageView()
+            }
         }
-        Text("메인 탭뷰 ")
+        .frame(maxWidth: .infinity , maxHeight: .infinity)
+        .safeAreaInset(edge: .bottom, spacing: 0 ){
+            BottomNavigationBar(activeTab: $activeTab)
+                .background(Color.appBackground)
+        }
+
     }
 }
 
