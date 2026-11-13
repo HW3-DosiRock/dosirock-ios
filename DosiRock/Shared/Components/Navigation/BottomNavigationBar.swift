@@ -20,10 +20,12 @@ struct BottomNavigationBar: View {
                 }
             }
         }
+        .padding()
     }
 }
 
 #Preview {
     @Previewable @State var tab = Navigation.thisweek
     BottomNavigationBar(activeTab: $tab)
+        .background(Color.appBackground)
 }
