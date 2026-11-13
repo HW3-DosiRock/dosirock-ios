@@ -40,13 +40,7 @@ struct FoundPasswordView: View {
 
             Spacer()
 
-            Rectangle()
-                .fill(Color.appBorder)
-                .frame(height: 1)
-                .padding(.horizontal, -Spacing.l)  // 바깥 좌우 패딩을 상쇄해서 화면 끝까지 늘림
-                .padding(.bottom, Spacing.l)  // 선과 버튼 사이 간격
-
-            PrimaryButton(
+            BottomActionBar(
                 title: vm.step == .password
                     ? "find_password_button_complete" : "다음",
                 isEnable: vm.canProceed,
