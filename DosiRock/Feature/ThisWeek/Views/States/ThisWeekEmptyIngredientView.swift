@@ -20,7 +20,14 @@ struct ThisWeekEmptyIngredientView: View {
             Text("thisweek_empty_desc")
                 .appFont(.brandSubtitle)
                 .multilineTextAlignment(.center)  // 여러 줄일 때 가운데 정렬
+            
+            Spacer()
+
+            // TODO: 버튼 문구와 동작은 기획에 맞게 교체 (지금은 다른 화면에서 복사해 온 자리 표시)
+            BottomActionBar(title: "다음") {}
+
         }
+        .padding(Spacing.screenHorizontal)  // BottomActionBar는 이 여백이 있다고 가정함
         .frame(maxWidth: .infinity , maxHeight: .infinity)
         .background(Color.appBackground)
     }
