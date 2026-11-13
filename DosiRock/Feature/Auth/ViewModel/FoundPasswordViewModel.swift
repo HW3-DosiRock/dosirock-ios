@@ -39,23 +39,30 @@ final class FoundPasswordViewModel {
 
     init(service: AuthService) {
         self.service = service
-        // shortcut: 회원가입과 같은 인증 API를 씀. 서버가 용도(purpose) 구분을 요구하면 여기서 넘김
+        
         flow = EmailVerificationFlow(
-            request: { try await service.requestVerificationNumber(email: $0) },
+            request: { try await service.requestVerificationNumber(email: $0 ,purpose: .passwordReset) },
             check: {
                 try await service.checkVerificationNumber(
                     email: $0,
-                    vNumber: $1
+                    vNumber: $1,
+                    purpose: .passwordReset
                 )
             }
         )
+
+        // 비밀번호 화면에 있는 동안 시간이 다 되면 처음으로
+        flow.onExpired = { [weak self] in
+            guard let self, self.step == .password else { return }
+            self.backToStart(AuthError.verificationTimeout.errorDescription)
+        }
     }
 
     func next() async {
         guard !isLoading, canProceed else { return }
         switch step {
         case .email:
-            if await flow.verify() != nil { step = .password }
+            if await flow.verify(keepTimer: true) { step = .password }
         case .password:
             await resetPassword()
         }
@@ -68,14 +75,45 @@ final class FoundPasswordViewModel {
         do {
             try await service.resetPassword(
                 email: flow.trimmedEmail,
+                code : flow.vNumber,
                 newPassword: passwordFields.password
             )
             isCompleted = true
             onCompleted()
         } catch {
-            errorMessage =
-                (error as? AuthError)?.errorDescription
+            let authError = error as? AuthError
+            let message =
+                authError?.errorDescription
                 ?? AuthError.unknown.errorDescription
+
+            switch authError?.code {
+            case "AUTH_VERIFICATION_NOT_FOUND",
+                "AUTH_VERIFICATION_EXPIRED",
+                "AUTH_VERIFICATION_ATTEMPT_LIMIT_REACHED":
+                backToStart(message)  // 새 코드를 받아야 함
+            case "AUTH_VERIFICATION_NOT_CONFIRMED",
+                "AUTH_VERIFICATION_ALREADY_USED",
+                "AUTH_VERIFICATION_CODE_MISMATCH":
+                backToCode(message)  // 코드만 다시 입력
+            default:
+                errorMessage = message  // 비밀번호 문제 등은 이 화면에 표시
+            }
         }
+    }
+
+    // 처음부터 다시: 인증 상태와 입력한 비밀번호를 모두 초기화하고 이메일 화면으로
+    private func backToStart(_ message: String?) {
+        flow.reset()
+        flow.emailErrorMessage = message
+        passwordFields.password = ""
+        passwordFields.passwordConfirm = ""
+        step = .email
+    }
+
+    // 코드만 다시: 코드 칸만 비우고 이메일 화면으로
+    private func backToCode(_ message: String?) {
+        flow.vNumber = ""
+        flow.errorMessage = message
+        step = .email
     }
 }
