@@ -32,7 +32,59 @@ struct RealAuthService {
 
     let baseURL: URL
 
+    // 갱신이 진행 중이면 그 작업. 동시에 여러 요청이 401을 받아도 갱신은 하나만 실행하기 위함
+    // (서버는 갱신에 성공하면 이전 리프레시 토큰을 바로 폐기해서, 두 번 갱신하면 쫓겨남)
+    private static var refreshTask: Task<Void, Error>?
+
+    // 요청을 보낸다. 로그인이 필요한 요청이 "액세스 토큰 무효(401)"를 받으면
+    // 토큰을 갱신하고 한 번만 다시 보낸다. 갱신도 거절되면 로그인 화면으로 보낸다.
     private func send<T: Decodable>(
+        _ path: String,
+        body: [String: Any],
+        authorized: Bool = false,
+        as type: T.Type
+    ) async throws -> T? {
+        do {
+            return try await sendOnce(
+                path,
+                body: body,
+                authorized: authorized,
+                as: type
+            )
+        } catch let error as AuthError
+            where authorized && error.code == "AUTH_ACCESS_TOKEN_INVALID"
+        {
+            try await refreshOnce()
+            return try await sendOnce(
+                path,
+                body: body,
+                authorized: authorized,
+                as: type
+            )
+        }
+    }
+
+    // 갱신은 동시에 하나만. 이미 진행 중이면 그 결과를 같이 기다린다
+    private func refreshOnce() async throws {
+        if let task = Self.refreshTask {
+            return try await task.value
+        }
+        let task = Task { try await self.refresh() }
+        Self.refreshTask = task
+        defer { Self.refreshTask = nil }
+
+        do {
+            try await task.value
+        } catch let error as AuthError where error.code != nil {
+            // 서버가 리프레시 토큰을 거부함(만료, 다른 기기 로그인 등) → 로그인 화면으로
+            SessionStore.shared.expire(message: error.errorDescription)
+            throw error
+        }
+        // 네트워크 오류 등은 로그인 상태를 유지한 채 그대로 던진다
+    }
+
+    // 요청 한 번을 실제로 보낸다 (재시도 없음)
+    private func sendOnce<T: Decodable>(
         _ path: String,
         body: [String: Any],
         authorized: Bool = false,
