@@ -21,10 +21,10 @@ struct MainTabView: View {
             }
         }
         .frame(maxWidth: .infinity , maxHeight: .infinity)
-        .background(Color.appBackground.ignoresSafeArea())   // ← 추가: 모든 탭의 배경
+        .background(Color.appBackground.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             BottomNavigationBar(activeTab: $activeTab)
-                .background(Color.appSurface)       
+                .background(Color.appSurface)
         }
 
     }
