@@ -7,10 +7,60 @@
 
 import SwiftUI
 
-// 마이페이지 탭 (임시 화면)
+// 마이페이지 탭
 struct MyPageView: View {
 
+    @State private var vm: MyPageViewModel
+
+    //프리뷰 테스트 용
+    init(vm: MyPageViewModel) {
+        _vm = State(initialValue: vm)
+    }
+
+    //실제 앱 용
+    init() {
+        self.init(
+            vm: MyPageViewModel(
+                users: AppEnvironment.makeUserRepository(),
+                auth: AppEnvironment.makeAuthService()
+            )
+        )
+    }
+
     var body: some View {
+
+        Group {
+            switch vm.state {
+            case .loading:
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .failed:
+                failedView
+            case .loaded(let profile):
+                content(profile)
+            }
+        }
+        .task { await vm.load() }
+        .appDialog(
+            isPresented: $vm.showLogoutDialog,
+            title: "dialog_logout_title",
+            message: "",
+            cancelTitle: "common_cancel",
+            confirmTitle: "dialog_logout_confirm",
+            onConfirm: { Task { await vm.logout() } }
+        )
+        .appDialog(
+            isPresented: $vm.showWithdrawDialog,
+            title: "dialog_withdraw_title",
+            message: "dialog_withdraw_message",
+            cancelTitle: "common_cancel",
+            confirmTitle: "dialog_withdraw_confirm",
+            onConfirm: {}  // TODO: 탈퇴 API가 나오면 연결
+        )
+    }
+
+    // 서버에서 불러온 정보
+    func content(_ profile: UserProfile) -> some View {
 
         // 화면이 크면 남는 공간을 섹션 사이에 고르게 나누고, 작으면 스크롤되게 한다
         GeometryReader { geo in
@@ -24,7 +74,7 @@ struct MyPageView: View {
                     Spacer(minLength: Spacing.xl)  // 최소 간격 xl, 남는 공간은 Spacer끼리 똑같이 나눠 가짐
 
                     //프로필
-                    profile
+                    profileCard(profile)
 
                     Spacer(minLength: Spacing.xl)
 
@@ -35,7 +85,7 @@ struct MyPageView: View {
                     Spacer(minLength: Spacing.xl)
 
                     // 설정
-                    settingSection
+                    settingSection(profile)
 
                     Spacer(minLength: Spacing.xl)
 
@@ -53,10 +103,23 @@ struct MyPageView: View {
                 .frame(minHeight: geo.size.height)  // 내용이 화면보다 작을 땐 화면 높이만큼 채움 (크면 스크롤)
             }
         }
-
     }
 
-    var profile: some View {
+    // 불러오기 실패 화면
+    var failedView: some View {
+        VStack(spacing: Spacing.l) {
+            Text("my_load_failed")
+                .appFont(.body)
+                .foregroundStyle(Color.appTextSecondary)
+            PrimaryButton(title: "common_retry") {
+                Task { await vm.load() }
+            }
+            .frame(width: 160)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    func profileCard(_ profile: UserProfile) -> some View {
 
         HStack(spacing: Spacing.l) {
 
@@ -66,9 +129,14 @@ struct MyPageView: View {
                 .frame(width: 72)
 
             VStack(alignment: .leading, spacing: 0) {
-                Text("닉네임")
-                    .appFont(.brandSubtitle)
-                Text("이메일")
+                Text(
+                    String(
+                        format: String(localized: "my_profile_name"),
+                        profile.nickname
+                    )
+                )
+                .appFont(.brandSubtitle)
+                Text(profile.email)
                     .appFont(.caption)
                     .foregroundColor(.appTextSecondary)
             }
@@ -98,12 +166,12 @@ struct MyPageView: View {
 
     // MARK: - 예상 절약액
 
-    // 임시 값: 월, 조리 완료 횟수, 예상 절약액은 서버 값으로 교체
+    // 조리 완료 횟수와 예상 절약액은 API가 나오면 서버 값으로 교체 (지금은 뷰모델의 임시 값)
     var summary: some View {
 
         VStack(alignment: .leading, spacing: Spacing.s) {
 
-            Text("11월")
+            Text(vm.monthText)
                 .appFont(.subbody)
                 .foregroundStyle(Color.appTextSecondary)
 
@@ -116,7 +184,7 @@ struct MyPageView: View {
                     Text(
                         String(
                             format: String(localized: "my_menu_complete_count"),
-                            4
+                            vm.completedCount
                         )
                     )
                     .appFont(.brandEmphasis)
@@ -141,7 +209,7 @@ struct MyPageView: View {
                             .frame(width: Size.Icon.medium)
                             .foregroundStyle(Color.appTextSecondary)
                     }
-                    Text(won(30774))
+                    Text(won(vm.estimatedSaving))
                         .appFont(.brandEmphasis)
                         .foregroundStyle(Color.appSuccess)
                 }
@@ -168,16 +236,15 @@ struct MyPageView: View {
         var trailingStyle: AppTypography = .caption
     }
 
-    var settingSection: some View {
+    func settingSection(_ profile: UserProfile) -> some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
             SectionHeader(title: "설정")
             GroupedListCard(
                 items: [
-                    // 임시 값: 외식 기준 금액은 서버 값으로 교체
                     MenuItem(
                         id: "diningOut",
                         title: "my_eat_out_title",
-                        trailing: won(12000),
+                        trailing: won(profile.diningOutCost),
                         trailingStyle: .heading
                     )
                 ]
@@ -234,9 +301,9 @@ struct MyPageView: View {
 
     var bottomActions: some View {
         HStack(spacing: Spacing.xl) {
-            Text("my_menu_logout")
+            Button("my_menu_logout") { vm.showLogoutDialog = true }
                 .foregroundStyle(Color.appTextSecondary)
-            Text("my_menu_withdraw")
+            Button("my_menu_withdraw") { vm.showWithdrawDialog = true }
                 .foregroundStyle(Color.appAttention)
         }
         .appFont(.subbody)
@@ -252,8 +319,22 @@ struct MyPageView: View {
     }
 }
 
-#Preview {
-    MyPageView()
-        .padding(Spacing.screenHorizontal)
+#if DEBUG
+    #Preview {
+        MyPageView(
+            vm: MyPageViewModel(
+                users: PreviewUserRepository(),
+                auth: MockAuthService()
+            )
+        )
+    }
 
-}
+    #Preview("불러오기 실패") {
+        MyPageView(
+            vm: MyPageViewModel(
+                users: PreviewUserRepository(shouldFail: true),
+                auth: MockAuthService()
+            )
+        )
+    }
+#endif

@@ -33,9 +33,6 @@
     "00:%lld" : {
 
     },
-    "11월" : {
-
-    },
     "auth_error_email_taken" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1957,9 +1954,6 @@
 
     },
     "냉장고 화면" : {
-
-    },
-    "닉네임" : {
 
     },
     "다음" : {
