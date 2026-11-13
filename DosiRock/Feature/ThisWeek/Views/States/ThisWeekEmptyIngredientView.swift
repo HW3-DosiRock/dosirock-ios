@@ -31,9 +31,7 @@ struct ThisWeekEmptyIngredientView: View {
             }
 
         }
-        .padding(Spacing.screenHorizontal)  // BottomActionBar는 이 여백이 있다고 가정함
         .frame(maxWidth: .infinity , maxHeight: .infinity)
-        .background(Color.appBackground)
     }
 }
 

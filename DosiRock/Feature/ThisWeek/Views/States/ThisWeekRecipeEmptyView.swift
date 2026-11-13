@@ -11,7 +11,7 @@ import SwiftUI
 struct ThisWeekRecipeEmptyView: View {
 
     let weekRangeText: String  // 예: "11월 9일~13일"
-  
+
     var body: some View {
 
         ScrollView {
@@ -38,8 +38,7 @@ struct ThisWeekRecipeEmptyView: View {
             maxHeight: .infinity,
             alignment: .topLeading
         )
-        .padding(Spacing.screenHorizontal)
-        .background(Color.appBackground)
+
     }
 
     var ingredientPriorityView: some View {
@@ -58,12 +57,17 @@ struct ThisWeekRecipeEmptyView: View {
                     .frame(width: Size.Icon.medium)
                     .foregroundStyle(Color.appTextSecondary)
                     .appToolTip(
-                        String(localized: "thisweek_show_ingredientPriorityInfo")
+                        String(
+                            localized: "thisweek_show_ingredientPriorityInfo"
+                        )
                     )
-                    .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언 
+                    .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
             }
+            
+             
+            
         }
-        
+
     }
 }
 
@@ -71,5 +75,6 @@ struct ThisWeekRecipeEmptyView: View {
     ThisWeekRecipeEmptyView(
         weekRangeText: "11월 9일~13일 도시락",
     )
+    .padding()
 
 }
