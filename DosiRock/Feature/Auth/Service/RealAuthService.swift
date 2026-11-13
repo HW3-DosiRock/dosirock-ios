@@ -44,7 +44,10 @@ struct RealAuthService {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         // 로그인이 필요한 API는 액세스 토큰을 헤더에 붙인다
         if authorized, let access = TokenStore.read(.access) {
-            request.setValue("Bearer \(access)", forHTTPHeaderField: "Authorization")
+            request.setValue(
+                "Bearer \(access)",
+                forHTTPHeaderField: "Authorization"
+            )
         }
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
@@ -86,28 +89,33 @@ struct RealAuthService {
 
 extension RealAuthService: AuthService {
 
-    func requestVerificationNumber(email: String) async throws {
+    func requestVerificationNumber(email: String, purpose: VerificationPurpose)
+        async throws
+    {
         _ = try await send(
             "auth/email-verifications",
-            body: ["email": email, "purpose": "SIGNUP"],
+            body: ["email": email, "purpose": purpose.rawValue],
             as: Empty.self
         )
     }
 
-    func checkVerificationNumber(email: String, vNumber: String) async throws
-        -> String
+    func checkVerificationNumber(
+        email: String,
+        vNumber: String,
+        purpose: VerificationPurpose
+    ) async throws
+        -> String?
     {
 
         let result = try await send(
             "auth/email-verifications/confirm",
-            body: ["email": email, "purpose": "SIGNUP", "code": vNumber],
+            body: [
+                "email": email, "purpose": purpose.rawValue, "code": vNumber,
+            ],
             as: SignupTokenData.self
         )
 
-        guard let token = result?.signupToken else {
-            throw AuthError.server
-        }
-        return token
+        return result?.signupToken
     }
 
     func signUp(
@@ -165,18 +173,23 @@ extension RealAuthService: AuthService {
     func logout() async throws {
         // 서버 요청이 성공하든 실패하든 내 기기의 토큰은 지운다
         defer { TokenStore.clear() }
-        _ = try await send("auth/logout", body: [:], authorized: true, as: Empty.self)
+        _ = try await send(
+            "auth/logout",
+            body: [:],
+            authorized: true,
+            as: Empty.self
+        )
     }
 
-    func resetPassword(email: String, newPassword: String) async throws {
-        #if DEBUG
-            try await MockAuthService().resetPassword(
-                email: email,
-                newPassword: newPassword
-            )
-        #else
-            throw AuthError.unknown
-        #endif
+    func resetPassword(email: String, code: String, newPassword: String)
+        async throws
+    {
+
+        _ = try await send(
+            "auth/password-reset",
+            body: ["email": email, "code": code, "newPassword": newPassword],
+            as: Empty.self
+        )
     }
 
 }

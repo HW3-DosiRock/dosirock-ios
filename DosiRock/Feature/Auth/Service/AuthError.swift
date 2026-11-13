@@ -74,10 +74,16 @@ enum AuthError: LocalizedError {
             "잠시후 다시 시도해 주세요"
         case .unknown:
             "알 수 없는 오류가 발생했어요"
-        case .api(_, let message, _):
-            message
+        case .api(_, let message, let details):
+            details?.values.first ?? message  // 검증 오류는 details에 구체적인 이유가 있음
         }
     }
+}
+
+//인증 번호 요청 용도
+enum VerificationPurpose: String {
+    case signup = "SIGNUP"
+    case passwordReset = "PASSWORD_RESET"
 }
 
 //약관 버전
@@ -88,9 +94,14 @@ struct SignUpAgreement {
 
 protocol AuthService {
     func login(email: String, password: String) async throws
-    func requestVerificationNumber(email: String) async throws
-    func checkVerificationNumber(email: String, vNumber: String) async throws
-        -> String
+    func requestVerificationNumber(email: String, purpose: VerificationPurpose)
+        async throws
+    func checkVerificationNumber(
+        email: String,
+        vNumber: String,
+        purpose: VerificationPurpose
+    ) async throws
+        -> String?
     func signUp(
         email: String,
         password: String,
@@ -98,7 +109,8 @@ protocol AuthService {
         signupToken: String,
         agreement: SignUpAgreement
     ) async throws
-    func resetPassword(email: String, newPassword: String) async throws
+    func resetPassword(email: String, code: String, newPassword: String)
+        async throws
     func refresh() async throws  // 리프레시 토큰으로 새 토큰 발급·저장
     func logout() async throws
 

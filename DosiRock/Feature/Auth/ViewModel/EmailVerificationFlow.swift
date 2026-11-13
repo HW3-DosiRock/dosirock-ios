@@ -14,9 +14,10 @@ final class EmailVerificationFlow {
     // MARK: - Dependencies
 
     private let request: (String) async throws -> Void  // 인증번호 요청(email)
-    private let check: (String, String) async throws -> String  // 인증번호 확인(email, 번호)
+    private let check: (String, String) async throws -> String?  // 인증번호 확인(email, 번호)
     private var expiresAt: Date?
     private var timerTask: Task<Void, Never>?
+    var onExpired: (() -> Void)?  // 인증번호 시간이 다 됐을 때 호출 (화면 이동용)
 
     // MARK: - State
 
@@ -31,7 +32,8 @@ final class EmailVerificationFlow {
         }
     }
     var vNumber = ""  // 숫자·6자리 제한은 입력칸(InputTextField.maxLength)에서 처리
-
+    private(set) var token : String?    //확인 성공 시 서버가 준 토큰(가입시에만 받음)
+    
     var isLoading = false
     var isVerificationSent = false
     var remainingSeconds = 0  // 인증번호 남은 시간(초). 0이면 타이머 없음/만료
@@ -76,7 +78,7 @@ final class EmailVerificationFlow {
 
     init(
         request: @escaping (String) async throws -> Void,
-        check: @escaping (String, String) async throws -> String
+        check: @escaping (String, String) async throws -> String?
     ) {
         self.request = request
         self.check = check
@@ -94,20 +96,23 @@ final class EmailVerificationFlow {
         ), target == trimmedEmail {  // 요청 중 이메일을 바꿨다면 무시
             isVerificationSent = true
             vNumber = ""
+            token = nil
             startTimer()
         }
     }
 
     // "다음"에서 호출. 확인에 성공하면 signupToken, 실패하면 nil
-    func verify() async -> String? {
-        guard !isLoading, canVerify else { return nil }
-        var token : String?
-        _ = await run {
-            token = try await self.check(self.trimmedEmail,Self.trim(self.vNumber))
+    // keepTimer : 비밀번호 재설정시 인증코드 유효 시간 제한이 있어서 타이머 정지 안됨
+    func verify(keepTimer: Bool = false) async -> Bool {
+            guard !isLoading, canVerify else { return false }
+            token = nil
+            let ok = await run {
+                self.token = try await self.check(self.trimmedEmail, Self.trim(self.vNumber))
+            }
+            if ok && !keepTimer { stopTimer() }
+            return ok
         }
-        if token != nil { stopTimer() }
-        return token
-    }
+
 
     // 인증을 처음부터 다시 하도록 상태 초기화 (이메일 입력값은 유지)
     func reset() {
@@ -116,6 +121,7 @@ final class EmailVerificationFlow {
         stopTimer()
         emailErrorMessage = nil
         errorMessage = nil
+        token = nil
     }
     
     // MARK: - Private
@@ -147,6 +153,7 @@ final class EmailVerificationFlow {
                 if self.remainingSeconds == 0 {
                     self.errorMessage =
                         AuthError.verificationTimeout.errorDescription
+                    self.onExpired?()
                     return
                 }
             }
