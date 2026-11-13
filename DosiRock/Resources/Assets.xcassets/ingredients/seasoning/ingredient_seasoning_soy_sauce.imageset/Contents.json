@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ingredient_seasoning_soy_sauce.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

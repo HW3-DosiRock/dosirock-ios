@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ingredient_meat_pork_neck.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

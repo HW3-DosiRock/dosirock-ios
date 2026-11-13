@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ingredient_vegetable_chili_pepper.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

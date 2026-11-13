@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ingredient_mushroom_enoki.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
