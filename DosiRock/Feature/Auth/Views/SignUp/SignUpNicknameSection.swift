@@ -32,8 +32,10 @@ struct SignUpNicknameSection: View {
     }
 }
 
+#if DEBUG
 #Preview {
     SignUpNicknameSection(vm: .init(service: MockAuthService()))
         .background(Color.appBackground)
         .padding()
 }
+#endif

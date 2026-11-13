@@ -108,6 +108,7 @@ struct LoginView: View {
     }
 }
 
+#if DEBUG
 #Preview("성공") {
     LoginView(vm: .init(service: MockAuthService(scenario: .success)))
         .environment(Router<AuthRoute>())
@@ -122,3 +123,4 @@ struct LoginView: View {
     )
     .environment(Router<AuthRoute>())
 }
+#endif

@@ -63,7 +63,9 @@ struct FoundPasswordView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     FoundPasswordView(vm: .init(service: MockAuthService()))
         .environment(Router<AuthRoute>())
 }
+#endif
