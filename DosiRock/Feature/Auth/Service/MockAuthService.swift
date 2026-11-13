@@ -6,7 +6,7 @@
 //
 
 #if DEBUG
-    struct MockAuthService: AuthService {
+struct MockAuthService: AuthService {
 
         enum Scenario {
             case success, network, slow, server
@@ -32,15 +32,23 @@
             try await simulate(.login)
         }
 
-        func requestVerificationNumber(email: String) async throws {
+        func requestVerificationNumber(email: String, purpose: VerificationPurpose)
+            async throws
+        {
             try await simulate(.requestVerificationNumber)
         }
 
-        func checkVerificationNumber(email: String, vNumber: String)
-            async throws -> String
-        {
+        func checkVerificationNumber(
+            email: String, vNumber: String, purpose: VerificationPurpose
+        ) async throws -> String? {
             try await simulate(.checkVerificationNumber)
-            return "mock-signup-token"
+            return purpose == .signup ? "mock-signup-token" : nil
+        }
+
+        func resetPassword(email: String, code: String, newPassword: String)
+            async throws
+        {
+            try await simulate(.resetPassword)
         }
 
         func signUp(
@@ -52,11 +60,7 @@
         ) async throws {
             try await simulate(.signUp)
         }
-
-        func resetPassword(email: String, newPassword: String) async throws {
-            try await simulate(.resetPassword)
-        }
-
+ 
         func refresh() async throws {
             try await simulate(.refresh)
         }

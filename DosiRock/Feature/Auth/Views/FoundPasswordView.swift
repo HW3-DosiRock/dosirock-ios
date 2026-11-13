@@ -33,7 +33,8 @@ struct FoundPasswordView: View {
                 PasswordSection(
                     fields: vm.passwordFields,
                     title: "find_password_password_section_title",
-                    submitError: vm.errorMessage
+                    submitError: vm.errorMessage,
+                    timerText: vm.flow.remainingText  // 확인 후에도 최초 코드의 남은 시간을 보여줌
                 )
             }
 

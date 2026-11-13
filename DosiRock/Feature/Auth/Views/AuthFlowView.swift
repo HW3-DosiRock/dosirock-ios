@@ -36,6 +36,13 @@ struct AuthFlowView: View {
         }
         .environment(router)
         .toast($toastMessage)  // NavigationStack 바깥이라 화면이 pop돼도 유지됨
+        .onAppear {
+            // 로그인이 강제로 풀려서 넘어왔다면 이유를 토스트로 안내
+            if let message = SessionStore.shared.expiredMessage {
+                toastMessage = LocalizedStringKey(message)
+                SessionStore.shared.expiredMessage = nil
+            }
+        }
     }
 
     // ViewBuilder 안에서는 대입문을 못 쓰므로 따로 뺌
