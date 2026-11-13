@@ -10,7 +10,10 @@ import SwiftUI
 // 상태 1 . 재료 등록이 없을 때 (초기)
 struct ThisWeekEmptyIngredientView: View {
     var body: some View {
-        VStack{
+        VStack(){
+            
+            Spacer()
+            
             Image("logo-stone")
                 .resizable()
                 .scaledToFit()
@@ -22,9 +25,10 @@ struct ThisWeekEmptyIngredientView: View {
                 .multilineTextAlignment(.center)  // 여러 줄일 때 가운데 정렬
             
             Spacer()
-
-            // TODO: 버튼 문구와 동작은 기획에 맞게 교체 (지금은 다른 화면에서 복사해 온 자리 표시)
-            BottomActionBar(title: "다음") {}
+            
+            BottomActionBar(title: "냉장고 재료 등록하기") {
+                //TODO 재료 추가 바텀 시트 expand 
+            }
 
         }
         .padding(Spacing.screenHorizontal)  // BottomActionBar는 이 여백이 있다고 가정함

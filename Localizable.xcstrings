@@ -935,6 +935,17 @@
         }
       }
     },
+    "thisweek_add_ingredient" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고 재료 등록하기"
+          }
+        }
+      }
+    },
     "thisweek_empty_desc" : {
       "extractionState" : "manual",
       "localizations" : {
