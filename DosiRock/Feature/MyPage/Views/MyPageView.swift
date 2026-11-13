@@ -11,6 +11,7 @@ import SwiftUI
 struct MyPageView: View {
 
     @State private var vm: MyPageViewModel
+    @State private var router = Router<MyPageRoute>()
 
     //프리뷰 테스트 용
     init(vm: MyPageViewModel) {
@@ -29,17 +30,28 @@ struct MyPageView: View {
 
     var body: some View {
 
-        Group {
-            switch vm.state {
-            case .loading:
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            case .failed:
-                failedView
-            case .loaded(let profile):
-                content(profile)
+        NavigationStack(path: $router.path) {
+            Group {
+                switch vm.state {
+                case .loading:
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .failed:
+                    failedView
+                case .loaded(let profile):
+                    content(profile)
+                }
+            }
+            // NavigationStack이 자기 흰 배경을 칠해서, 바깥(MainTabView)의 배경이 안 보임 → 여기서 직접 칠함
+            .background(Color.appBackground.ignoresSafeArea())
+            .navigationDestination(for: MyPageRoute.self) { route in
+                switch route {
+                case .profileEdit: ProfileEditView()
+                }
             }
         }
+        .environment(router)
+        // task와 대화상자는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행/가려짐)
         .task { await vm.load() }
         .appDialog(
             isPresented: $vm.showLogoutDialog,
@@ -143,11 +155,15 @@ struct MyPageView: View {
 
             Spacer()
 
-            Image("settings")
-                .resizable()
-                .scaledToFit()
-                .frame(width: Size.Icon.large)
-                .padding(.trailing, Spacing.l)
+            Button {
+                router.push(.profileEdit)
+            } label: {
+                Image("settings")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: Size.Icon.large)
+            }
+            .padding(.trailing, Spacing.l)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(Spacing.l)
