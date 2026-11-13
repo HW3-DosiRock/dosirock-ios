@@ -7,16 +7,16 @@
 import Foundation
 
 enum AppEnvironment {
+
+    // 서버 주소는 여기서만 교체
+    private static let baseURL = URL(string: "https://dosirock.duckdns.org/api")!
+//     private static let baseURL = URL(string: "http://10.242.18.242:3001/api")!   // Mockoon
+
     static func makeAuthService() -> AuthService {
-        #if DEBUG
-//        MockAuthService(scenario: .success)   // 시나리오를 바꿔 가며 테스트
-//        MockAuthService(scenario: .failure(AuthError.invalidCredentials))   // 시나리오를 바꿔 가며 테스트
-        //Mockoon 
-//        RealAuthService(baseURL: URL(string: "http://127.0.0.1:3001/api")!)
-        //배포
-        RealAuthService(baseURL: URL(string: "https://dosirock.duckdns.org/api")!)
-        #else
-        RealAuthService(baseURL: URL(string: "https://dosirock.duckdns.org/api")!)
-        #endif
+        RealAuthService(baseURL: baseURL)
+    }
+
+    static func makeUserRepository() -> UserRepository {
+        UserRepositoryImpl(baseURL: baseURL)
     }
 }
