@@ -1928,6 +1928,50 @@
         }
       }
     },
+    "thisweek_add_ingredient" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고 재료 등록하기"
+          }
+        }
+      }
+    },
+    "thisweek_empty_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료를 등록하면\n이번주 레시피를 추천받을 수 있어요"
+          }
+        }
+      }
+    },
+    "thisweek_ingredient_priority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 사용 우선순위"
+          }
+        }
+      }
+    },
+    "thisweek_show_ingredientPriorityInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "먼저 사용을 켜면\n사용 권장일이 7일 이내인 재료를\n주 초반 메뉴에 먼저 넣어드려요"
+          }
+        }
+      }
+    },
     "toggle_state_off" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1956,6 +2000,9 @@
     "꺼짐" : {
 
     },
+    "냉장고 재료 등록하기" : {
+
+    },
     "냉장고 화면" : {
 
     },
@@ -1971,7 +2018,19 @@
     "도시의 돌멩이" : {
 
     },
+    "레시피 만드는 중" : {
+
+    },
+    "레시피 목록" : {
+
+    },
     "로그인" : {
+
+    },
+    "로딩 화면" : {
+
+    },
+    "마이페이지 화면" : {
 
     },
     "버전 %@" : {
@@ -1993,6 +2052,18 @@
 
     },
     "시작하기" : {
+
+    },
+    "에러 화면" : {
+
+    },
+    "이메일" : {
+
+    },
+    "이메일을 입력해주세요" : {
+
+    },
+    "이번주" : {
 
     },
     "안내" : {
