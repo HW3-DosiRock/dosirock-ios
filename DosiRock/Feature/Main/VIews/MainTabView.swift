@@ -13,16 +13,17 @@ struct MainTabView: View {
 
     var body: some View {
 
-        Group {
-            switch activeTab {
-            case .thisweek: ThisWeekView()
-            case .fridge: RefrigeratorView()
-            case .mypage: MyPageView()
+        VStack(spacing: 0) {
+            Group {
+                switch activeTab {
+                case .thisweek: ThisWeekView()
+                case .fridge: RefrigeratorView()
+                case .mypage: MyPageView()
+                }
             }
-        }
-        .frame(maxWidth: .infinity , maxHeight: .infinity)
-        .background(Color.appBackground.ignoresSafeArea())
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.appBackground.ignoresSafeArea())
+
             BottomNavigationBar(activeTab: $activeTab)
                 .background(Color.appSurface)
         }

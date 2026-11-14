@@ -12,6 +12,7 @@ struct MyPageView: View {
 
     @State private var vm: MyPageViewModel
     @State private var router = Router<MyPageRoute>()
+    @State private var viewportHeight: CGFloat = 0
 
     //프리뷰 테스트 용
     init(vm: MyPageViewModel) {
@@ -324,6 +325,7 @@ struct MyPageView: View {
         }
         .appFont(.subbody)
         .frame(maxWidth: .infinity)
+        .padding(.bottom,Spacing.l)
     }
 
     // 12000 → "12,000원"
