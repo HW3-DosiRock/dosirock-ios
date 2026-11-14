@@ -28,4 +28,5 @@ struct ProfileEditView: View {
 }
 #Preview {
     ProfileEditView()
+        .environment(Router<MyPageRoute>())
 }
