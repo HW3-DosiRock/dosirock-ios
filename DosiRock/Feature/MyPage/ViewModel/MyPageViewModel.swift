@@ -16,7 +16,7 @@ final class MyPageViewModel {
         case failed
     }
 
-    private let users: UserRepository
+    let users: UserRepository
     private let auth: AuthService
 
     var state: State = .loading
@@ -46,6 +46,18 @@ final class MyPageViewModel {
         } catch {
             state = .failed
         }
+    }
+
+    var profile: UserProfile? {
+        if case .loaded(let p) = state { p } else { nil }
+    }
+
+    // 프로필 수정 후 다시 불러오지 않고 닉네임만 바꿔 반영
+    func applyNickname(_ nickname: String) {
+        guard let p = profile else { return }
+        state = .loaded(
+            UserProfile(email: p.email, nickname: nickname, diningOutCost: p.diningOutCost)
+        )
     }
 
     func logout() async {

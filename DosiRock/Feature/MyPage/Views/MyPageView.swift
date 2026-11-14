@@ -13,6 +13,7 @@ struct MyPageView: View {
     @State private var vm: MyPageViewModel
     @State private var router = Router<MyPageRoute>()
     @State private var viewportHeight: CGFloat = 0
+    @State private var toast: LocalizedStringKey?
 
     //프리뷰 테스트 용
     init(vm: MyPageViewModel) {
@@ -47,11 +48,28 @@ struct MyPageView: View {
             .background(Color.appBackground.ignoresSafeArea())
             .navigationDestination(for: MyPageRoute.self) { route in
                 switch route {
-                case .profileEdit: ProfileEditView()
+                case .profileEdit:
+                    if let profile = vm.profile {
+                        ProfileEditView(
+                            vm: ProfileEditViewModel(users: vm.users, profile: profile),
+                            onSaved: {
+                                vm.applyNickname($0)
+                                toast = "my_profile_saved_toast"
+                            }
+                        )
+                    }
+                case .passwordChange:
+                    PasswordChangeView(
+                        vm: PasswordChangeViewModel(users: vm.users),
+                        onChanged: { toast = "my_password_changed_toast" }
+                    )
+                case .findPassword:
+                    findPasswordView
                 }
             }
         }
         .environment(router)
+        .toast($toast)
         // task와 대화상자는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행/가려짐)
         .task { await vm.load() }
         .appDialog(
@@ -69,6 +87,21 @@ struct MyPageView: View {
             cancelTitle: "common_cancel",
             confirmTitle: "dialog_withdraw_confirm",
             onConfirm: {}  // TODO: 탈퇴 API가 나오면 연결
+        )
+    }
+
+    // 현재 비밀번호를 모를 때: 이메일 인증으로 재설정 (로그인 전 '비밀번호 찾기'와 같은 화면)
+    private var findPasswordView: some View {
+        let reset = FoundPasswordViewModel(service: AppEnvironment.makeAuthService())
+        reset.onCompleted = {
+            router.pop()  // 비밀번호 재설정 화면
+            router.pop()  // 프로필 수정 화면
+            toast = "find_password_toast_completed"
+        }
+        return FoundPasswordView(
+            vm: reset,
+            leadingTitle: "my_password_title",
+            onBack: { router.pop() }
         )
     }
 

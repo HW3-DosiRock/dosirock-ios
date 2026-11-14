@@ -8,5 +8,7 @@
 enum MyPageRoute : Hashable {
     
     case profileEdit
+    case passwordChange
+    case findPassword
     //TODO ... 
 }
