@@ -14,6 +14,7 @@ struct MyPageView: View {
     @State private var router = Router<MyPageRoute>()
     @State private var viewportHeight: CGFloat = 0
     @State private var toast: LocalizedStringKey?
+    @State private var showPrivacy = false
 
     //프리뷰 테스트 용
     init(vm: MyPageViewModel) {
@@ -65,6 +66,8 @@ struct MyPageView: View {
                     )
                 case .findPassword:
                     findPasswordView
+                case .priceInfo: PriceInfoView()
+                case .appInfo: AppInfoView()
                 case .diningOutCost:
                     if let profile = vm.profile {
                         DiningOutCostView(
@@ -85,6 +88,16 @@ struct MyPageView: View {
         }
         .environment(router)
         .toast($toast)
+        // 개인정보 처리방침: 회원가입의 약관 시트(TermDocumentView)를 재사용
+        .sheet(isPresented: $showPrivacy) {
+            if let doc = TermDocument.privacyPolicy {
+                TermDocumentView(document: doc)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(Radius.xLarge)
+                    .presentationBackground(Color.appBackground)
+            }
+        }
         // task와 대화상자는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행/가려짐)
         .task { await vm.load() }
         .appDialog(
@@ -329,14 +342,26 @@ struct MyPageView: View {
                 items: [
                     MenuItem(id: "privacy", title: "my_menu_privacy"),
                     MenuItem(id: "priceInfo", title: "my_menu_price_info"),
-                    // 임시 값: 앱 버전은 번들 정보로 교체
                     MenuItem(
                         id: "appInfo",
                         title: "my_menu_app_info",
-                        trailing: "0.2 프로토타입"
+                        trailing: AppEnvironment.appVersion
                     ),
                 ]
-            ) { menuRow($0) }
+            ) { item in
+                Button { openInfo(item.id) } label: {
+                    menuRow(item).contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private func openInfo(_ id: String) {
+        switch id {
+        case "privacy": showPrivacy = true
+        case "priceInfo": router.push(.priceInfo)
+        default: router.push(.appInfo)
         }
     }
 

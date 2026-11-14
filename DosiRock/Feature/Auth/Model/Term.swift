@@ -23,6 +23,16 @@ struct TermDocument: Decodable {
         let label: String
         let text: String
     }
+
+    /// 번들의 JSON 문서. 파일이 없거나 형식이 틀리면 nil
+    static func bundled(_ name: String) -> TermDocument? {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
+              let data = try? Data(contentsOf: url) else { return nil }
+        return try? JSONDecoder().decode(TermDocument.self, from: data)
+    }
+
+    /// 마이페이지에서 보여주는 개인정보 처리방침 (가입 동의 약관과는 별도 문서)
+    static var privacyPolicy: TermDocument? { bundled("terms_privacy_policy") }
 }
 
 /// 가입 화면에서 체크박스로 동의받는 약관
@@ -37,11 +47,7 @@ enum Term: String, CaseIterable, Identifiable {
     var title: String { document?.title ?? "만 14세 이상입니다" }
 
     /// 번들의 JSON 문서. 파일이 없거나 형식이 틀리면 nil → 보기 버튼 비활성
-    var document: TermDocument? {
-        guard let url = Bundle.main.url(forResource: rawValue, withExtension: "json"),
-              let data = try? Data(contentsOf: url) else { return nil }
-        return try? JSONDecoder().decode(TermDocument.self, from: data)
-    }
+    var document: TermDocument? { .bundled(rawValue) }
 
     var hasDocument: Bool { document != nil }
 }

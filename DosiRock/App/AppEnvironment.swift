@@ -12,6 +12,10 @@ enum AppEnvironment {
     private static let baseURL = URL(string: "https://dosirock.duckdns.org/api")!
 //     private static let baseURL = URL(string: "http://10.242.18.242:3001/api")!   // Mockoon
 
+        // 번들(MARKETING_VERSION)에 적힌 앱 버전
+        static let appVersion =
+            Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "-"
+    
     static func makeAuthService() -> AuthService {
         RealAuthService(baseURL: baseURL)
     }

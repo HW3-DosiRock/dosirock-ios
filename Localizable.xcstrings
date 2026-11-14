@@ -1452,6 +1452,9 @@
         }
       }
     },
+    "OpenAI" : {
+
+    },
     "recipe_badge_cooked" : {
       "extractionState" : "manual",
       "localizations" : {

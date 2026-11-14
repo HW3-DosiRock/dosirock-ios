@@ -11,5 +11,7 @@ enum MyPageRoute : Hashable {
     case passwordChange
     case findPassword
     case diningOutCost
+    case priceInfo
+    case appInfo
     //TODO ... 
 }
