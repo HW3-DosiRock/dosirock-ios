@@ -10,20 +10,28 @@ import SwiftUI
 struct FoundPasswordView: View {
 
     @State private var vm: FoundPasswordViewModel
-    @Environment(Router<AuthRoute>.self) private var router
+    @Environment(Router<AuthRoute>.self) private var router: Router<AuthRoute>?
+    private let leadingTitle: LocalizedStringKey
+    private let onBack: (() -> Void)?  // 마이페이지처럼 AuthRoute 밖에서 쓸 때 뒤로가기 동작
 
-    init(vm: FoundPasswordViewModel) {
+    init(
+        vm: FoundPasswordViewModel,
+        leadingTitle: LocalizedStringKey = "로그인",
+        onBack: (() -> Void)? = nil
+    ) {
         _vm = State(initialValue: vm)
+        self.leadingTitle = leadingTitle
+        self.onBack = onBack
     }
 
     var body: some View {
         VStack {
             NavigationHeader(
                 title: "비밀번호 찾기",
-                leadingTitle: "로그인",
+                leadingTitle: leadingTitle,
                 trailingText:
                     "\(vm.step.rawValue + 1)/\(FoundPasswordViewModel.Step.allCases.count)",
-                onLeadingTap: { router.pop() }
+                onLeadingTap: { onBack?() ?? router?.pop() }
             )
 
             switch vm.step {

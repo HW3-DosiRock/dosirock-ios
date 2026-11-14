@@ -121,6 +121,171 @@
         }
       }
     },
+    "common_cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        }
+      }
+    },
+    "common_retry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 시도"
+          }
+        }
+      }
+    },
+    "common_save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장"
+          }
+        }
+      }
+    },
+    "common_save_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장하지 못했어요. 입력한 값은 그대로 있어요. 다시 시도해 주세요."
+          }
+        }
+      }
+    },
+    "common_saving" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장 중…"
+          }
+        }
+      }
+    },
+    "common_won_format" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@원"
+          }
+        }
+      }
+    },
+    "dialog_discard_keep" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속 입력"
+          }
+        }
+      }
+    },
+    "dialog_discard_leave" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "나가기"
+          }
+        }
+      }
+    },
+    "dialog_discard_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "변경 내용을 저장하지 않고 나갈까요?"
+          }
+        }
+      }
+    },
+    "dialog_logout_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃"
+          }
+        }
+      }
+    },
+    "dialog_logout_done_toast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃 완료"
+          }
+        }
+      }
+    },
+    "dialog_logout_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃할까요?"
+          }
+        }
+      }
+    },
+    "dialog_withdraw_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탈퇴하기"
+          }
+        }
+      }
+    },
+    "dialog_withdraw_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탈퇴 시 그동안의 사용 내역을 복구할 수 없어요. 정말 탈퇴하시겠어요?"
+          }
+        }
+      }
+    },
+    "dialog_withdraw_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원 탈퇴"
+          }
+        }
+      }
+    },
     "find_password_button_complete" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -352,6 +517,831 @@
         }
       }
     },
+    "my_app_info_ai" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메뉴·레시피"
+          }
+        }
+      }
+    },
+    "my_app_info_howto" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이렇게 써요"
+          }
+        }
+      }
+    },
+    "my_app_info_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "도시의 돌멩이"
+          }
+        }
+      }
+    },
+    "my_app_info_step1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고에 있는 재료를 등록해요."
+          }
+        }
+      }
+    },
+    "my_app_info_step2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "요일별 도시락 구성을 제안받고, 마음에 들지 않는 날은 다시 제안받은 뒤 확정해요."
+          }
+        }
+      }
+    },
+    "my_app_info_step3" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메뉴를 누르면 AI가 레시피를 만들어요."
+          }
+        }
+      }
+    },
+    "my_app_info_step4" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "요리를 마치면 ‘조리 완료’를 눌러 냉장고에 반영해요."
+          }
+        }
+      }
+    },
+    "my_app_info_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "직장인을 위한 도시락 준비·절약 기록"
+          }
+        }
+      }
+    },
+    "my_app_info_tagline" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "도시락: 하루를 살아가는 도시의 돌멩이"
+          }
+        }
+      }
+    },
+    "my_app_info_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 안내"
+          }
+        }
+      }
+    },
+    "my_app_info_version" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "버전"
+          }
+        }
+      }
+    },
+    "my_eat_out_default" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기본값 12,000원으로 입력"
+          }
+        }
+      }
+    },
+    "my_eat_out_empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "금액을 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_eat_out_not_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "숫자만 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_eat_out_not_positive" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0보다 큰 금액을 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_eat_out_range" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1,000원~100,000원 사이로 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_eat_out_saved_toast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "외식 기준 금액 변경 완료 · 새로 완료하는 도시락부터 %@원"
+          }
+        }
+      }
+    },
+    "my_eat_out_tip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "외식 한 끼 기준 · 새로 완료하는 도시락부터 적용"
+          }
+        }
+      }
+    },
+    "my_eat_out_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "외식 기준 금액"
+          }
+        }
+      }
+    },
+    "my_eat_out_unit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "원"
+          }
+        }
+      }
+    },
+    "my_load_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마이페이지 정보를 불러오지 못했어요"
+          }
+        }
+      }
+    },
+    "my_menu_app_info" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 안내"
+          }
+        }
+      }
+    },
+    "my_menu_complete_count" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld회"
+          }
+        }
+      }
+    },
+    "my_menu_complete_price" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예상 절약액"
+          }
+        }
+      }
+    },
+    "my_menu_complete_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "조리 완료"
+          }
+        }
+      }
+    },
+    "my_menu_info" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "안내"
+          }
+        }
+      }
+    },
+    "my_menu_logout" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃"
+          }
+        }
+      }
+    },
+    "my_menu_price_info" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "가격 데이터 안내"
+          }
+        }
+      }
+    },
+    "my_menu_privacy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
+          }
+        }
+      }
+    },
+    "my_menu_saving_tip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "외식 기준 금액 − 예상 재료비 (추정 금액)"
+          }
+        }
+      }
+    },
+    "my_menu_setting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
+          }
+        }
+      }
+    },
+    "my_menu_setting_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "외식 기준 금액"
+          }
+        }
+      }
+    },
+    "my_menu_withdraw" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탈퇴하기"
+          }
+        }
+      }
+    },
+    "my_password_changed_toast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호 변경 완료"
+          }
+        }
+      }
+    },
+    "my_password_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 비밀번호 확인"
+          }
+        }
+      }
+    },
+    "my_password_confirm_mismatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호가 일치하지 않아요"
+          }
+        }
+      }
+    },
+    "my_password_current" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 비밀번호"
+          }
+        }
+      }
+    },
+    "my_password_current_empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 비밀번호를 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_password_current_mismatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 비밀번호와 일치하지 않아요"
+          }
+        }
+      }
+    },
+    "my_password_forgot" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 비밀번호를 모르겠어요"
+          }
+        }
+      }
+    },
+    "my_password_new" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 비밀번호"
+          }
+        }
+      }
+    },
+    "my_password_new_empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 비밀번호를 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_password_new_help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영문, 숫자 포함 8~20자"
+          }
+        }
+      }
+    },
+    "my_password_new_invalid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영문, 숫자 포함 8~20자로 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_password_new_same" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 비밀번호와 다르게 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_password_save_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장하지 못했어요"
+          }
+        }
+      }
+    },
+    "my_password_submit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호 변경"
+          }
+        }
+      }
+    },
+    "my_password_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호 재설정"
+          }
+        }
+      }
+    },
+    "my_price_info_cost_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예상 재료비는 메뉴에 쓰는 양만큼의 비용이에요. 이미 가진 재료도 포함해요."
+          }
+        }
+      }
+    },
+    "my_price_info_coupang_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "쿠팡 링크는 재료별로 가격이 저렴하고 후기가 좋은 상품을 미리 찾아 등록해둔 링크예요. 쿠팡 상품 가격은 앱에 보여 주지 않아요."
+          }
+        }
+      }
+    },
+    "my_price_info_etc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공공 시세 없는 재료"
+          }
+        }
+      }
+    },
+    "my_price_info_etc_source" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "서버 설정가격"
+          }
+        }
+      }
+    },
+    "my_price_info_livestock" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "축산물"
+          }
+        }
+      }
+    },
+    "my_price_info_livestock_source" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KAPE 평균 소비자가격"
+          }
+        }
+      }
+    },
+    "my_price_info_missing_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "혹시 재료 가격 정보가 없을 경우 0원이 아니라 ‘가격 정보 없음’으로 두고, 그 재료가 들어간 금액은 ‘미산정’으로 표시해요."
+          }
+        }
+      }
+    },
+    "my_price_info_price_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 가격은 공공 데이터 포털 API에서 받아오는 가격과 조사일을 함께 보여주고, API에서 제공하지 않는 재료는 별도로 조사한 정보를 토대로 서버에서 설정한 가격을 보여줘요."
+          }
+        }
+      }
+    },
+    "my_price_info_produce" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "농수산물"
+          }
+        }
+      }
+    },
+    "my_price_info_produce_source" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "aT 평균 소매가격"
+          }
+        }
+      }
+    },
+    "my_price_info_saving_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예상 절약액은 외식 기준 금액에서 예상 재료비를 뺀 추정 금액이에요. 실제 지출 차액이 아니에요."
+          }
+        }
+      }
+    },
+    "my_price_info_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "가격 데이터 안내"
+          }
+        }
+      }
+    },
+    "my_price_info_update" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "갱신"
+          }
+        }
+      }
+    },
+    "my_price_info_update_value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "매일 1회(실조사일 표시)"
+          }
+        }
+      }
+    },
+    "my_privacy_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
+          }
+        }
+      }
+    },
+    "my_profile_account" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계정"
+          }
+        }
+      }
+    },
+    "my_profile_edit_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프로필 수정"
+          }
+        }
+      }
+    },
+    "my_profile_email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일"
+          }
+        }
+      }
+    },
+    "my_profile_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 님"
+          }
+        }
+      }
+    },
+    "my_profile_nickname" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "닉네임"
+          }
+        }
+      }
+    },
+    "my_profile_nickname_empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "닉네임을 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_profile_nickname_help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한글, 영문, 숫자 2~10자"
+          }
+        }
+      }
+    },
+    "my_profile_nickname_invalid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한글, 영문, 숫자만 쓸 수 있어요 (띄어쓰기 제외)"
+          }
+        }
+      }
+    },
+    "my_profile_nickname_length" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2~10자로 입력해주세요"
+          }
+        }
+      }
+    },
+    "my_profile_password_reset" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비밀번호 재설정"
+          }
+        }
+      }
+    },
+    "my_profile_saved_toast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프로필 수정 완료"
+          }
+        }
+      }
+    },
+    "my_profile_setting_a11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프로필 설정"
+          }
+        }
+      }
+    },
     "onboarding_button_next" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -461,6 +1451,9 @@
           }
         }
       }
+    },
+    "OpenAI" : {
+
     },
     "recipe_badge_cooked" : {
       "extractionState" : "manual",
@@ -981,9 +1974,6 @@
     "로그인" : {
 
     },
-    "마이페이지 화면" : {
-
-    },
     "버전 %@" : {
 
     },
@@ -999,7 +1989,16 @@
     "비밀번호를 입력해주세요" : {
 
     },
+    "설정" : {
+
+    },
     "시작하기" : {
+
+    },
+    "안내" : {
+
+    },
+    "예상 절약액" : {
 
     },
     "이메일" : {
@@ -1012,6 +2011,9 @@
 
     },
     "이번주 화면" : {
+
+    },
+    "조리 완료" : {
 
     },
     "직장인을 위한 도시락 준비·절약 기록" : {
