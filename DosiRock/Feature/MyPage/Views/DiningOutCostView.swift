@@ -9,7 +9,6 @@ struct DiningOutCostView: View {
 
     @Environment(Router<MyPageRoute>.self) private var router
     @State private var vm: DiningOutCostViewModel
-    @State private var showTip = false
     var onSaved: (Int) -> Void = { _ in }  // 저장된 금액을 마이페이지에 알림
 
     init(vm: DiningOutCostViewModel, onSaved: @escaping (Int) -> Void = { _ in }) {
@@ -74,36 +73,17 @@ struct DiningOutCostView: View {
                 .appFont(.heading)
                 .foregroundStyle(Color.appTextPrimary)
 
-            Button {
-                showTip = true
-                Task {
-                    try? await Task.sleep(for: .seconds(2))
-                    showTip = false
-                }
-            } label: {
-                Image("info")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Size.Icon.medium)
-                    .foregroundStyle(Color.appTextSecondary)
-            }
-            .overlay(alignment: .topLeading) {
-                if showTip {
-                    // 삼각형 끝이 아이콘 가운데에 오도록 왼쪽으로 당김
-                    AppToolTip(
-                        message: String(localized: "my_eat_out_tip")
-                            .replacingOccurrences(of: " · ", with: "\n"),
-                        arrowOffset: Spacing.l
-                    )
-                    .fixedSize()
-                    .offset(x: Size.Icon.medium / 2 - Spacing.l - 8, y: Size.Icon.medium)
-                    .transition(.opacity)
-                }
-            }
-            .accessibilityLabel("my_eat_out_tip")
+            Image("info")
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: Size.Icon.medium)
+                .foregroundStyle(Color.appTextSecondary)
+                .appToolTip(String(localized: "my_eat_out_tip"))
+                .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
+ 
         }
-        .animation(.easeOut(duration: 0.15), value: showTip)
+       
     }
 }
 

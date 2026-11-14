@@ -32,7 +32,7 @@ struct PasswordChangeView: View {
                 placeHolder: "my_password_current",
                 text: $vm.current,
                 inputType: .password,
-                errorMsg: vm.currentError,
+                errorMsg: vm.errorMessage,
                 submitLabel: .next,
                 onSubmit: { newFocused = true },
                 labelColor: .appTextPrimary
@@ -62,7 +62,7 @@ struct PasswordChangeView: View {
                 placeHolder: "my_password_confirm",
                 text: f.passwordConfirm,
                 inputType: .password,
-                errorMsg: vm.confirmError ?? vm.errorMessage,
+                errorMsg: vm.confirmError,
                 showsErrorAfterBlur: true,
                 onSubmit: { confirmFocused = false },
                 focused: $confirmFocused,

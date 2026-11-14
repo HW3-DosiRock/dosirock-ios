@@ -52,7 +52,10 @@ struct MyPageView: View {
                 case .profileEdit:
                     if let profile = vm.profile {
                         ProfileEditView(
-                            vm: ProfileEditViewModel(users: vm.users, profile: profile),
+                            vm: ProfileEditViewModel(
+                                users: vm.users,
+                                profile: profile
+                            ),
                             onSaved: {
                                 vm.applyNickname($0)
                                 toast = "my_profile_saved_toast"
@@ -71,12 +74,17 @@ struct MyPageView: View {
                 case .diningOutCost:
                     if let profile = vm.profile {
                         DiningOutCostView(
-                            vm: DiningOutCostViewModel(users: vm.users, cost: profile.diningOutCost),
+                            vm: DiningOutCostViewModel(
+                                users: vm.users,
+                                cost: profile.diningOutCost
+                            ),
                             onSaved: {
                                 vm.applyDiningOutCost($0)
                                 toast = LocalizedStringKey(
                                     String(
-                                        format: String(localized: "my_eat_out_saved_toast"),
+                                        format: String(
+                                            localized: "my_eat_out_saved_toast"
+                                        ),
                                         $0.formatted()
                                     )
                                 )
@@ -120,7 +128,9 @@ struct MyPageView: View {
 
     // 현재 비밀번호를 모를 때: 이메일 인증으로 재설정 (로그인 전 '비밀번호 찾기'와 같은 화면)
     private var findPasswordView: some View {
-        let reset = FoundPasswordViewModel(service: AppEnvironment.makeAuthService())
+        let reset = FoundPasswordViewModel(
+            service: AppEnvironment.makeAuthService()
+        )
         reset.onCompleted = {
             router.pop()  // 비밀번호 재설정 화면
             router.pop()  // 프로필 수정 화면
@@ -154,7 +164,6 @@ struct MyPageView: View {
 
                     // 예상 절약액
                     summary
-                        .zIndex(1)  // 툴팁이 아래 섹션에 가려지지 않게
 
                     Spacer(minLength: Spacing.xl)
 
@@ -277,16 +286,16 @@ struct MyPageView: View {
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
 
-                        // TODO: feat/this-week가 dev에 머지되면 아래 줄 추가 (누르면 툴팁이 보였다가 사라짐)
-                        //   .appToolTip(String(localized: "my_menu_saving_tip"))
-                        //   .accessibilityAddTraits(.isButton)
                         Image("info")
                             .renderingMode(.template)
                             .resizable()
                             .scaledToFit()
                             .frame(width: Size.Icon.medium)
                             .foregroundStyle(Color.appTextSecondary)
+                            .appToolTip(String(localized: "my_menu_saving_tip"))
+                            .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
                     }
+                    .zIndex(1)  // 툴팁이 바로 아래 금액 글자 위에 그려지게
                     Text(won(vm.estimatedSaving))
                         .appFont(.brandEmphasis)
                         .foregroundStyle(Color.appSuccess)
@@ -294,14 +303,16 @@ struct MyPageView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(Spacing.l)
-            .background(
-                Color.appSurface,
-                in: RoundedRectangle(cornerRadius: Radius.large)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: Radius.large)
-                    .stroke(Color.appBorder)
-            )
+            .background {
+                RoundedRectangle(cornerRadius: Radius.large).fill(
+                    Color.appSurface
+                )
+                //테두리 최상단으로 오버레이 하면 툴팁위로 테두리 그려져서 백그라운드에 같이 그리게 위치 변경함
+                RoundedRectangle(cornerRadius: Radius.large).stroke(
+                    Color.appBorder
+                )
+            }
+
         }
     }
 
@@ -327,7 +338,9 @@ struct MyPageView: View {
                     )
                 ]
             ) { item in
-                Button { router.push(.diningOutCost) } label: {
+                Button {
+                    router.push(.diningOutCost)
+                } label: {
                     menuRow(item).contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -349,7 +362,9 @@ struct MyPageView: View {
                     ),
                 ]
             ) { item in
-                Button { openInfo(item.id) } label: {
+                Button {
+                    openInfo(item.id)
+                } label: {
                     menuRow(item).contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -403,7 +418,7 @@ struct MyPageView: View {
         }
         .appFont(.subbody)
         .frame(maxWidth: .infinity)
-        .padding(.bottom,Spacing.l)
+        .padding(.bottom, Spacing.l)
     }
 
     // 12000 → "12,000원"
