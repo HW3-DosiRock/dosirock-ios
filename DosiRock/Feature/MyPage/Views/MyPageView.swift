@@ -65,6 +65,21 @@ struct MyPageView: View {
                     )
                 case .findPassword:
                     findPasswordView
+                case .diningOutCost:
+                    if let profile = vm.profile {
+                        DiningOutCostView(
+                            vm: DiningOutCostViewModel(users: vm.users, cost: profile.diningOutCost),
+                            onSaved: {
+                                vm.applyDiningOutCost($0)
+                                toast = LocalizedStringKey(
+                                    String(
+                                        format: String(localized: "my_eat_out_saved_toast"),
+                                        $0.formatted()
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -298,7 +313,12 @@ struct MyPageView: View {
                         trailingStyle: .heading
                     )
                 ]
-            ) { menuRow($0) }
+            ) { item in
+                Button { router.push(.diningOutCost) } label: {
+                    menuRow(item).contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 

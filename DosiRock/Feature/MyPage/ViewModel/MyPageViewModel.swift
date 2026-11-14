@@ -60,6 +60,11 @@ final class MyPageViewModel {
         )
     }
 
+    func applyDiningOutCost(_ cost: Int) {
+        guard let p = profile else { return }
+        state = .loaded(UserProfile(email: p.email, nickname: p.nickname, diningOutCost: cost))
+    }
+
     func logout() async {
         
         try? await auth.logout()  // 서버 요청이 실패해도 기기의 토큰은 지워짐
