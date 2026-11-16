@@ -165,8 +165,12 @@ struct IngredientRegistrationSheet: View {
         guard let days = item.storageDays, let method = item.storageMethod else {
             return nil
         }
-        let key = method == .refrigerated
-            ? "fridge_register_basis_refrigerated" : "fridge_register_basis_room"
+        let key: String
+        switch method {
+        case .roomTemperature: key = "fridge_register_basis_room"
+        case .refrigerated: key = "fridge_register_basis_refrigerated"
+        case .frozen: key = "fridge_register_basis_frozen"
+        }
         return String(format: String(localized: String.LocalizationValue(key)), days)
     }
 

@@ -457,7 +457,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "재료를 등록하면 이번 주 레시피를 추천받을 수 있어요"
+            "value" : "재료를 등록하면 \n이번 주 레시피를 추천받을 수 있어요"
           }
         }
       }
@@ -2357,6 +2357,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "버전 %@"
+          }
+        }
+      }
+    },
+    "fridge_register_basis_frozen" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉동 보관 %lld일 기준"
           }
         }
       }

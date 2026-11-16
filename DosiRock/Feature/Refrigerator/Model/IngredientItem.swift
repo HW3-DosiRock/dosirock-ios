@@ -30,6 +30,7 @@ nonisolated struct IngredientItem: Codable, Identifiable, Hashable {
     enum StorageMethod: String, Codable {
         case roomTemperature = "ROOM_TEMPERATURE"
         case refrigerated = "REFRIGERATED"
+        case frozen = "FROZEN"
     }
 }
 
@@ -38,7 +39,7 @@ nonisolated extension IngredientItem.Category {
         switch self {
         case .vegetable: "채소"
         case .mushroom: "버섯"
-        case .meat: "고기"
+        case .meat: "육류"
         case .seafood: "수산"
         case .other: "기타"
         case .basic: "기본 재료"

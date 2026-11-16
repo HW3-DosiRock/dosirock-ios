@@ -38,6 +38,7 @@ struct TermDocumentView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(Spacing.l)
+            .tint(Color.appPrimary)  // 링크 색
 
         }
         .padding(.top, backTitle == nil ? Spacing.xl : 0)
@@ -45,6 +46,20 @@ struct TermDocumentView: View {
             if backTitle != nil { Color.appBackground.ignoresSafeArea() }
         }
         .navigationBarBackButtonHidden(true)
+    }
+
+    // [이름](주소) 형태의 마크다운 링크를 눌러서 열 수 있게 변환 (링크가 없는 문서는 그대로 글자)
+    private func linked(_ text: String) -> AttributedString {
+        let options = AttributedString.MarkdownParsingOptions(
+            interpretedSyntax: .inlineOnlyPreservingWhitespace
+        )
+        guard var result = try? AttributedString(markdown: text, options: options)
+        else { return AttributedString(text) }
+        // 링크는 밑줄을 그어서 일반 글자와 구분
+        for run in result.runs where run.link != nil {
+            result[run.range].underlineStyle = .single
+        }
+        return result
     }
 
     // MARK: - Header
@@ -76,7 +91,7 @@ struct TermDocumentView: View {
             }
 
             ForEach(section.body ?? [], id: \.self) { text in
-                Text(text)
+                Text(linked(text))
                     .appFont(.body)
                     .foregroundStyle(Color.appTextSecondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -97,10 +112,18 @@ struct TermDocumentView: View {
                     Text(item.label)
                         .appFont(.caption)
                         .foregroundStyle(Color.appPrimary)
-                    Text(item.text)
+                    // 첫 줄은 본문(예: 보관 기준), 둘째 줄부터는 작고 흐리게(예: 참고 자료)
+                    let lines = item.text.components(separatedBy: "\n")
+                    Text(linked(lines[0]))
                         .appFont(.body)
                         .foregroundStyle(Color.appTextPrimary)
                         .fixedSize(horizontal: false, vertical: true)
+                    ForEach(Array(lines.dropFirst().enumerated()), id: \.offset) { _, line in
+                        Text(linked(line))
+                            .appFont(.subbody)
+                            .foregroundStyle(Color.appTextSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(Spacing.l)
