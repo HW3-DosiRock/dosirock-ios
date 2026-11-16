@@ -13,5 +13,7 @@ enum MyPageRoute : Hashable {
     case diningOutCost
     case priceInfo
     case appInfo
+    case privacyPolicy
+    case storageGuide
     //TODO ... 
 }

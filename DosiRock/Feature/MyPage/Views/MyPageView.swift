@@ -14,7 +14,6 @@ struct MyPageView: View {
     @State private var router = Router<MyPageRoute>()
     @State private var viewportHeight: CGFloat = 0
     @State private var toast: LocalizedStringKey?
-    @State private var showPrivacy = false
 
     //프리뷰 테스트 용
     init(vm: MyPageViewModel) {
@@ -71,6 +70,14 @@ struct MyPageView: View {
                     findPasswordView
                 case .priceInfo: PriceInfoView()
                 case .appInfo: AppInfoView()
+                case .privacyPolicy:
+                    if let doc = TermDocument.privacyPolicy {
+                        TermDocumentView(document: doc, backTitle: "tab_my_page")
+                    }
+                case .storageGuide:
+                    if let doc = TermDocument.recommendedUseGuide {
+                        TermDocumentView(document: doc, backTitle: "tab_my_page")
+                    }
                 case .diningOutCost:
                     if let profile = vm.profile {
                         DiningOutCostView(
@@ -96,16 +103,6 @@ struct MyPageView: View {
         }
         .environment(router)
         .toast($toast)
-        // 개인정보 처리방침: 회원가입의 약관 시트(TermDocumentView)를 재사용
-        .sheet(isPresented: $showPrivacy) {
-            if let doc = TermDocument.privacyPolicy {
-                TermDocumentView(document: doc)
-                    .presentationDetents([.large])
-                    .presentationDragIndicator(.visible)
-                    .presentationCornerRadius(Radius.xLarge)
-                    .presentationBackground(Color.appBackground)
-            }
-        }
         // task와 대화상자는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행/가려짐)
         .task { await vm.load() }
         .appDialog(
@@ -355,6 +352,7 @@ struct MyPageView: View {
                 items: [
                     MenuItem(id: "privacy", title: "my_menu_privacy"),
                     MenuItem(id: "priceInfo", title: "my_menu_price_info"),
+                    MenuItem(id: "storageGuide", title: "my_menu_storage_guide"),
                     MenuItem(
                         id: "appInfo",
                         title: "my_menu_app_info",
@@ -374,8 +372,9 @@ struct MyPageView: View {
 
     private func openInfo(_ id: String) {
         switch id {
-        case "privacy": showPrivacy = true
+        case "privacy": router.push(.privacyPolicy)
         case "priceInfo": router.push(.priceInfo)
+        case "storageGuide": router.push(.storageGuide)
         default: router.push(.appInfo)
         }
     }

@@ -10,6 +10,7 @@ import SwiftUI
 struct TermDocumentView: View {
 
     let document: TermDocument
+    var backTitle: LocalizedStringKey? = nil  // 지정하면 시트가 아닌 별도 화면 모양(‹ 뒤로)
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -17,8 +18,8 @@ struct TermDocumentView: View {
         VStack {
             NavigationHeader(
                 title: LocalizedStringKey(document.title),
-                leadingTitle: "닫기",
-                showsBackIcon: false,
+                leadingTitle: backTitle ?? "닫기",
+                showsBackIcon: backTitle != nil,
                 onLeadingTap: { dismiss() }
             )
 
@@ -39,7 +40,11 @@ struct TermDocumentView: View {
             .padding(Spacing.l)
 
         }
-        .padding(.top, Spacing.xl)
+        .padding(.top, backTitle == nil ? Spacing.xl : 0)
+        .background {
+            if backTitle != nil { Color.appBackground.ignoresSafeArea() }
+        }
+        .navigationBarBackButtonHidden(true)
     }
 
     // MARK: - Header
