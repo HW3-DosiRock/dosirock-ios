@@ -7,6 +7,9 @@
     " " : {
 
     },
+    "'%@' 재료가 목록에 없어요" : {
+
+    },
     "%lld" : {
 
     },
@@ -429,6 +432,39 @@
         }
       }
     },
+    "fridge_add_ingredient" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 등록하기"
+          }
+        }
+      }
+    },
+    "fridge_empty_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고가 비어 있어요 "
+          }
+        }
+      }
+    },
+    "fridge_empty_sub_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료를 등록하면 이번 주 메뉴를 제안해 드려요"
+          }
+        }
+      }
+    },
     "login_button_submit" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -743,7 +779,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "마이페이지 정보를 불러오지 못했어요"
+            "value" : "정보를 불러오지 못했어요"
           }
         }
       }
@@ -2003,7 +2039,7 @@
     "냉장고 재료 등록하기" : {
 
     },
-    "냉장고 화면" : {
+    "다른 재료명으로 검색해보세요." : {
 
     },
     "다음" : {
@@ -2067,6 +2103,18 @@
 
     },
     "이번주" : {
+
+    },
+    "재료 %lld개" : {
+
+    },
+    "재료 선택" : {
+
+    },
+    "재료 이름 검색" : {
+
+    },
+    "재료가 목록에 없어요" : {
 
     },
     "조리 완료" : {
