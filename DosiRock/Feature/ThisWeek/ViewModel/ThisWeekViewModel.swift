@@ -49,6 +49,6 @@ final class ThisWeekViewModel {
     func load() async {
         // TODO API 연동 시 교체: 응답을 보고 아래처럼 상태를 정한다
         //   재료 없음 → .emptyIngredient / 재료 있고 레시피 없음 → .emptyRecipe ...
-        state = .emptyRecipe
+        state = .emptyIngredient
     }
 }
