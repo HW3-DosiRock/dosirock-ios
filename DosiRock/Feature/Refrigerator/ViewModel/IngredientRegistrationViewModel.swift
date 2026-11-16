@@ -17,8 +17,8 @@ final class IngredientRegistrationViewModel {
     var quantityError: String? {
 
         guard !quantityText.isEmpty else { return nil }  // 입력 전엔 오류 없음
-        guard let value = Double(quantityText) else { return "숫자만 입력해주세요" }
-        guard value > 0 else { return "0보다 큰 수를 입력해주세요" }
+        guard let value = Double(quantityText) else { return String(localized: "fridge_register_error_not_number") }
+        guard value > 0 else { return String(localized: "fridge_register_error_not_positive") }
 
         // "." 기준으로 나누기: "150.55" → ["150", "55"]
         let parts = quantityText.split(
@@ -29,8 +29,11 @@ final class IngredientRegistrationViewModel {
 
         if decimalCount > selectedItem.decimalPlaces {
             return selectedItem.decimalPlaces == 0
-                ? "정수로 입력해주세요"
-                : "소수점 \(selectedItem.decimalPlaces)자리까지 입력할 수 있어요"
+                ? String(localized: "fridge_register_error_integer_only")
+                : String(
+                    format: String(localized: "fridge_register_error_decimal_limit"),
+                    selectedItem.decimalPlaces
+                )
         }
         return nil
     }

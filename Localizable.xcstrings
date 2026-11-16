@@ -10,19 +10,6 @@
     "'%@' 재료가 목록에 없어요" : {
 
     },
-    "%@ · %lld일 안에" : {
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ · %2$lld일 안에"
-          }
-        }
-      }
-    },
-    "%@ 선택" : {
-
-    },
     "%lld" : {
 
     },
@@ -474,6 +461,193 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "재료를 등록하면 이번 주 메뉴를 제안해 드려요"
+          }
+        }
+      }
+    },
+    "fridge_register_back" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 선택"
+          }
+        }
+      }
+    },
+    "fridge_register_basis_refrigerated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장 보관 %lld일 기준"
+          }
+        }
+      }
+    },
+    "fridge_register_basis_room" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실온 보관 %lld일 기준"
+          }
+        }
+      }
+    },
+    "fridge_register_error_decimal_limit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소수점 %lld자리까지 입력할 수 있어요"
+          }
+        }
+      }
+    },
+    "fridge_register_error_integer_only" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정수로 입력해주세요"
+          }
+        }
+      }
+    },
+    "fridge_register_error_not_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "숫자만 입력해주세요"
+          }
+        }
+      }
+    },
+    "fridge_register_error_not_positive" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0보다 큰 수를 입력해주세요"
+          }
+        }
+      }
+    },
+    "fridge_register_expiry_add" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "포장에 적힌 소비기한 입력"
+          }
+        }
+      }
+    },
+    "fridge_register_expiry_clear" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지우기"
+          }
+        }
+      }
+    },
+    "fridge_register_expiry_select" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 선택"
+          }
+        }
+      }
+    },
+    "fridge_register_expiry_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "포장 소비기한"
+          }
+        }
+      }
+    },
+    "fridge_register_quantity_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금 있는 양"
+          }
+        }
+      }
+    },
+    "fridge_register_quantity_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수량을 입력해주세요"
+          }
+        }
+      }
+    },
+    "fridge_register_recommended_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "권장 사용일"
+          }
+        }
+      }
+    },
+    "fridge_register_recommended_tooltip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "먼저 쓸 재료를 고르기 위한 권장 사용일 기본값\n제품의 소비기한과 개봉 후 안내 우선\n구입과 개봉 시점, 보관 상태에 따라 조정"
+          }
+        }
+      }
+    },
+    "fridge_register_recommended_value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld일 안에"
+          }
+        }
+      }
+    },
+    "fridge_register_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 등록"
           }
         }
       }
@@ -2046,9 +2220,6 @@
     "건너뛰기" : {
 
     },
-    "권장 사용일" : {
-
-    },
     "꺼짐" : {
 
     },
@@ -2100,9 +2271,6 @@
     "설정" : {
 
     },
-    "수량을 입력해주세요" : {
-
-    },
     "시작하기" : {
 
     },
@@ -2127,9 +2295,6 @@
     "재료 %lld개" : {
 
     },
-    "재료 등록" : {
-
-    },
     "재료 선택" : {
 
     },
@@ -2142,35 +2307,28 @@
     "재료가 목록에 없어요" : {
 
     },
-    "저장" : {
-
-    },
     "조리 완료" : {
-
-    },
-    "지금 있는 양" : {
-
-    },
-    "지우기" : {
 
     },
     "직장인을 위한 도시락 준비·절약 기록" : {
 
     },
-    "취소" : {
-
-    },
     "켜짐" : {
-
-    },
-    "포장 소비기한" : {
-
-    },
-    "포장에 적힌 소비기한 입력" : {
 
     },
     "회원가입" : {
 
+    },
+    "my_menu_storage_guide" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보관 기준 안내"
+          }
+        }
+      }
     }
   },
   "version" : "1.3"

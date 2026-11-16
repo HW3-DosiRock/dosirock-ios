@@ -32,8 +32,8 @@ struct IngredientRegistrationSheet: View {
 
         VStack(spacing: 0) {
             NavigationHeader(
-                title: "재료 등록",
-                leadingTitle: "재료 선택",
+                title: "fridge_register_title",
+                leadingTitle: "fridge_register_back",
                 titleStyle: .heading,
                 onLeadingTap: { dismiss() }
             )
@@ -45,8 +45,8 @@ struct IngredientRegistrationSheet: View {
                     // 기본 재료(있음/없음 관리)는 수량 입력이 없음
                     if item.managementType == .quantity {
                         InputTextField(
-                            label: "지금 있는 양",
-                            placeHolder: "수량을 입력해주세요",
+                            label: "fridge_register_quantity_label",
+                            placeHolder: "fridge_register_quantity_placeholder",
                             text: $vm.quantityText,
                             inputType: .decimal,
                             suffix: LocalizedStringKey(item.unit),
@@ -63,7 +63,7 @@ struct IngredientRegistrationSheet: View {
             }
             .scrollDismissesKeyboard(.interactively)
 
-            PrimaryButton(title: "저장", isEnable: vm.canSave) {
+            PrimaryButton(title: "common_save", isEnable: vm.canSave) {
                 onSave(item)
                 dismiss()
             }
@@ -101,16 +101,36 @@ struct IngredientRegistrationSheet: View {
     private var recommendedSection: some View {
         if let date = vm.recommendedDate, let days = vm.daysUntilRecommended {
             VStack(alignment: .leading, spacing: Spacing.s) {
-                Text("권장 사용일")
-                    .appFont(.heading)
-                    .foregroundStyle(Color.appTextPrimary)
+                
+                HStack{
+                    Text("fridge_register_recommended_title")
+                        .appFont(.heading)
+                        .foregroundStyle(Color.appTextPrimary)
+                    Image("info")
+                        .renderingMode(.template)  // 색을 입힐 수 있게 템플릿으로
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: Size.Icon.medium)
+                        .foregroundStyle(Color.appTextSecondary)
+                        .appToolTip(
+                            String(localized: "fridge_register_recommended_tooltip")
+                        )
+                        .zIndex(1)
+                        .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
+                }                .zIndex(1)  // 툴팁이 아래 입력 칸에 가려지지 않게 (zIndex는 같은 부모 안의 형제끼리만 비교됨)
 
                 HStack {
                     stepButton("chevron.left", enabled: vm.canShiftEarlier) {
                         vm.shiftRecommended(by: -1)
                     }
                     Spacer()
-                    Text("\(date.shortKorean) · \(days)일 안에")
+                    Text(
+                        String(
+                            format: String(localized: "fridge_register_recommended_value"),
+                            date.shortKorean,
+                            days
+                        )
+                    )
                         .appFont(.body)
                         .foregroundStyle(Color.appTextPrimary)
                     Spacer()
@@ -120,12 +140,16 @@ struct IngredientRegistrationSheet: View {
                 }
                 .padding(.horizontal, Spacing.s)
                 .frame(height: Size.buttonHeight)
-                .background(Color.appSurface)
+                .background{
+                    RoundedRectangle(cornerRadius: Radius.small).fill(
+                        Color.appSurface
+                    )
+                    RoundedRectangle(cornerRadius: Radius.small).stroke(
+                        Color.appBorder
+                    )
+                }
                 .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-                .overlay(
-                    RoundedRectangle(cornerRadius: Radius.small)
-                        .stroke(Color.appBorder, lineWidth: 1)
-                )
+              
 
                 if let basis = storageBasisText {
                     Text(basis)
@@ -141,8 +165,9 @@ struct IngredientRegistrationSheet: View {
         guard let days = item.storageDays, let method = item.storageMethod else {
             return nil
         }
-        let name = method == .refrigerated ? "냉장" : "실온"
-        return "\(name) 보관 \(days)일 기준"
+        let key = method == .refrigerated
+            ? "fridge_register_basis_refrigerated" : "fridge_register_basis_room"
+        return String(format: String(localized: String.LocalizationValue(key)), days)
     }
 
     private func stepButton(
@@ -165,12 +190,12 @@ struct IngredientRegistrationSheet: View {
         if vm.showsExpiryInput, let date = vm.expiryDate {
             VStack(alignment: .leading, spacing: Spacing.s) {
                 HStack {
-                    Text("포장 소비기한")
+                    Text("fridge_register_expiry_title")
                         .appFont(.heading)
                         .foregroundStyle(Color.appTextPrimary)
                     Spacer()
                     Button { vm.toggleExpiryInput() } label: {
-                        Text("지우기")
+                        Text("fridge_register_expiry_clear")
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
                     }
@@ -199,7 +224,7 @@ struct IngredientRegistrationSheet: View {
             }
         } else {
             TextLinkButton(
-                title: "포장에 적힌 소비기한 입력",
+                title: "fridge_register_expiry_add",
                 icon: "plus",
                 textColor: .appTextPrimary,
                 textStyle: .subbody

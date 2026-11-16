@@ -32,8 +32,8 @@ struct ExpiryDatePickerSheet: View {
     var body: some View {
         VStack(spacing: Spacing.l) {
             NavigationHeader(
-                title: "포장 소비기한",
-                leadingTitle: "취소",
+                title: "fridge_register_expiry_title",
+                leadingTitle: "common_cancel",
                 showsBackIcon: false,
                 titleStyle: .heading,
                 onLeadingTap: { dismiss() }
@@ -50,7 +50,14 @@ struct ExpiryDatePickerSheet: View {
 
             Spacer(minLength: 0)
 
-            PrimaryButton(title: "\(draft.shortKorean) 선택") {
+            PrimaryButton(
+                title: LocalizedStringKey(
+                    String(
+                        format: String(localized: "fridge_register_expiry_select"),
+                        draft.shortKorean
+                    )
+                )
+            ) {
                 onSelect(draft)
                 dismiss()
             }
