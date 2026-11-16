@@ -156,8 +156,10 @@ struct AddIngredientSheet: View {
                         LazyVGrid(columns: columns, spacing: Spacing.s) {
                             ForEach(group.items) { item in
                                 IngredientTile(
-                                    label: item.name,
+                                    label: IngredientNameBreak.display(item.mainName),
                                     imageName: item.imageName,
+                                    subLabel: item.subName,
+                                    reservesNameSpace: true,
                                     isChecked: refrigerVm
                                         .registeredIngredientIds.contains(
                                             item.id

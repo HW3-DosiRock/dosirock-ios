@@ -51,6 +51,18 @@ nonisolated extension IngredientItem {
     // TODO: 한국어 이름 → 에셋 이름 매핑 (58종 이름 목록 받으면 채움)
     var imageName: String { IngredientImageMap.assetName(for: name) }
 
+    // "삼겹살(수입)" → mainName "삼겹살", subName "수입" (괄호가 없으면 subName은 nil)
+    var mainName: String {
+        guard let open = name.firstIndex(of: "(") else { return name }
+        return String(name[..<open])
+    }
+    var subName: String? {
+        guard let open = name.firstIndex(of: "("),
+              let close = name.lastIndex(of: ")"),
+              open < close else { return nil }
+        return String(name[name.index(after: open)..<close])
+    }
+
     static let samples: [IngredientItem] = [
         .init(id: 1, name: "삼겹살", category: .meat, unit: "g", decimalPlaces: 0,
               managementType: .quantity, storageMethod: .refrigerated, storageDays: 5),

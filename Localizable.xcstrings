@@ -132,6 +132,28 @@
         }
       }
     },
+    "common_close" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "닫기"
+          }
+        }
+      }
+    },
+    "common_next" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음"
+          }
+        }
+      }
+    },
     "common_retry" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -462,6 +484,72 @@
         }
       }
     },
+    "fridge_header_add" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 추가"
+          }
+        }
+      }
+    },
+    "fridge_picker_empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료가 목록에 없어요"
+          }
+        }
+      }
+    },
+    "fridge_picker_empty_query" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "'%@' 재료가 목록에 없어요"
+          }
+        }
+      }
+    },
+    "fridge_picker_search_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다른 재료명으로 검색해보세요."
+          }
+        }
+      }
+    },
+    "fridge_picker_search_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 이름 검색"
+          }
+        }
+      }
+    },
+    "fridge_picker_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 선택"
+          }
+        }
+      }
+    },
     "fridge_register_back" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -469,6 +557,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "재료 선택"
+          }
+        }
+      }
+    },
+    "fridge_register_basis_frozen" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉동 보관 %lld일 기준"
           }
         }
       }
@@ -645,6 +744,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "재료 등록"
+          }
+        }
+      }
+    },
+    "fridge_registered_banner" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 %lld종 등록 완료"
           }
         }
       }
@@ -2038,6 +2148,17 @@
         }
       }
     },
+    "sign_up_terms_view" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보기"
+          }
+        }
+      }
+    },
     "sign_up_toast_completed" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2159,6 +2280,17 @@
         }
       }
     },
+    "term_document_version" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "버전 %@"
+          }
+        }
+      }
+    },
     "thisweek_add_ingredient" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2225,6 +2357,9 @@
         }
       }
     },
+    "가\n가" : {
+
+    },
     "레시피 만드는 중" : {
 
     },
@@ -2239,138 +2374,6 @@
     },
     "재료 %lld개" : {
 
-    },
-    "common_close" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "닫기"
-          }
-        }
-      }
-    },
-    "common_next" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다음"
-          }
-        }
-      }
-    },
-    "fridge_picker_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "재료 선택"
-          }
-        }
-      }
-    },
-    "fridge_picker_search_placeholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "재료 이름 검색"
-          }
-        }
-      }
-    },
-    "fridge_picker_empty" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "재료가 목록에 없어요"
-          }
-        }
-      }
-    },
-    "fridge_picker_empty_query" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "'%@' 재료가 목록에 없어요"
-          }
-        }
-      }
-    },
-    "fridge_picker_search_hint" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다른 재료명으로 검색해보세요."
-          }
-        }
-      }
-    },
-    "fridge_header_add" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "재료 추가"
-          }
-        }
-      }
-    },
-    "fridge_registered_banner" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "재료 %lld종 등록 완료"
-          }
-        }
-      }
-    },
-    "sign_up_terms_view" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "보기"
-          }
-        }
-      }
-    },
-    "term_document_version" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "버전 %@"
-          }
-        }
-      }
-    },
-    "fridge_register_basis_frozen" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "냉동 보관 %lld일 기준"
-          }
-        }
-      }
     }
   },
   "version" : "1.3"
