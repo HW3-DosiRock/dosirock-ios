@@ -57,6 +57,12 @@ struct AddIngredientSheet: View {
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Radius.xLarge)
         .modifier(PageSheetSizing())
+        .sheet(item: $selectedItem) { item in
+            IngredientRegistrationSheet(ingredient: item) { ingredient in
+                // shortcut: 실패를 삼킴, 공통 네트워크 알림 작업 때 에러 표시 연결
+                Task { try? await refrigerVm.register(ingredient) }
+            }
+        }
     }
 
     // 검색창: 돋보기 + 입력 + 지우기(✕)
@@ -175,7 +181,7 @@ struct AddIngredientSheet: View {
 #endif
 
 // iPad에서 시트가 가운데 작은 카드로 뜨지 않고 화면을 크게 채우게 함 (iOS 18+, 17은 기본 동작)
-private struct PageSheetSizing: ViewModifier {
+struct PageSheetSizing: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 18, *) {
             content.presentationSizing(.page)
