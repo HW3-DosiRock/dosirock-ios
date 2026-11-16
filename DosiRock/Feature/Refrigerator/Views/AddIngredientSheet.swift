@@ -10,12 +10,24 @@ import SwiftUI
 struct AddIngredientSheet: View {
 
     @Environment(\.dismiss) private var dismiss
-    @State private var vm = IngredientPickerViewModel()
+    @State private var vm: IngredientPickerViewModel
     @State private var selectedItem: IngredientItem?  // 눌린 재료 (두 번째 시트용)
     private let columns = Array(
         repeating: GridItem(.flexible(), spacing: Spacing.s),
         count: 4
     )
+
+    // 프리뷰용
+    init(vm: IngredientPickerViewModel) { _vm = State(initialValue: vm) }
+
+    // 실기기용
+    init() {
+        self.init(
+            vm: IngredientPickerViewModel(
+                repository: AppEnvironment.makeIngredientRepository()
+            )
+        )
+    }
 
     var body: some View {
 
@@ -39,9 +51,11 @@ struct AddIngredientSheet: View {
             }
         }
         .background(Color.appBackground)
+        .task { await vm.load() }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Radius.xLarge)
+        .modifier(PageSheetSizing())
     }
 
     // 검색창: 돋보기 + 입력 + 지우기(✕)
@@ -71,6 +85,26 @@ struct AddIngredientSheet: View {
 
     @ViewBuilder
     private var content: some View {
+        switch vm.state {
+        case .loading:
+            LoadingView().frame(maxWidth: .infinity).padding(.top, Spacing.xl)
+        case .failed:
+            VStack(spacing: Spacing.l) {
+                Text("my_load_failed")
+                    .appFont(.body)
+                    .foregroundStyle(Color.appTextSecondary)
+                PrimaryButton(title: "common_retry") { Task { await vm.load() } }
+                    .frame(width: 160)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, Spacing.xl)
+        case .loaded:
+            loadedContent
+        }
+    }
+
+    @ViewBuilder
+    private var loadedContent: some View {
 
         if vm.isEmptyResult {
             VStack(spacing: Spacing.s) {
@@ -101,7 +135,7 @@ struct AddIngredientSheet: View {
             LazyVStack(alignment: .leading, spacing: Spacing.xl) {
                 ForEach(vm.grouped, id: \.category) { group in
                     VStack(alignment: .leading, spacing: Spacing.m) {
-                        Text(categoryTitle(group.category))
+                        Text(group.category.title)
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
 
@@ -119,16 +153,19 @@ struct AddIngredientSheet: View {
         }
     }
 
-    private func categoryTitle(_ key: String) -> String {
-        switch key {
-        case "meat": "고기"
-        case "mushroom": "버섯"
-        case "vegetable": "채소"
-        default: key
-        }
-    }
 }
 
 #Preview {
     AddIngredientSheet()
+}
+
+// iPad에서 시트가 가운데 작은 카드로 뜨지 않고 화면을 크게 채우게 함 (iOS 18+, 17은 기본 동작)
+private struct PageSheetSizing: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 18, *) {
+            content.presentationSizing(.page)
+        } else {
+            content
+        }
+    }
 }

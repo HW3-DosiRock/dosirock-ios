@@ -9,11 +9,35 @@ import Foundation
 
 @Observable @MainActor
 final class IngredientPickerViewModel {
-    var ingredients: [IngredientItem]
+
+    enum State { case loading, failed, loaded }
+
+    private(set) var state: State = .loading
+    private(set) var ingredients: [IngredientItem] = []
     var query = ""
 
-    init(ingredients: [IngredientItem] = IngredientItem.samples) {
-        self.ingredients = ingredients
+    private let repository: IngredientRepository
+
+    init(repository: IngredientRepository) {
+        self.repository = repository
+    }
+
+    func load() async {
+        state = .loading
+        do {
+            ingredients = try await repository.fetchAll()
+
+            #if DEBUG
+                let unmapped = ingredients.filter {
+                    !IngredientImageMap.isMapped($0.name)
+                }.map(\.name)
+                if !unmapped.isEmpty { print("⚠️ 이미지 매핑 없음:", unmapped) }
+            #endif
+
+            state = .loaded
+        } catch {
+            state = .failed
+        }
     }
 
     private var filtered: [IngredientItem] {
@@ -28,9 +52,12 @@ final class IngredientPickerViewModel {
     }
     var isEmptyResult: Bool { filtered.isEmpty }
 
-    var grouped: [(category: String, items: [IngredientItem])] {
-        Dictionary(grouping: filtered, by: \.category)
-            .map { (category: $0.key, items: $0.value) }
-            .sorted { $0.category < $1.category }
+    // 카테고리 정의 순서대로, 재료가 있는 카테고리만
+    var grouped: [(category: IngredientItem.Category, items: [IngredientItem])]
+    {
+        IngredientItem.Category.allCases.compactMap { category in
+            let items = filtered.filter { $0.category == category }
+            return items.isEmpty ? nil : (category, items)
+        }
     }
 }
