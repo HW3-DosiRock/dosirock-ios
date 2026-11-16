@@ -33,6 +33,9 @@ struct TermDocument: Decodable {
 
     /// 마이페이지에서 보여주는 개인정보 처리방침 (가입 동의 약관과는 별도 문서)
     static var privacyPolicy: TermDocument? { bundled("terms_privacy_policy") }
+
+    /// 마이페이지 안내의 보관 기준 안내 (권장 사용일의 근거)
+    static var recommendedUseGuide: TermDocument? { bundled("recommended_use_guide") }
 }
 
 /// 가입 화면에서 체크박스로 동의받는 약관

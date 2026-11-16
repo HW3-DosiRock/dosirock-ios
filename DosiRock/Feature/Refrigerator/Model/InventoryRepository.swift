@@ -4,9 +4,11 @@
 //
 //  Created by Admin on 11/16/26.
 //
+import Foundation
 
 protocol InventoryRepository {
     func fetch() async throws -> [InventoryItem]
+    func add(_ ingredient: IngredientItem) async throws
 }
 
 //TODO 삭제 (API 구현 전까지)
@@ -16,47 +18,64 @@ struct EmptyInventoryRepository: InventoryRepository {
         []
     }
 
+    func add(_ ingredient: IngredientItem) async throws {
+
+    }
+
 }
 
 #if DEBUG
-    struct PreviewInventoryRepository: InventoryRepository {
+    actor PreviewInventoryRepository: InventoryRepository {
 
         enum Scenario { case filled, empty, failure, slow }
-        var scenario: Scenario = .filled
+
+        private let scenario: Scenario
+        private var items: [InventoryItem]
+
+        init(scenario: Scenario = .filled) {
+            self.scenario = scenario
+            self.items = (scenario == .empty) ? [] : Self.samples
+        }
 
         func fetch() async throws -> [InventoryItem] {
 
             switch scenario {
-            case .filled:
-                try await Task.sleep(for: .milliseconds(500))
-                return Self.samples
-            case .empty:
-                try await Task.sleep(for: .milliseconds(500))
-                return []
             case .failure:
                 try await Task.sleep(for: .milliseconds(500))
                 throw AuthError.network
             case .slow:
                 try await Task.sleep(for: .seconds(5))
-                return Self.samples
+            default:
+                try await Task.sleep(for: .milliseconds(500))
             }
+            return items  // 장부를 읽는다
+        }
+
+        func add(_ ingredient: IngredientItem) async throws {
+            items.append(
+                InventoryItem(
+                    id: UUID().uuidString,
+                    name: ingredient.name,
+                    ingredientId: ingredient.id
+                )
+            )
         }
 
         static let samples: [InventoryItem] = [
             InventoryItem(
                 id: "enoki",
                 name: "팽이버섯",
-                imageName: "ingredient_mushroom_enoki"
+                ingredientId: 25
             ),
             InventoryItem(
                 id: "chicken",
                 name: "닭고기",
-                imageName: "ingredient_meat_chicken"
+                ingredientId: 35
             ),
             InventoryItem(
                 id: "tofu",
                 name: "두부",
-                imageName: "ingredient_etc_tofu"
+                ingredientId: 40
             ),
         ]
 

@@ -9,5 +9,5 @@
 nonisolated struct InventoryItem : Identifiable , Hashable {
     let id : String
     let name : String
-    let imageName : String
+    let ingredientId: Int
 }

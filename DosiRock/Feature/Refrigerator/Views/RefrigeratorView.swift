@@ -30,14 +30,15 @@ struct RefrigeratorView: View {
 
         RefrigeratorContentView(
             state: vm.state,
+            registeredCount: vm.registeredCount,
             onRetry: { Task { await vm.load() } },
-            onAdd: { vm.showAddSheet = true }
+            onAdd: { vm.openAddSheet() }
         )
         .task {
             await vm.load()
         }
         .sheet(isPresented: $vm.showAddSheet) {
-            AddIngredientSheet()
+            AddIngredientSheet(refrigerVm: vm)
         }
     }
 
@@ -46,13 +47,14 @@ struct RefrigeratorView: View {
 struct RefrigeratorContentView: View {
 
     let state: RefrigeratorViewModel.State
+    var registeredCount = 0  // 방금 등록한 재료 수 (0이면 배너 숨김)
     var onRetry: () -> Void = {}
     var onAdd: () -> Void = {}
 
     var body: some View {
 
         VStack {
-            SectionHeader(title: "tab_fridge", titleStyle: .brandTitle)
+            header
             Group {
                 switch state {
                 case .loading:
@@ -62,14 +64,43 @@ struct RefrigeratorContentView: View {
                 case .empty:
                     emptyContent
                 case .loaded(let items):
-                    // TODO: 재료 목록 화면 (시안이 나오면)
-                    Text("재료 \(items.count)개")
+                    loadedContent(items)
                 }
             }
         }
         .padding(Spacing.screenHorizontal)
         .background(Color.appBackground.ignoresSafeArea())
 
+    }
+
+    // 제목 + (재료가 있을 때만) "+ 재료 추가"
+    private var header: some View {
+        HStack {
+            Text("tab_fridge")
+                .appFont(.brandTitle)
+                .foregroundStyle(Color.appTextPrimary)
+            Spacer()
+            if case .loaded = state {
+                TextLinkButton(
+                    title: "재료 추가",
+                    icon: "plus",
+                    textColor: .appTextPrimary,
+                    textStyle: .subbody
+                ) { onAdd() }
+            }
+        }
+    }
+
+    private func loadedContent(_ items: [InventoryItem]) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.m) {
+            if registeredCount > 0 {
+                AppBanner(type: .success, message: "재료 \(registeredCount)종 등록 완료")
+            }
+            // TODO: 재료 목록 화면 (시안이 나오면)
+            Text("재료 \(items.count)개")
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 
     private var emptyContent: some View {
@@ -126,6 +157,12 @@ struct RefrigeratorContentView: View {
     #Preview("목록") {
         RefrigeratorContentView(
             state: .loaded(PreviewInventoryRepository.samples)
+        )
+    }
+    #Preview("등록 직후") {
+        RefrigeratorContentView(
+            state: .loaded(PreviewInventoryRepository.samples),
+            registeredCount: 3
         )
     }
 #endif

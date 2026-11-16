@@ -11,12 +11,14 @@ enum InputType {
     case email      // 이메일
     case password   // 비밀번호 (●●● 가림)
     case number     // 숫자만
+    case decimal    // 소수점 포함 숫자 (검증은 호출하는 쪽에서)
 
     var keyboardType: UIKeyboardType {
         switch self {
         case .text, .password: .default
         case .email:           .emailAddress    // @ 있는 키보드
         case .number:          .numberPad       // 숫자 키패드
+        case .decimal:         .decimalPad      // 소수점 키패드
         }
     }
 
