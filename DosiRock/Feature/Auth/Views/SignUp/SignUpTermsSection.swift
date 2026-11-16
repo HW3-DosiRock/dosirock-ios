@@ -62,7 +62,7 @@ struct SignUpTermsSection: View {
                         Button {
                             viewing = term
                         } label: {
-                            Text("보기")
+                            Text("sign_up_terms_view")
                                 .appFont(.subbody)
                                 .foregroundStyle(Color.appTextSecondary)
                         }

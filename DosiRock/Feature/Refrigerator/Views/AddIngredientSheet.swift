@@ -34,8 +34,8 @@ struct AddIngredientSheet: View {
 
         VStack(spacing: 0) {
             NavigationHeader(
-                title: "재료 선택",
-                leadingTitle: "닫기",
+                title: "fridge_picker_title",
+                leadingTitle: "common_close",
                 showsBackIcon: false,
                 titleStyle: .heading,
                 onLeadingTap: { dismiss() }
@@ -72,7 +72,7 @@ struct AddIngredientSheet: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(Color.appTextSecondary)
 
-            TextField("재료 이름 검색", text: $vm.query)
+            TextField("fridge_picker_search_placeholder", text: $vm.query)
                 .appFont(.body)
                 .foregroundStyle(Color.appTextPrimary)
                 .autocorrectionDisabled()
@@ -114,6 +114,13 @@ struct AddIngredientSheet: View {
         }
     }
 
+    // 검색 결과가 없을 때 제목 (검색어가 있으면 검색어를 넣어서)
+    private var emptyTitle: String {
+        vm.query.isEmpty
+            ? String(localized: "fridge_picker_empty")
+            : String(format: String(localized: "fridge_picker_empty_query"), vm.query)
+    }
+
     @ViewBuilder
     private var loadedContent: some View {
 
@@ -125,17 +132,13 @@ struct AddIngredientSheet: View {
                     .frame(width: 104)
                     .padding(.bottom, Spacing.xs)
 
-                Text(
-                    vm.query.isEmpty
-                        ? "재료가 목록에 없어요"
-                        : "'\(vm.query)' 재료가 목록에 없어요"
-                )
+                Text(emptyTitle)
                 .appFont(.brandSubtitle)
                 .foregroundStyle(Color.appTextPrimary)
                 .multilineTextAlignment(.center)
 
                 if !vm.query.isEmpty {
-                    Text("다른 재료명으로 검색해보세요.")
+                    Text("fridge_picker_search_hint")
                         .appFont(.body)
                         .foregroundStyle(Color.appTextSecondary)
                 }

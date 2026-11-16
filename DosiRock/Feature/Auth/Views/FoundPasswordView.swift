@@ -16,7 +16,7 @@ struct FoundPasswordView: View {
 
     init(
         vm: FoundPasswordViewModel,
-        leadingTitle: LocalizedStringKey = "로그인",
+        leadingTitle: LocalizedStringKey = "find_password_header_back",
         onBack: (() -> Void)? = nil
     ) {
         _vm = State(initialValue: vm)
@@ -27,7 +27,7 @@ struct FoundPasswordView: View {
     var body: some View {
         VStack {
             NavigationHeader(
-                title: "비밀번호 찾기",
+                title: "find_password_header_title",
                 leadingTitle: leadingTitle,
                 trailingText:
                     "\(vm.step.rawValue + 1)/\(FoundPasswordViewModel.Step.allCases.count)",
@@ -50,7 +50,7 @@ struct FoundPasswordView: View {
 
             BottomActionBar(
                 title: vm.step == .password
-                    ? "find_password_button_complete" : "다음",
+                    ? "find_password_button_complete" : "common_next",
                 isEnable: vm.canProceed,
                 isLoading: vm.isLoading
             ) {

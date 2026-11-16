@@ -262,7 +262,7 @@ struct MyPageView: View {
             HStack(alignment: .top) {
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("조리 완료")
+                    Text("my_menu_complete_subtitle")
                         .appFont(.subbody)
                         .foregroundStyle(Color.appTextSecondary)
                     Text(
@@ -279,7 +279,7 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(spacing: Spacing.xs) {
-                        Text("예상 절약액")
+                        Text("my_menu_complete_price")
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
 
@@ -324,7 +324,7 @@ struct MyPageView: View {
 
     func settingSection(_ profile: UserProfile) -> some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
-            SectionHeader(title: "설정")
+            SectionHeader(title: "my_menu_setting")
             GroupedListCard(
                 items: [
                     MenuItem(
@@ -347,7 +347,7 @@ struct MyPageView: View {
 
     var infoSection: some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
-            SectionHeader(title: "안내")
+            SectionHeader(title: "my_menu_info")
             GroupedListCard(
                 items: [
                     MenuItem(id: "privacy", title: "my_menu_privacy"),

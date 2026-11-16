@@ -83,7 +83,7 @@ struct AppBanner: View {
         AppBanner(
             type: .info,
             message: "재료를 추가하면 추천이 더 정확해져요",
-            actionMessage: "이번주 메뉴 제안받기"
+            actionMessage: "이번 주 메뉴 제안받기"
         )
         AppBanner(type: .success, message: "이번 주 식단이 저장됐어요")
         AppBanner(type: .attention, message: "네트워크 연결을 확인해주세요")

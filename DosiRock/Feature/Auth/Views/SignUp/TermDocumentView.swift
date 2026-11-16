@@ -18,7 +18,7 @@ struct TermDocumentView: View {
         VStack {
             NavigationHeader(
                 title: LocalizedStringKey(document.title),
-                leadingTitle: backTitle ?? "닫기",
+                leadingTitle: backTitle ?? "common_close",
                 showsBackIcon: backTitle != nil,
                 onLeadingTap: { dismiss() }
             )
@@ -54,7 +54,7 @@ struct TermDocumentView: View {
             Text(document.title)
                 .appFont(.brandSubtitle)
                 .foregroundStyle(Color.appTextPrimary)
-            Text("버전 \(document.version)")
+            Text(String(format: String(localized: "term_document_version"), document.version))
                 .appFont(.caption)
                 .foregroundStyle(Color.appTextSecondary)
         }

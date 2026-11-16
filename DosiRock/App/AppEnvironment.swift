@@ -29,7 +29,7 @@ enum AppEnvironment {
 
     static func makeInventoryRepository() -> InventoryRepository {
         #if DEBUG
-            PreviewInventoryRepository(scenario: .filled)
+            PreviewInventoryRepository(scenario: .empty)
         #else
             EmptyInventoryRepository()
         #endif

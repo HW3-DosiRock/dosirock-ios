@@ -26,7 +26,7 @@ struct ThisWeekEmptyIngredientView: View {
             
             Spacer()
             
-            BottomActionBar(title: "냉장고 재료 등록하기") {
+            BottomActionBar(title: "thisweek_add_ingredient") {
                 //TODO 재료 추가 바텀 시트 expand 
             }
 

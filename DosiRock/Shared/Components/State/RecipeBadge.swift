@@ -14,13 +14,13 @@ enum RecipeState: String, Codable {
     case used
     case nextWeek
 
-    var title: String {
+    var title: LocalizedStringKey {
         switch self {
-        case .useSoon: "빨리 쓸 재료 사용"
-        case .tomorrow: "내일까지"
-        case .cooked: "조리 완료"
-        case .used: "사용함"
-        case .nextWeek: "다음 주"
+        case .useSoon: "recipe_badge_use_soon"
+        case .tomorrow: "recipe_badge_tomorrow"
+        case .cooked: "recipe_badge_cooked"
+        case .used: "recipe_badge_used"
+        case .nextWeek: "recipe_badge_next_week"
         }
     }
 

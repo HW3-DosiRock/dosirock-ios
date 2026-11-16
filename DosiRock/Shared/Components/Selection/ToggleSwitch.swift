@@ -44,7 +44,7 @@ struct ToggleSwitch: View {
         .sensoryFeedback(.selection, trigger: isOn)
         .accessibilityElement()
         .accessibilityAddTraits(.isButton)
-        .accessibilityValue(isOn ? "켜짐" : "꺼짐")
+        .accessibilityValue(isOn ? LocalizedStringKey("toggle_state_on") : LocalizedStringKey("toggle_state_off"))
     }
 }
 

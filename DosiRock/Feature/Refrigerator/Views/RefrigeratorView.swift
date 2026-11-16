@@ -82,7 +82,7 @@ struct RefrigeratorContentView: View {
             Spacer()
             if case .loaded = state {
                 TextLinkButton(
-                    title: "재료 추가",
+                    title: "fridge_header_add",
                     icon: "plus",
                     textColor: .appTextPrimary,
                     textStyle: .subbody
@@ -94,7 +94,13 @@ struct RefrigeratorContentView: View {
     private func loadedContent(_ items: [InventoryItem]) -> some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
             if registeredCount > 0 {
-                AppBanner(type: .success, message: "재료 \(registeredCount)종 등록 완료")
+                AppBanner(
+                    type: .success,
+                    message: String(
+                        format: String(localized: "fridge_registered_banner"),
+                        registeredCount
+                    )
+                )
             }
             // TODO: 재료 목록 화면 (시안이 나오면)
             Text("재료 \(items.count)개")

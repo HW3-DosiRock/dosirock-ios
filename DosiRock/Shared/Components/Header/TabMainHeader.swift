@@ -37,7 +37,7 @@ struct TabMainHeader: View {
 #Preview {
     VStack(spacing: Spacing.m) {
         TabMainHeader(
-            title: "이번 주",
+            title: "이번주",
             actionTitle: "추천 조건 변경",
             actionIcon: "slider.horizontal.3"
         ) {

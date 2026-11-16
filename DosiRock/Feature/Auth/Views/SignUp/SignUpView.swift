@@ -36,7 +36,7 @@ struct SignUpView: View {
             Spacer()
 
             BottomActionBar(
-                title: vm.step == .nickname ? "sign_up_button_complete" : "다음",
+                title: vm.step == .nickname ? "sign_up_button_complete" : "common_next",
                 isEnable: vm.canProceed,
                 isLoading: vm.isLoading
             ) {
