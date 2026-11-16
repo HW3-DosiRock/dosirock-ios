@@ -11,24 +11,25 @@ struct AddIngredientSheet: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var vm: IngredientPickerViewModel
+    let refrigerVm: RefrigeratorViewModel
     @State private var selectedItem: IngredientItem?  // 눌린 재료 (두 번째 시트용)
     private let columns = Array(
         repeating: GridItem(.flexible(), spacing: Spacing.s),
         count: 4
     )
 
-    // 프리뷰용
-    init(vm: IngredientPickerViewModel) { _vm = State(initialValue: vm) }
-
-    // 실기기용
-    init() {
-        self.init(
-            vm: IngredientPickerViewModel(
-                repository: AppEnvironment.makeIngredientRepository()
-            )
+    init(
+        refrigerVm: RefrigeratorViewModel,
+        vm: IngredientPickerViewModel? = nil
+    ) {
+        self.refrigerVm = refrigerVm
+        _vm = State(
+            initialValue: vm
+                ?? IngredientPickerViewModel(
+                    repository: AppEnvironment.makeIngredientRepository()
+                )
         )
     }
-
     var body: some View {
 
         VStack(spacing: 0) {
@@ -71,7 +72,9 @@ struct AddIngredientSheet: View {
                 .autocorrectionDisabled()
 
             if !vm.query.isEmpty {
-                Button { vm.query = "" } label: {
+                Button {
+                    vm.query = ""
+                } label: {
                     Image(systemName: "xmark")
                         .foregroundStyle(Color.appTextSecondary)
                 }
@@ -93,8 +96,10 @@ struct AddIngredientSheet: View {
                 Text("my_load_failed")
                     .appFont(.body)
                     .foregroundStyle(Color.appTextSecondary)
-                PrimaryButton(title: "common_retry") { Task { await vm.load() } }
-                    .frame(width: 160)
+                PrimaryButton(title: "common_retry") {
+                    Task { await vm.load() }
+                }
+                .frame(width: 160)
             }
             .frame(maxWidth: .infinity)
             .padding(.top, Spacing.xl)
@@ -143,7 +148,11 @@ struct AddIngredientSheet: View {
                             ForEach(group.items) { item in
                                 IngredientTile(
                                     label: item.name,
-                                    imageName: item.imageName
+                                    imageName: item.imageName,
+                                    isChecked: refrigerVm
+                                        .registeredIngredientIds.contains(
+                                            item.id
+                                        )
                                 ) { selectedItem = item }
                             }
                         }
@@ -155,9 +164,15 @@ struct AddIngredientSheet: View {
 
 }
 
-#Preview {
-    AddIngredientSheet()
-}
+#if DEBUG
+    #Preview {
+        AddIngredientSheet(
+            refrigerVm: RefrigeratorViewModel(
+                inventory: PreviewInventoryRepository()
+            )
+        )
+    }
+#endif
 
 // iPad에서 시트가 가운데 작은 카드로 뜨지 않고 화면을 크게 채우게 함 (iOS 18+, 17은 기본 동작)
 private struct PageSheetSizing: ViewModifier {
