@@ -47,8 +47,20 @@ final class RefrigeratorViewModel {
         items.first { $0.ingredientId == ingredient.id }?.quantity
     }
 
-    init(inventory: InventoryRepository) {
+    // 재료 기준 정보 (id → 재료). 냉장고 타일을 눌렀을 때 등록 시트에 넘길 재료를 찾는 데 씀
+    private let ingredientRepository: IngredientRepository
+    private var ingredients: [Int: IngredientItem] = [:]
+
+    func ingredient(for item: InventoryItem) -> IngredientItem? {
+        ingredients[item.ingredientId]
+    }
+
+    init(
+        inventory: InventoryRepository,
+        ingredientRepository: IngredientRepository = AppEnvironment.makeIngredientRepository()
+    ) {
         self.inventory = inventory
+        self.ingredientRepository = ingredientRepository
     }
 
     func load() async {
@@ -58,6 +70,10 @@ final class RefrigeratorViewModel {
             state = items.isEmpty ? .empty : .loaded(items)
         } catch {
             state = .failed
+        }
+        // shortcut: 실패하면 타일을 눌러도 시트가 안 뜸, 에러 표시는 공통 네트워크 알림 작업 때
+        if let list = try? await ingredientRepository.fetchAll() {
+            ingredients = Dictionary(list.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         }
     }
 

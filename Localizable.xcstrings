@@ -462,6 +462,39 @@
         }
       }
     },
+    "fridge_delete_dialog_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        }
+      }
+    },
+    "fridge_delete_dialog_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하면 등록한 수량 정보가 사라져요."
+          }
+        }
+      }
+    },
+    "fridge_delete_dialog_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고에서 삭제할까요?"
+          }
+        }
+      }
+    },
     "fridge_empty_desc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -491,6 +524,68 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "재료 추가"
+          }
+        }
+      }
+    },
+    "fridge_list_presence_sub" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "눌러서 보유 전환"
+          }
+        }
+      }
+    },
+    "fridge_list_presence_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기본 재료"
+          }
+        }
+      }
+    },
+    "fridge_list_priority_sub" : {
+      "extractionState" : "pasted",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "권장 사용일이 가까운 순"
+          }
+        }
+      }
+    },
+    "fridge_list_priority_title" : {
+      "extractionState" : "pasted",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빨리 써야 할 재료"
+          }
+        }
+      }
+    },
+    "fridge_list_quantity_sub" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "눌러서 수량 추가·수정"
+          }
+        }
+      }
+    },
+    "fridge_list_quantity_title" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수량"
           }
         }
       }
@@ -601,6 +696,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : " %1$@ → %2$@ 변경"
+          }
+        }
+      }
+    },
+    "fridge_register_delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고에서 삭제"
+          }
+        }
+      }
+    },
+    "fridge_register_delete_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하지 못했어요. 다시 시도해 주세요."
           }
         }
       }
@@ -777,6 +894,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "재료 %lld종 등록 완료"
+          }
+        }
+      }
+    },
+    "fridge_registered_banner_action" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 메뉴 제안받기"
           }
         }
       }
@@ -2393,75 +2521,6 @@
     },
     "에러 화면" : {
 
-    },
-    "재료 %lld개" : {
-
-    },
-    "fridge_register_delete" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "냉장고에서 삭제"
-          }
-        }
-      }
-    },
-    "fridge_delete_dialog_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "냉장고에서 삭제할까요?"
-          }
-        }
-      }
-    },
-    "fridge_delete_dialog_message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "삭제하면 등록한 수량 정보가 사라져요."
-          }
-        }
-      }
-    },
-    "fridge_delete_dialog_confirm" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "삭제"
-          }
-        }
-      }
-    },
-    "fridge_register_delete_failed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "삭제하지 못했어요. 다시 시도해 주세요."
-          }
-        }
-      }
-    },
-    "fridge_registered_banner_action" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이번 주 메뉴 제안받기"
-          }
-        }
-      }
     }
   },
   "version" : "1.3"

@@ -66,7 +66,9 @@ struct EmptyInventoryRepository: InventoryRepository {
                         id: UUID().uuidString,
                         name: ingredient.name,
                         ingredientId: ingredient.id,
-                        quantity: quantity
+                        quantity: quantity,
+                        unit: ingredient.unit,
+                        managementType: ingredient.managementType
                     )
                 )
             }
@@ -81,19 +83,29 @@ struct EmptyInventoryRepository: InventoryRepository {
                 id: "enoki",
                 name: "팽이버섯",
                 ingredientId: 25,
-                quantity: 300
+                quantity: 300,
+                unit: "g"
             ),
             InventoryItem(
                 id: "chicken",
                 name: "닭고기",
                 ingredientId: 35,
-                quantity: 500
+                quantity: 500,
+                unit: "g"
             ),
             InventoryItem(
                 id: "tofu",
                 name: "두부",
                 ingredientId: 40,
-                quantity: 2
+                quantity: 2,
+                unit: "개"
+            ),
+            InventoryItem(
+                id: "salt",
+                name: "소금",
+                ingredientId: 46,
+                unit: "g",
+                managementType: .presence
             ),
         ]
 
