@@ -152,7 +152,7 @@ final class EmailVerificationFlow {
                 
                 if self.remainingSeconds == 0 {
                     self.errorMessage =
-                        AuthError.verificationTimeout.errorDescription
+                        APIError.verificationTimeout.errorDescription
                     self.onExpired?()
                     return
                 }
@@ -187,8 +187,8 @@ final class EmailVerificationFlow {
             return true
         } catch {
             self[keyPath: target] =
-                (error as? AuthError)?.errorDescription
-                ?? AuthError.unknown.errorDescription
+                (error as? APIError)?.errorDescription
+                ?? APIError.unknown.errorDescription
             return false
         }
     }

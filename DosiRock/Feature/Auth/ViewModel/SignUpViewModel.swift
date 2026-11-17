@@ -147,10 +147,10 @@ final class SignUpViewModel {
             isCompleted = true
             onCompleted()
         } catch {
-            let authError = error as? AuthError
+            let authError = error as? APIError
             let message =
                 authError?.errorDescription
-                ?? AuthError.unknown.errorDescription
+                ?? APIError.unknown.errorDescription
             if authError?.code == "AUTH_SIGNUP_TOKEN_INVALID" {
                 // 토큰 만료 → 이메일 인증부터 다시
                 signupToken = nil

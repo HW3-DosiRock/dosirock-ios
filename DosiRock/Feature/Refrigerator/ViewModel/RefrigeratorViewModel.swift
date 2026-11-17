@@ -57,7 +57,7 @@ final class RefrigeratorViewModel {
 
     init(
         inventory: InventoryRepository,
-        ingredientRepository: IngredientRepository = AppEnvironment.makeIngredientRepository()
+        ingredientRepository: IngredientRepository 
     ) {
         self.inventory = inventory
         self.ingredientRepository = ingredientRepository

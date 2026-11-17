@@ -22,7 +22,7 @@ struct AppInfoView: View {
     }
 
     private let rows = [
-        Row(label: "my_app_info_version", value: LocalizedStringKey(AppEnvironment.appVersion)),
+        Row(label: "my_app_info_version", value: LocalizedStringKey(AppInfo.appVersion)),
         Row(label: "my_app_info_ai", value: "OpenAI"),
     ]
 

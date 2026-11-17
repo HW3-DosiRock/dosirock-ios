@@ -9,25 +9,16 @@ import SwiftUI
 
 // 마이페이지 탭
 struct MyPageView: View {
-
+    
+    @Environment(\.container) private var container
+    
     @State private var vm: MyPageViewModel
     @State private var router = Router<MyPageRoute>()
     @State private var viewportHeight: CGFloat = 0
     @State private var toast: LocalizedStringKey?
 
-    //프리뷰 테스트 용
     init(vm: MyPageViewModel) {
         _vm = State(initialValue: vm)
-    }
-
-    //실제 앱 용
-    init() {
-        self.init(
-            vm: MyPageViewModel(
-                users: AppEnvironment.makeUserRepository(),
-                auth: AppEnvironment.makeAuthService()
-            )
-        )
     }
 
     var body: some View {
@@ -126,7 +117,7 @@ struct MyPageView: View {
     // 현재 비밀번호를 모를 때: 이메일 인증으로 재설정 (로그인 전 '비밀번호 찾기'와 같은 화면)
     private var findPasswordView: some View {
         let reset = FoundPasswordViewModel(
-            service: AppEnvironment.makeAuthService()
+            service: container.auth
         )
         reset.onCompleted = {
             router.pop()  // 비밀번호 재설정 화면
@@ -356,7 +347,7 @@ struct MyPageView: View {
                     MenuItem(
                         id: "appInfo",
                         title: "my_menu_app_info",
-                        trailing: AppEnvironment.appVersion
+                        trailing: AppInfo.appVersion
                     ),
                 ]
             ) { item in
@@ -434,7 +425,7 @@ struct MyPageView: View {
         MyPageView(
             vm: MyPageViewModel(
                 users: PreviewUserRepository(),
-                auth: MockAuthService()
+                auth: PreviewAuthService()
             )
         )
     }
@@ -443,7 +434,7 @@ struct MyPageView: View {
         MyPageView(
             vm: MyPageViewModel(
                 users: PreviewUserRepository(shouldFail: true),
-                auth: MockAuthService()
+                auth: PreviewAuthService()
             )
         )
     }

@@ -45,8 +45,8 @@ final class LoginViewModel {
             onSuccess?()
         } catch {
             errorMessage =
-                (error as? AuthError)?.errorDescription
-                ?? AuthError.unknown.errorDescription
+                (error as? APIError)?.errorDescription
+                ?? APIError.unknown.errorDescription
         }
     }
     

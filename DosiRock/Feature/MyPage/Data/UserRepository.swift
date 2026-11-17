@@ -19,22 +19,16 @@ protocol UserRepository {
 
 struct UserRepositoryImpl: UserRepository {
 
-    private let client: APIClient
-
-    init(baseURL: URL) {
-        client = APIClient(baseURL: baseURL)
-    }
-
+    let client: APIClient
+    
     func fetchMe() async throws -> UserProfile {
-        let result = try await client.send(
+        try await client.sendRequired(
             "users/me",
             method: .get,
             authorized: true,
             as: UserProfile.self
         )
 
-        guard let profile = result else { throw AuthError.server }
-        return profile
     }
 
     func updateNickname(_ nickname: String) async throws {
@@ -77,7 +71,7 @@ struct UserRepositoryImpl: UserRepository {
         var shouldFail = false  // true면 불러오기 실패 상태를 볼 수 있다
 
         func fetchMe() async throws -> UserProfile {
-            if shouldFail { throw AuthError.network }
+            if shouldFail { throw APIError.network }
             return UserProfile(
                 email: "dosirak@example.com",
                 nickname: "배고픈돌멩",

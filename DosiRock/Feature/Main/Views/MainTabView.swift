@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MainTabView: View {
 
+    @Environment(\.container) private var container
+
     @State var activeTab: Navigation = Navigation.thisweek
 
     var body: some View {
@@ -17,8 +19,20 @@ struct MainTabView: View {
             Group {
                 switch activeTab {
                 case .thisweek: ThisWeekView()
-                case .fridge: RefrigeratorView()
-                case .mypage: MyPageView()
+                case .fridge:
+                    RefrigeratorView(
+                        vm: RefrigeratorViewModel(
+                            inventory: container.inventory,
+                            ingredientRepository: container.ingredients
+                        )
+                    )
+                case .mypage:
+                    MyPageView(
+                        vm: MyPageViewModel(
+                            users: container.user,
+                            auth: container.auth
+                        )
+                    )
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

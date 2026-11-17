@@ -54,7 +54,7 @@ final class FoundPasswordViewModel {
         // 비밀번호 화면에 있는 동안 시간이 다 되면 처음으로
         flow.onExpired = { [weak self] in
             guard let self, self.step == .password else { return }
-            self.backToStart(AuthError.verificationTimeout.errorDescription)
+            self.backToStart(APIError.verificationTimeout.errorDescription)
         }
     }
 
@@ -81,10 +81,10 @@ final class FoundPasswordViewModel {
             isCompleted = true
             onCompleted()
         } catch {
-            let authError = error as? AuthError
+            let authError = error as? APIError
             let message =
                 authError?.errorDescription
-                ?? AuthError.unknown.errorDescription
+                ?? APIError.unknown.errorDescription
 
             switch authError?.code {
             case "AUTH_VERIFICATION_NOT_FOUND",

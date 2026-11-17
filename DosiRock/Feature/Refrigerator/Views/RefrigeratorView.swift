@@ -10,21 +10,13 @@ import SwiftUI
 // 냉장고 탭 (임시 화면)
 struct RefrigeratorView: View {
 
+    @Environment(\.container) private var container
+
     @State private var vm: RefrigeratorViewModel
     @State private var editingItem: IngredientItem?  // 냉장고에서 누른 재료 (등록 시트용)
 
-    //프리뷰용
     init(vm: RefrigeratorViewModel) {
         _vm = State(initialValue: vm)
-    }
-
-    //실기기용
-    init() {
-        self.init(
-            vm: RefrigeratorViewModel(
-                inventory: AppEnvironment.makeInventoryRepository()
-            )
-        )
     }
 
     var body: some View {
@@ -40,7 +32,10 @@ struct RefrigeratorView: View {
             await vm.load()
         }
         .sheet(isPresented: $vm.showAddSheet) {
-            AddIngredientSheet(refrigerVm: vm)
+            AddIngredientSheet(
+                refrigerVm: vm,
+                vm: IngredientPickerViewModel(repository: container.ingredients)
+            )
         }
         .sheet(item: $editingItem) { item in
             IngredientRegistrationSheet(
@@ -143,9 +138,13 @@ struct RefrigeratorContentView: View {
     // 7일 기준은 임의값(이번주 탭 "사용 우선순위" 안내와 맞춤), 명세가 나오면 서버 기준으로 교체
     @ViewBuilder
     private func userPriority(_ items: [InventoryItem]) -> some View {
-        let soon = items
+        let soon =
+            items
             .filter { ($0.daysUntilRecommended() ?? .max) <= 7 }
-            .sorted { ($0.recommendedDate ?? .distantFuture) < ($1.recommendedDate ?? .distantFuture) }
+            .sorted {
+                ($0.recommendedDate ?? .distantFuture)
+                    < ($1.recommendedDate ?? .distantFuture)
+            }
         if !soon.isEmpty {
             VStack(alignment: .leading, spacing: Spacing.m) {
                 SectionHeader(
@@ -177,19 +176,33 @@ struct RefrigeratorContentView: View {
     private func prioritySubtitle(_ item: InventoryItem) -> String {
         let date = item.recommendedDate?.shortKorean ?? ""
         if let quantity = item.quantityText {
-            return String(format: String(localized: "fridge_priority_subtitle"), quantity, date)
+            return String(
+                format: String(localized: "fridge_priority_subtitle"),
+                quantity,
+                date
+            )
         }
-        return String(format: String(localized: "fridge_priority_subtitle_no_quantity"), date)
+        return String(
+            format: String(localized: "fridge_priority_subtitle_no_quantity"),
+            date
+        )
     }
 
     // 오늘·내일·N일 안에 (같은 분홍색 뱃지)
     private func priorityBadge(_ item: InventoryItem) -> some View {
         let days = item.daysUntilRecommended() ?? 0
-        let title: LocalizedStringKey = switch days {
-        case ...0: "fridge_priority_badge_today"
-        case 1: "recipe_badge_tomorrow"
-        default: LocalizedStringKey(String(format: String(localized: "fridge_priority_badge_days"), days))
-        }
+        let title: LocalizedStringKey =
+            switch days {
+            case ...0: "fridge_priority_badge_today"
+            case 1: "recipe_badge_tomorrow"
+            default:
+                LocalizedStringKey(
+                    String(
+                        format: String(localized: "fridge_priority_badge_days"),
+                        days
+                    )
+                )
+            }
         return RecipeBadge(type: .tomorrow, title: title)
     }
 

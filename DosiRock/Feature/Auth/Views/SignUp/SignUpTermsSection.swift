@@ -99,7 +99,7 @@ struct SignUpTermsSection: View {
 
 #if DEBUG
 #Preview {
-    SignUpTermsSection(vm: .init(service: MockAuthService()))
+    SignUpTermsSection(vm: .init(service: PreviewAuthService()))
         .background(Color.appBackground)
         .padding()
 

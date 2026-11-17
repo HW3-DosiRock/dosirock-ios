@@ -1,5 +1,5 @@
 //
-//  RealAuthService.swift
+//  AuthService.swift
 //  DosiRock
 //
 //  Created by Admin on 11/12/26.
@@ -7,28 +7,42 @@
 
 import Foundation
 
+protocol AuthService {
+    func login(email: String, password: String) async throws
+    func requestVerificationNumber(email: String, purpose: VerificationPurpose)
+        async throws
+    func checkVerificationNumber(
+        email: String,
+        vNumber: String,
+        purpose: VerificationPurpose
+    ) async throws
+        -> String?
+    func signUp(
+        email: String,
+        password: String,
+        nickName: String,
+        signupToken: String,
+        agreement: SignUpAgreement
+    ) async throws
+    func resetPassword(email: String, code: String, newPassword: String)
+        async throws
+    func refresh() async throws  // 리프레시 토큰으로 새 토큰 발급·저장
+    func logout() async throws
+
+}
+
 //인증번호 확인 응답 데이터
 nonisolated struct SignupTokenData: Decodable {
     let signupToken: String
 }
 
-struct RealAuthService {
+struct AuthServiceImpl {
 
-    private let client: APIClient
-
-    init(baseURL: URL) {
-        client = APIClient(baseURL: baseURL)
-    }
-
-    // 로그인 응답의 data
-    nonisolated struct LoginTokenData: Decodable {
-        let accessToken: String
-        let refreshToken: String
-    }
+    let client: APIClient
 
 }
 
-extension RealAuthService: AuthService {
+extension AuthServiceImpl: AuthService {
 
     func requestVerificationNumber(email: String, purpose: VerificationPurpose)
         async throws
@@ -85,13 +99,11 @@ extension RealAuthService: AuthService {
 
     func login(email: String, password: String) async throws {
 
-        let result = try await client.send(
+        let tokens = try await client.sendRequired(
             "auth/login",
             body: ["email": email, "password": password],
             as: LoginTokenData.self
         )
-
-        guard let tokens = result else { throw AuthError.server }
 
         TokenStore.save(tokens.accessToken, for: .access)
         TokenStore.save(tokens.refreshToken, for: .refresh)

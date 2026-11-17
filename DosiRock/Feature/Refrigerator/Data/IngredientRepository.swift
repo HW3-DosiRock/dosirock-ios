@@ -20,20 +20,15 @@ private nonisolated struct IngredientListResponse: Decodable {
 
 struct IngredientRepositoryImpl: IngredientRepository {
 
-    private let client: APIClient
-
-    init(baseURL: URL) {
-        client = APIClient(baseURL: baseURL)
-    }
-
+    let client: APIClient
+ 
     func fetchAll() async throws -> [IngredientItem] {
-        let result = try await client.send(
+        let result = try await client.sendRequired(
             "ingredients",
             method: .get,
             authorized: true,
             as: IngredientListResponse.self
         )
-        guard let result else { throw AuthError.server }
         return result.items
     }
 }
@@ -49,7 +44,7 @@ struct IngredientRepositoryImpl: IngredientRepository {
             switch scenario {
             case .filled: return IngredientItem.samples
             case .empty: return []
-            case .failure: throw AuthError.network
+            case .failure: throw APIError.network
             }
         }
     }
