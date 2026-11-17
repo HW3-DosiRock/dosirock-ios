@@ -594,6 +594,17 @@
         }
       }
     },
+    "fridge_register_change_summary" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " %1$@ → %2$@ 변경"
+          }
+        }
+      }
+    },
     "fridge_register_error_decimal_limit" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -744,6 +755,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "재료 등록"
+          }
+        }
+      }
+    },
+    "fridge_register_title_2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 수정"
           }
         }
       }
@@ -2374,6 +2396,61 @@
     },
     "재료 %lld개" : {
 
+    },
+    "fridge_register_delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고에서 삭제"
+          }
+        }
+      }
+    },
+    "fridge_delete_dialog_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고에서 삭제할까요?"
+          }
+        }
+      }
+    },
+    "fridge_delete_dialog_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하면 등록한 수량 정보가 사라져요."
+          }
+        }
+      }
+    },
+    "fridge_delete_dialog_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        }
+      }
+    },
+    "fridge_register_delete_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하지 못했어요. 다시 시도해 주세요."
+          }
+        }
+      }
     }
   },
   "version" : "1.3"

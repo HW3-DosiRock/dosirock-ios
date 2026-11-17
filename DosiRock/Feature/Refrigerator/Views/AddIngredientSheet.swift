@@ -58,10 +58,11 @@ struct AddIngredientSheet: View {
         .presentationCornerRadius(Radius.xLarge)
         .modifier(PageSheetSizing())
         .sheet(item: $selectedItem) { item in
-            IngredientRegistrationSheet(ingredient: item) { ingredient in
-                // shortcut: 실패를 삼킴, 공통 네트워크 알림 작업 때 에러 표시 연결
-                Task { try? await refrigerVm.register(ingredient) }
-            }
+            IngredientRegistrationSheet(
+                ingredient: item,
+                refrigerVm: refrigerVm,
+                previousQuantity: refrigerVm.quantity(of: item)
+            )
         }
     }
 
@@ -160,10 +161,7 @@ struct AddIngredientSheet: View {
                                     imageName: item.imageName,
                                     subLabel: item.subName,
                                     reservesNameSpace: true,
-                                    isChecked: refrigerVm
-                                        .registeredIngredientIds.contains(
-                                            item.id
-                                        )
+                                    isChecked: refrigerVm.isRegistered(item)
                                 ) { selectedItem = item }
                             }
                         }
@@ -176,10 +174,14 @@ struct AddIngredientSheet: View {
 }
 
 #if DEBUG
+    // 프리뷰는 실제 서버 대신 샘플 데이터를 쓴다 (vm을 안 넘기면 서버에 요청해서 프리뷰에서는 실패함)
     #Preview {
         AddIngredientSheet(
             refrigerVm: RefrigeratorViewModel(
                 inventory: PreviewInventoryRepository()
+            ),
+            vm: IngredientPickerViewModel(
+                repository: PreviewIngredientRepository(scenario: .filled)
             )
         )
     }

@@ -41,6 +41,7 @@ struct AppBanner: View {
 
     let type: BannerType
     let message: String
+    var showIcon = true
     var actionMessage: LocalizedStringKey? = nil
     var action: () -> Void = {}
 
@@ -50,9 +51,11 @@ struct AppBanner: View {
 
             //title
             HStack(alignment: .top, spacing: Spacing.s) {
-                Image(systemName: type.icon)
-                    .foregroundStyle(type.foreground)
 
+                if showIcon {
+                    Image(systemName: type.icon)
+                        .foregroundStyle(type.foreground)
+                }
                 Text(message)
                     .foregroundStyle(type.foreground)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -74,7 +77,7 @@ struct AppBanner: View {
         .padding(Spacing.m)
         .background(type.background)
         .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-    
+
     }
 }
 

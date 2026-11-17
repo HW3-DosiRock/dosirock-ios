@@ -10,4 +10,5 @@ nonisolated struct InventoryItem : Identifiable , Hashable {
     let id : String
     let name : String
     let ingredientId: Int
+    var quantity: Double? = nil  // 보유 수량 (기본 재료는 nil) / TODO 명세 나오면 확정
 }
