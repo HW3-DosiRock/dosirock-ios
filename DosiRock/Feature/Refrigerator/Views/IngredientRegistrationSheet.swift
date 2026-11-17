@@ -13,16 +13,28 @@ struct IngredientRegistrationSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var vm: IngredientRegistrationViewModel
     @State private var showsExpiryPicker = false
-    var onSave: (IngredientItem) -> Void = { _ in }
+    @State private var isSaving = false
+    @State private var errorMessage: String?  // 저장·삭제 실패 안내
+    @State private var showsDeleteDialog = false
+    @State private var sheetHeight: CGFloat = 400  // 시트 초기 높이
+    @State private var contentHeight: CGFloat = 0  // ScrollView 안쪽 내용 높이
+
+    let refrigerVm: RefrigeratorViewModel  // 저장하면 냉장고에 등록하고 체크 표시·배너까지 갱신
 
     init(
         ingredient: IngredientItem,
-        onSave: @escaping (IngredientItem) -> Void = { _ in }
+        refrigerVm: RefrigeratorViewModel,
+        previousQuantity: Double? = nil,
+        isExisting: Bool? = nil
     ) {
         _vm = State(
-            initialValue: IngredientRegistrationViewModel(selectedItem: ingredient)
+            initialValue: IngredientRegistrationViewModel(
+                selectedItem: ingredient,
+                previousQuantity: previousQuantity,
+                isExisting: isExisting
+            )
         )
-        self.onSave = onSave
+        self.refrigerVm = refrigerVm
     }
 
     private var item: IngredientItem { vm.selectedItem }
@@ -32,7 +44,8 @@ struct IngredientRegistrationSheet: View {
 
         VStack(spacing: 0) {
             NavigationHeader(
-                title: "fridge_register_title",
+                title: refrigerVm.isRegistered(item)
+                    ? "fridge_register_title_2" : "fridge_register_title",
                 leadingTitle: "fridge_register_back",
                 titleStyle: .heading,
                 onLeadingTap: { dismiss() }
@@ -55,31 +68,116 @@ struct IngredientRegistrationSheet: View {
                         )
                     }
 
+                    // 이미 있는 재료를 다시 등록할 때: "지금 4개 → 14개 변경"
+                    if let summary = vm.changeSummary {
+                        AppBanner(
+                            type: .success,
+                            message: summary,
+                            showIcon: false
+                        )
+                    }
+
                     recommendedSection
                     expirySection
                 }
                 .padding(.horizontal, Spacing.screenHorizontal)
                 .padding(.vertical, Spacing.l)
+                // ScrollView가 아니라 내용의 본래 높이를 잼 (padding 뒤에서)
+                .onGeometryChange(for: CGFloat.self) {
+                    $0.size.height
+                } action: {
+                    contentHeight = $0
+                }
             }
+            // 내용만큼만 커지게 (처음 측정 전에는 제한 없음). 넘치면 스크롤
+            .frame(maxHeight: contentHeight > 0 ? contentHeight : nil)
             .scrollDismissesKeyboard(.interactively)
 
-            PrimaryButton(title: "common_save", isEnable: vm.canSave) {
-                onSave(item)
-                dismiss()
+            VStack(spacing: Spacing.s) {
+                if let errorMessage {
+                    AppBanner(type: .attention, message: errorMessage)
+                }
+                PrimaryButton(
+                    title: "common_save",
+                    isEnable: vm.canSave,
+                    isLoading: isSaving
+                ) { save() }
+
+                // 이미 냉장고에 있는 재료만
+                if vm.isExisting {
+                    TextLinkButton(
+                        title: "fridge_register_delete",
+                        textColor: .appAttention,
+                        textStyle: .heading,
+                        isEnable: !isSaving
+                    ) { showsDeleteDialog = true }
+                }
             }
             .padding(.horizontal, Spacing.screenHorizontal)
             .padding(.bottom, Spacing.l)
         }
+        // 1) 내용 자체의 높이를 잼 (하단 안전 영역 포함). 아래 frame보다 먼저 와야 내용 높이가 나옴
+        .onGeometryChange(for: CGFloat.self) {
+            $0.size.height + $0.safeAreaInsets.bottom
+        } action: {
+            sheetHeight = $0
+        }
+        // 2) iPad처럼 시트가 크게 뜨면 내용은 위쪽에 붙이고, 배경색은 시트 전체에 칠함
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.appBackground)
-        .presentationDetents([.height(580), .large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Radius.xLarge)
         .modifier(PageSheetSizing())
+        .presentationDetents([.height(sheetHeight)])
+        .appDialog(
+            isPresented: $showsDeleteDialog,
+            title: "fridge_delete_dialog_title",
+            message: "fridge_delete_dialog_message",
+            cancelTitle: "common_cancel",
+            confirmTitle: "fridge_delete_dialog_confirm",
+            onConfirm: { delete() }
+        )
         .sheet(isPresented: $showsExpiryPicker) {
             ExpiryDatePickerSheet(initial: vm.expiryDate ?? Date()) { date in
                 vm.expiryDate = date
                 vm.showsExpiryInput = true
             }
+        }
+    }
+
+    // 저장: 성공하면 시트를 닫고, 실패하면 입력값은 그대로 두고 안내 배너를 보여 줌
+    private func save() {
+        isSaving = true
+        errorMessage = nil
+        Task {
+            do {
+                try await refrigerVm.register(
+                    item,
+                    quantity: vm.quantity,
+                    recommendedDate: vm.recommendedDate
+                )
+                dismiss()
+            } catch {
+                errorMessage = String(localized: "common_save_failed")
+            }
+            isSaving = false
+        }
+    }
+
+    // 삭제: 성공하면 시트를 닫고, 실패하면 안내 배너
+    private func delete() {
+        isSaving = true
+        errorMessage = nil
+        Task {
+            do {
+                try await refrigerVm.remove(item)
+                dismiss()
+            } catch {
+                errorMessage = String(
+                    localized: "fridge_register_delete_failed"
+                )
+            }
+            isSaving = false
         }
     }
 
@@ -101,8 +199,8 @@ struct IngredientRegistrationSheet: View {
     private var recommendedSection: some View {
         if let date = vm.recommendedDate, let days = vm.daysUntilRecommended {
             VStack(alignment: .leading, spacing: Spacing.s) {
-                
-                HStack{
+
+                HStack {
                     Text("fridge_register_recommended_title")
                         .appFont(.heading)
                         .foregroundStyle(Color.appTextPrimary)
@@ -113,11 +211,13 @@ struct IngredientRegistrationSheet: View {
                         .frame(width: Size.Icon.medium)
                         .foregroundStyle(Color.appTextSecondary)
                         .appToolTip(
-                            String(localized: "fridge_register_recommended_tooltip")
+                            String(
+                                localized: "fridge_register_recommended_tooltip"
+                            )
                         )
                         .zIndex(1)
                         .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
-                }                .zIndex(1)  // 툴팁이 아래 입력 칸에 가려지지 않게 (zIndex는 같은 부모 안의 형제끼리만 비교됨)
+                }.zIndex(1)  // 툴팁이 아래 입력 칸에 가려지지 않게 (zIndex는 같은 부모 안의 형제끼리만 비교됨)
 
                 HStack {
                     stepButton("chevron.left", enabled: vm.canShiftEarlier) {
@@ -126,13 +226,15 @@ struct IngredientRegistrationSheet: View {
                     Spacer()
                     Text(
                         String(
-                            format: String(localized: "fridge_register_recommended_value"),
+                            format: String(
+                                localized: "fridge_register_recommended_value"
+                            ),
                             date.shortKorean,
                             days
                         )
                     )
-                        .appFont(.body)
-                        .foregroundStyle(Color.appTextPrimary)
+                    .appFont(.body)
+                    .foregroundStyle(Color.appTextPrimary)
                     Spacer()
                     stepButton("chevron.right", enabled: true) {
                         vm.shiftRecommended(by: 1)
@@ -140,7 +242,7 @@ struct IngredientRegistrationSheet: View {
                 }
                 .padding(.horizontal, Spacing.s)
                 .frame(height: Size.buttonHeight)
-                .background{
+                .background {
                     RoundedRectangle(cornerRadius: Radius.small).fill(
                         Color.appSurface
                     )
@@ -149,7 +251,6 @@ struct IngredientRegistrationSheet: View {
                     )
                 }
                 .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-              
 
                 if let basis = storageBasisText {
                     Text(basis)
@@ -162,7 +263,8 @@ struct IngredientRegistrationSheet: View {
 
     // "냉장 보관 5일 기준"
     private var storageBasisText: String? {
-        guard let days = item.storageDays, let method = item.storageMethod else {
+        guard let days = item.storageDays, let method = item.storageMethod
+        else {
             return nil
         }
         let key: String
@@ -171,7 +273,10 @@ struct IngredientRegistrationSheet: View {
         case .refrigerated: key = "fridge_register_basis_refrigerated"
         case .frozen: key = "fridge_register_basis_frozen"
         }
-        return String(format: String(localized: String.LocalizationValue(key)), days)
+        return String(
+            format: String(localized: String.LocalizationValue(key)),
+            days
+        )
     }
 
     private func stepButton(
@@ -181,7 +286,9 @@ struct IngredientRegistrationSheet: View {
     ) -> some View {
         Button(action: action) {
             Image(systemName: icon)
-                .foregroundStyle(enabled ? Color.appTextPrimary : Color.appDisabled)
+                .foregroundStyle(
+                    enabled ? Color.appTextPrimary : Color.appDisabled
+                )
                 .frame(width: Size.minTouch, height: Size.minTouch)
         }
         .buttonStyle(.plain)
@@ -198,7 +305,9 @@ struct IngredientRegistrationSheet: View {
                         .appFont(.heading)
                         .foregroundStyle(Color.appTextPrimary)
                     Spacer()
-                    Button { vm.toggleExpiryInput() } label: {
+                    Button {
+                        vm.toggleExpiryInput()
+                    } label: {
                         Text("fridge_register_expiry_clear")
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
@@ -206,7 +315,9 @@ struct IngredientRegistrationSheet: View {
                     .buttonStyle(.plain)
                 }
 
-                Button { showsExpiryPicker = true } label: {
+                Button {
+                    showsExpiryPicker = true
+                } label: {
                     HStack {
                         Text(date.shortKorean)
                             .appFont(.body)
@@ -239,9 +350,36 @@ struct IngredientRegistrationSheet: View {
 
 #if DEBUG
     #Preview("수량 재료") {
-        IngredientRegistrationSheet(ingredient: IngredientItem.samples[2])
+        IngredientRegistrationSheet(
+            ingredient: IngredientItem.samples[2],
+            refrigerVm: RefrigeratorViewModel(
+                inventory: PreviewInventoryRepository()
+            )
+        )
+    }
+    #Preview("이미 있는 재료") {
+        IngredientRegistrationSheet(
+            ingredient: IngredientItem.samples[2],
+            refrigerVm: RefrigeratorViewModel(
+                inventory: PreviewInventoryRepository()
+            ),
+            previousQuantity: 4
+        )
     }
     #Preview("기본 재료") {
-        IngredientRegistrationSheet(ingredient: IngredientItem.samples[4])
+        IngredientRegistrationSheet(
+            ingredient: IngredientItem.samples[4],
+            refrigerVm: RefrigeratorViewModel(
+                inventory: PreviewInventoryRepository()
+            )
+        )
+    }
+    #Preview("저장 실패") {
+        IngredientRegistrationSheet(
+            ingredient: IngredientItem.samples[2],
+            refrigerVm: RefrigeratorViewModel(
+                inventory: PreviewInventoryRepository(scenario: .failure)
+            )
+        )
     }
 #endif

@@ -48,10 +48,11 @@ enum RecipeState: String, Codable {
 struct RecipeBadge: View {
 
     let type: RecipeState
+    var title: LocalizedStringKey? = nil  // 지정하면 type의 기본 문구 대신 사용 (예: "5일 안에")
 
     var body: some View {
         
-        Text(type.title)
+        Text(title ?? type.title)
             .lineLimit(1)
             .fixedSize(horizontal: true, vertical: false)  // 뱃지 안에서 줄바꿈·잘림 방지
             .padding(.horizontal, Spacing.s)

@@ -41,6 +41,7 @@ struct AppBanner: View {
 
     let type: BannerType
     let message: String
+    var showIcon = true
     var actionMessage: LocalizedStringKey? = nil
     var action: () -> Void = {}
 
@@ -50,23 +51,29 @@ struct AppBanner: View {
 
             //title
             HStack(alignment: .top, spacing: Spacing.s) {
-                Image(systemName: type.icon)
-                    .foregroundStyle(type.foreground)
 
-                Text(message)
-                    .foregroundStyle(type.foreground)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .fixedSize(horizontal: false, vertical: true)  // 긴 문구는 줄바꿈
-            }
+                if showIcon {
+                    Image(systemName: type.icon)
+                        .foregroundStyle(type.foreground)
+                }
 
-            //Action
-            if let actionMessage {
-                TextLinkButton(
-                    title: actionMessage,
-                    textColor: .appPrimary,
-                    textStyle: .subbody
-                ) {
-                    action()
+                VStack(alignment: .leading) {
+                    
+                    Text(message)
+                        .foregroundStyle(type.foreground)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)  // 긴 문구는 줄바꿈
+                    
+                    //Action
+                    if let actionMessage {
+                        TextLinkButton(
+                            title: actionMessage,
+                            textColor: .appPrimary,
+                            textStyle: .subbody
+                        ) {
+                            action()
+                        }
+                    }
                 }
             }
         }
@@ -74,7 +81,7 @@ struct AppBanner: View {
         .padding(Spacing.m)
         .background(type.background)
         .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-    
+
     }
 }
 

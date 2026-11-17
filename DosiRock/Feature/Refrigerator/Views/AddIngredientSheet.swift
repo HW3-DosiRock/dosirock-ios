@@ -53,15 +53,16 @@ struct AddIngredientSheet: View {
         }
         .background(Color.appBackground)
         .task { await vm.load() }
-        .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Radius.xLarge)
         .modifier(PageSheetSizing())
         .sheet(item: $selectedItem) { item in
-            IngredientRegistrationSheet(ingredient: item) { ingredient in
-                // shortcut: 실패를 삼킴, 공통 네트워크 알림 작업 때 에러 표시 연결
-                Task { try? await refrigerVm.register(ingredient) }
-            }
+            IngredientRegistrationSheet(
+                ingredient: item,
+                refrigerVm: refrigerVm,
+                previousQuantity: refrigerVm.quantity(of: item),
+                isExisting: refrigerVm.isRegistered(item)
+            )
         }
     }
 
@@ -160,10 +161,7 @@ struct AddIngredientSheet: View {
                                     imageName: item.imageName,
                                     subLabel: item.subName,
                                     reservesNameSpace: true,
-                                    isChecked: refrigerVm
-                                        .registeredIngredientIds.contains(
-                                            item.id
-                                        )
+                                    isChecked: refrigerVm.isRegistered(item)
                                 ) { selectedItem = item }
                             }
                         }
@@ -176,20 +174,36 @@ struct AddIngredientSheet: View {
 }
 
 #if DEBUG
+    // 프리뷰는 실제 서버 대신 샘플 데이터를 쓴다 (vm을 안 넘기면 서버에 요청해서 프리뷰에서는 실패함)
     #Preview {
         AddIngredientSheet(
             refrigerVm: RefrigeratorViewModel(
                 inventory: PreviewInventoryRepository()
+            ),
+            vm: IngredientPickerViewModel(
+                repository: PreviewIngredientRepository(scenario: .filled)
             )
         )
     }
 #endif
+ 
 
 // iPad에서 시트가 가운데 작은 카드로 뜨지 않고 화면을 크게 채우게 함 (iOS 18+, 17은 기본 동작)
 struct PageSheetSizing: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 18, *) {
             content.presentationSizing(.page)
+        } else {
+            content
+        }
+    }
+}
+
+// iPad에서 시트가 내용 크기만큼만 뜨게 함 (내용이 짧은 시트용, iOS 18+, 17은 기본 동작)
+struct FittedSheetSizing: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 18, *) {
+            content.presentationSizing(.fitted)
         } else {
             content
         }

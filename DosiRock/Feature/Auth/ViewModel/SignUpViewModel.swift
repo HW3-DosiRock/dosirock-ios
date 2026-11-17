@@ -138,7 +138,6 @@ final class SignUpViewModel {
                 nickName: trimmedNickName,
                 signupToken: token,
                 agreement: SignUpAgreement(
-                    // shortcut: 약관 파일을 못 읽으면 "1.0"으로 보냄, 약관 버전이 바뀌면 파일 기준으로만 보내도록 수정
                     serviceTermsVersion: Term.service.document?.version
                         ?? "1.0",
                     privacyConsentVersion: Term.privacy.document?.version
