@@ -20,14 +20,11 @@ struct AddIngredientSheet: View {
 
     init(
         refrigerVm: RefrigeratorViewModel,
-        vm: IngredientPickerViewModel? = nil
+        vm: IngredientPickerViewModel
     ) {
         self.refrigerVm = refrigerVm
         _vm = State(
             initialValue: vm
-                ?? IngredientPickerViewModel(
-                    repository: AppEnvironment.makeIngredientRepository()
-                )
         )
     }
     var body: some View {
@@ -119,7 +116,10 @@ struct AddIngredientSheet: View {
     private var emptyTitle: String {
         vm.query.isEmpty
             ? String(localized: "fridge_picker_empty")
-            : String(format: String(localized: "fridge_picker_empty_query"), vm.query)
+            : String(
+                format: String(localized: "fridge_picker_empty_query"),
+                vm.query
+            )
     }
 
     @ViewBuilder
@@ -134,9 +134,9 @@ struct AddIngredientSheet: View {
                     .padding(.bottom, Spacing.xs)
 
                 Text(emptyTitle)
-                .appFont(.brandSubtitle)
-                .foregroundStyle(Color.appTextPrimary)
-                .multilineTextAlignment(.center)
+                    .appFont(.brandSubtitle)
+                    .foregroundStyle(Color.appTextPrimary)
+                    .multilineTextAlignment(.center)
 
                 if !vm.query.isEmpty {
                     Text("fridge_picker_search_hint")
@@ -157,7 +157,9 @@ struct AddIngredientSheet: View {
                         LazyVGrid(columns: columns, spacing: Spacing.s) {
                             ForEach(group.items) { item in
                                 IngredientTile(
-                                    label: IngredientNameBreak.display(item.mainName),
+                                    label: IngredientNameBreak.display(
+                                        item.mainName
+                                    ),
                                     imageName: item.imageName,
                                     subLabel: item.subName,
                                     reservesNameSpace: true,
@@ -178,7 +180,8 @@ struct AddIngredientSheet: View {
     #Preview {
         AddIngredientSheet(
             refrigerVm: RefrigeratorViewModel(
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredientRepository: PreviewIngredientRepository()
             ),
             vm: IngredientPickerViewModel(
                 repository: PreviewIngredientRepository(scenario: .filled)
@@ -186,7 +189,6 @@ struct AddIngredientSheet: View {
         )
     }
 #endif
- 
 
 // iPad에서 시트가 가운데 작은 카드로 뜨지 않고 화면을 크게 채우게 함 (iOS 18+, 17은 기본 동작)
 struct PageSheetSizing: ViewModifier {

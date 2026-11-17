@@ -9,15 +9,17 @@ import SwiftUI
 
 struct AuthFlowView: View {
 
+    @Environment(\.container) private var container
+    
     @State private var router = Router<AuthRoute>()
 
     @State private var loginVM: LoginViewModel
     @State private var toastMessage: LocalizedStringKey?
 
-    init(onLoginSuccess: @escaping () -> Void) {
+    init(auth: AuthService , onLoginSuccess: @escaping () -> Void) {
 
         //로그인
-        let vm = LoginViewModel(service: AppEnvironment.makeAuthService())
+        let vm = LoginViewModel(service: auth)
         vm.onSuccess = onLoginSuccess  // 로그인 성공 시 RootView가 준 동작 실행
         _loginVM = State(initialValue: vm)  //처음 들어갈 값을 직접 넣어 주는 코드
     }
@@ -47,7 +49,7 @@ struct AuthFlowView: View {
 
     // ViewBuilder 안에서는 대입문을 못 쓰므로 따로 뺌
     private var signUpView: some View {
-        let vm = SignUpViewModel(service: AppEnvironment.makeAuthService())
+        let vm = SignUpViewModel(service: container.auth)
         vm.onCompleted = {
             router.popToRoot()  // 로그인 화면으로
             toastMessage = "sign_up_toast_completed"
@@ -56,7 +58,7 @@ struct AuthFlowView: View {
     }
 
     private var findPasswordView: some View {
-        let vm = FoundPasswordViewModel(service: AppEnvironment.makeAuthService())
+        let vm = FoundPasswordViewModel(service: container.auth)
         vm.onCompleted = {
             router.popToRoot()  // 로그인 화면으로
             toastMessage = "find_password_toast_completed"

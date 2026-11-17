@@ -353,7 +353,8 @@ struct IngredientRegistrationSheet: View {
         IngredientRegistrationSheet(
             ingredient: IngredientItem.samples[2],
             refrigerVm: RefrigeratorViewModel(
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredientRepository: PreviewIngredientRepository()
             )
         )
     }
@@ -361,7 +362,8 @@ struct IngredientRegistrationSheet: View {
         IngredientRegistrationSheet(
             ingredient: IngredientItem.samples[2],
             refrigerVm: RefrigeratorViewModel(
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredientRepository: PreviewIngredientRepository()
             ),
             previousQuantity: 4
         )
@@ -370,7 +372,8 @@ struct IngredientRegistrationSheet: View {
         IngredientRegistrationSheet(
             ingredient: IngredientItem.samples[4],
             refrigerVm: RefrigeratorViewModel(
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredientRepository: PreviewIngredientRepository()
             )
         )
     }
@@ -378,7 +381,8 @@ struct IngredientRegistrationSheet: View {
         IngredientRegistrationSheet(
             ingredient: IngredientItem.samples[2],
             refrigerVm: RefrigeratorViewModel(
-                inventory: PreviewInventoryRepository(scenario: .failure)
+                inventory: PreviewInventoryRepository(scenario: .failure),
+                ingredientRepository: PreviewIngredientRepository()
             )
         )
     }
