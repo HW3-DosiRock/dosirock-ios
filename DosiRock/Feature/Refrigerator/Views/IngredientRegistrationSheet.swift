@@ -16,6 +16,9 @@ struct IngredientRegistrationSheet: View {
     @State private var isSaving = false
     @State private var errorMessage: String?  // 저장·삭제 실패 안내
     @State private var showsDeleteDialog = false
+    @State private var sheetHeight: CGFloat = 400  // 시트 초기 높이
+    @State private var contentHeight: CGFloat = 0  // ScrollView 안쪽 내용 높이
+
     let refrigerVm: RefrigeratorViewModel  // 저장하면 냉장고에 등록하고 체크 표시·배너까지 갱신
 
     init(
@@ -67,7 +70,11 @@ struct IngredientRegistrationSheet: View {
 
                     // 이미 있는 재료를 다시 등록할 때: "지금 4개 → 14개 변경"
                     if let summary = vm.changeSummary {
-                        AppBanner(type: .success, message: summary, showIcon: false)
+                        AppBanner(
+                            type: .success,
+                            message: summary,
+                            showIcon: false
+                        )
                     }
 
                     recommendedSection
@@ -75,7 +82,15 @@ struct IngredientRegistrationSheet: View {
                 }
                 .padding(.horizontal, Spacing.screenHorizontal)
                 .padding(.vertical, Spacing.l)
+                // ScrollView가 아니라 내용의 본래 높이를 잼 (padding 뒤에서)
+                .onGeometryChange(for: CGFloat.self) {
+                    $0.size.height
+                } action: {
+                    contentHeight = $0
+                }
             }
+            // 내용만큼만 커지게 (처음 측정 전에는 제한 없음). 넘치면 스크롤
+            .frame(maxHeight: contentHeight > 0 ? contentHeight : nil)
             .scrollDismissesKeyboard(.interactively)
 
             VStack(spacing: Spacing.s) {
@@ -101,11 +116,19 @@ struct IngredientRegistrationSheet: View {
             .padding(.horizontal, Spacing.screenHorizontal)
             .padding(.bottom, Spacing.l)
         }
+        // 1) 내용 자체의 높이를 잼 (하단 안전 영역 포함). 아래 frame보다 먼저 와야 내용 높이가 나옴
+        .onGeometryChange(for: CGFloat.self) {
+            $0.size.height + $0.safeAreaInsets.bottom
+        } action: {
+            sheetHeight = $0
+        }
+        // 2) iPad처럼 시트가 크게 뜨면 내용은 위쪽에 붙이고, 배경색은 시트 전체에 칠함
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.appBackground)
-        .presentationDetents([.height(580), .large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Radius.xLarge)
         .modifier(PageSheetSizing())
+        .presentationDetents([.height(sheetHeight)])
         .appDialog(
             isPresented: $showsDeleteDialog,
             title: "fridge_delete_dialog_title",
@@ -146,7 +169,9 @@ struct IngredientRegistrationSheet: View {
                 try await refrigerVm.remove(item)
                 dismiss()
             } catch {
-                errorMessage = String(localized: "fridge_register_delete_failed")
+                errorMessage = String(
+                    localized: "fridge_register_delete_failed"
+                )
             }
             isSaving = false
         }

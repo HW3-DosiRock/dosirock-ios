@@ -53,7 +53,6 @@ struct AddIngredientSheet: View {
         }
         .background(Color.appBackground)
         .task { await vm.load() }
-        .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Radius.xLarge)
         .modifier(PageSheetSizing())
@@ -187,12 +186,24 @@ struct AddIngredientSheet: View {
         )
     }
 #endif
+ 
 
 // iPad에서 시트가 가운데 작은 카드로 뜨지 않고 화면을 크게 채우게 함 (iOS 18+, 17은 기본 동작)
 struct PageSheetSizing: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 18, *) {
             content.presentationSizing(.page)
+        } else {
+            content
+        }
+    }
+}
+
+// iPad에서 시트가 내용 크기만큼만 뜨게 함 (내용이 짧은 시트용, iOS 18+, 17은 기본 동작)
+struct FittedSheetSizing: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 18, *) {
+            content.presentationSizing(.fitted)
         } else {
             content
         }

@@ -22,6 +22,7 @@ struct ExpiryDatePickerSheet: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var draft: Date  // "선택"을 눌러야 바깥에 반영됨
+    @State private var sheetHeight: CGFloat = 560  // 시트 높이 (내용 높이를 재서 갱신)
     let onSelect: (Date) -> Void
 
     init(initial: Date, onSelect: @escaping (Date) -> Void) {
@@ -48,8 +49,6 @@ struct ExpiryDatePickerSheet: View {
                 .clipShape(RoundedRectangle(cornerRadius: Radius.small))
                 .padding(.horizontal, Spacing.screenHorizontal)
 
-            Spacer(minLength: 0)
-
             PrimaryButton(
                 title: LocalizedStringKey(
                     String(
@@ -64,11 +63,19 @@ struct ExpiryDatePickerSheet: View {
             .padding(.horizontal, Spacing.screenHorizontal)
             .padding(.bottom, Spacing.l)
         }
+        // 1) 내용 자체의 높이를 잼 (하단 안전 영역 포함). 아래 frame보다 먼저 와야 내용 높이가 나옴
+        .onGeometryChange(for: CGFloat.self) {
+            $0.size.height + $0.safeAreaInsets.bottom
+        } action: {
+            sheetHeight = $0
+        }
+        // 2) iPad처럼 시트가 크게 뜨면 내용은 위쪽에 붙이고, 배경색은 시트 전체에 칠함
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.appBackground)
-        .presentationDetents([.height(580)])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Radius.xLarge)
         .modifier(PageSheetSizing())
+        .presentationDetents([.height(sheetHeight)])
     }
 }
 
