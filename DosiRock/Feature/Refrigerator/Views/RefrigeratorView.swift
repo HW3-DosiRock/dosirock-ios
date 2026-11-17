@@ -99,8 +99,12 @@ struct RefrigeratorContentView: View {
                     message: String(
                         format: String(localized: "fridge_registered_banner"),
                         registeredCount
-                    )
-                )
+                    ),
+                    showIcon: true,
+                    actionMessage: "fridge_registered_banner_action"
+                ){
+                    //TODO
+                }
             }
             // TODO: 재료 목록 화면 (시안이 나오면)
             Text("재료 \(items.count)개")

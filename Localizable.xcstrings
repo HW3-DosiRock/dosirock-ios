@@ -2451,6 +2451,17 @@
           }
         }
       }
+    },
+    "fridge_registered_banner_action" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 메뉴 제안받기"
+          }
+        }
+      }
     }
   },
   "version" : "1.3"

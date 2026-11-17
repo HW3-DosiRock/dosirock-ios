@@ -56,20 +56,24 @@ struct AppBanner: View {
                     Image(systemName: type.icon)
                         .foregroundStyle(type.foreground)
                 }
-                Text(message)
-                    .foregroundStyle(type.foreground)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .fixedSize(horizontal: false, vertical: true)  // 긴 문구는 줄바꿈
-            }
 
-            //Action
-            if let actionMessage {
-                TextLinkButton(
-                    title: actionMessage,
-                    textColor: .appPrimary,
-                    textStyle: .subbody
-                ) {
-                    action()
+                VStack(alignment: .leading) {
+                    
+                    Text(message)
+                        .foregroundStyle(type.foreground)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)  // 긴 문구는 줄바꿈
+                    
+                    //Action
+                    if let actionMessage {
+                        TextLinkButton(
+                            title: actionMessage,
+                            textColor: .appPrimary,
+                            textStyle: .subbody
+                        ) {
+                            action()
+                        }
+                    }
                 }
             }
         }
