@@ -347,7 +347,7 @@ struct MyPageView: View {
                     MenuItem(
                         id: "appInfo",
                         title: "my_menu_app_info",
-                        trailing: AppEnvironment.appVersion
+                        trailing: AppInfo.appVersion
                     ),
                 ]
             ) { item in
