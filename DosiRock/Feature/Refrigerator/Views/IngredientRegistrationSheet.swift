@@ -151,7 +151,11 @@ struct IngredientRegistrationSheet: View {
         errorMessage = nil
         Task {
             do {
-                try await refrigerVm.register(item, quantity: vm.quantity)
+                try await refrigerVm.register(
+                    item,
+                    quantity: vm.quantity,
+                    recommendedDate: vm.recommendedDate
+                )
                 dismiss()
             } catch {
                 errorMessage = String(localized: "common_save_failed")

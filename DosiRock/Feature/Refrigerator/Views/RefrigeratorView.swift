@@ -120,7 +120,7 @@ struct RefrigeratorContentView: View {
                         //TODO: 이번주 메뉴 제안 받기 실행
                     }
                 }
-                userPriority
+                userPriority(items)
                 // 수량 재료 / 기본 재료(보유 여부만 관리)로 나눠서 보여줌
                 inventorySection(
                     titleKey: "fridge_list_quantity_title",
@@ -139,12 +139,58 @@ struct RefrigeratorContentView: View {
         }
     }
 
-    private var userPriority: some View {
-        // TODO: 빨리 써야 할 재료 (재고에 권장 사용일이 생기면)
-        VStack {
-           
-            EmptyView()
+    // 빨리 써야 할 재료: 권장 사용일이 7일 이내인 재료를 가까운 순으로
+    // 7일 기준은 임의값(이번주 탭 "사용 우선순위" 안내와 맞춤), 명세가 나오면 서버 기준으로 교체
+    @ViewBuilder
+    private func userPriority(_ items: [InventoryItem]) -> some View {
+        let soon = items
+            .filter { ($0.daysUntilRecommended() ?? .max) <= 7 }
+            .sorted { ($0.recommendedDate ?? .distantFuture) < ($1.recommendedDate ?? .distantFuture) }
+        if !soon.isEmpty {
+            VStack(alignment: .leading, spacing: Spacing.m) {
+                SectionHeader(
+                    title: "fridge_list_priority_title",
+                    titleStyle: .heading,
+                    caption: "fridge_list_priority_sub"
+                )
+                GroupedListCard(items: soon) { item in
+                    Button {
+                        // TODO: 재료 상세(사용 우선순위) 화면으로 이동
+                    } label: {
+                        ListRow(
+                            iconCodes: [item.imageName],
+                            title: item.name,
+                            subtitle: prioritySubtitle(item),
+                            badgePlacement: .trailing
+                        ) {
+                            priorityBadge(item)
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
         }
+    }
+
+    // "300g · 권장 사용일 11/10(화)" (수량이 없는 기본 재료는 날짜만)
+    private func prioritySubtitle(_ item: InventoryItem) -> String {
+        let date = item.recommendedDate?.shortKorean ?? ""
+        if let quantity = item.quantityText {
+            return String(format: String(localized: "fridge_priority_subtitle"), quantity, date)
+        }
+        return String(format: String(localized: "fridge_priority_subtitle_no_quantity"), date)
+    }
+
+    // 오늘·내일·N일 안에 (같은 분홍색 뱃지)
+    private func priorityBadge(_ item: InventoryItem) -> some View {
+        let days = item.daysUntilRecommended() ?? 0
+        let title: LocalizedStringKey = switch days {
+        case ...0: "fridge_priority_badge_today"
+        case 1: "recipe_badge_tomorrow"
+        default: LocalizedStringKey(String(format: String(localized: "fridge_priority_badge_days"), days))
+        }
+        return RecipeBadge(type: .tomorrow, title: title)
     }
 
     private let gridColumns = Array(

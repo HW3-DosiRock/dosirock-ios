@@ -71,7 +71,6 @@ final class RefrigeratorViewModel {
         } catch {
             state = .failed
         }
-        // shortcut: 실패하면 타일을 눌러도 시트가 안 뜸, 에러 표시는 공통 네트워크 알림 작업 때
         if let list = try? await ingredientRepository.fetchAll() {
             ingredients = Dictionary(list.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         }
@@ -85,10 +84,10 @@ final class RefrigeratorViewModel {
         state = items.isEmpty ? .empty : .loaded(items)
     }
 
-    func register(_ ingredient: IngredientItem, quantity: Double?) async throws {
+    func register(_ ingredient: IngredientItem, quantity: Double?, recommendedDate: Date?) async throws {
 
         let isNew = !isRegistered(ingredient)  // 이미 있는 재료의 수정은 "N종 등록 완료"에 세지 않음
-        try await inventory.add(ingredient, quantity: quantity)  // 1. 장부에 적어 달라고 시킨다
+        try await inventory.add(ingredient, quantity: quantity, recommendedDate: recommendedDate)  // 1. 장부에 적어 달라고 시킨다
         items = try await inventory.fetch()  // 2. 장부를 다시 읽어서 최신 상태로 맞춘다
         state = items.isEmpty ? .empty : .loaded(items)  // 첫 등록이면 빈 화면 → 목록 화면
         if isNew { registeredThisSession.insert(ingredient.id) }

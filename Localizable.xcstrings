@@ -549,7 +549,6 @@
       }
     },
     "fridge_list_priority_sub" : {
-      "extractionState" : "pasted",
       "localizations" : {
         "ko" : {
           "stringUnit" : {
@@ -560,7 +559,6 @@
       }
     },
     "fridge_list_priority_title" : {
-      "extractionState" : "pasted",
       "localizations" : {
         "ko" : {
           "stringUnit" : {
@@ -641,6 +639,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "재료 선택"
+          }
+        }
+      }
+    },
+    "fridge_priority_badge_days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld일 안에"
+          }
+        }
+      }
+    },
+    "fridge_priority_badge_today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘까지"
+          }
+        }
+      }
+    },
+    "fridge_priority_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · 권장 사용일 %2$@"
+          }
+        }
+      }
+    },
+    "fridge_priority_subtitle_no_quantity" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "권장 사용일 %@"
           }
         }
       }
