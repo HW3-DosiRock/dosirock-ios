@@ -47,7 +47,7 @@ struct EmptyInventoryRepository: InventoryRepository {
             switch scenario {
             case .failure:
                 try await Task.sleep(for: .milliseconds(500))
-                throw AuthError.network
+                throw APIError.network
             case .slow:
                 try await Task.sleep(for: .seconds(5))
             default:

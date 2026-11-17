@@ -43,7 +43,7 @@ final class PasswordChangeViewModel {
             return true
         } catch {
             errorMessage =
-                (error as? AuthError)?.errorDescription
+                (error as? APIError)?.errorDescription
                 ?? String(localized: "my_password_save_failed")
             return false
         }

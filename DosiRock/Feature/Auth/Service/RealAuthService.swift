@@ -91,7 +91,7 @@ extension RealAuthService: AuthService {
             as: LoginTokenData.self
         )
 
-        guard let tokens = result else { throw AuthError.server }
+        guard let tokens = result else { throw APIError.server }
 
         TokenStore.save(tokens.accessToken, for: .access)
         TokenStore.save(tokens.refreshToken, for: .refresh)

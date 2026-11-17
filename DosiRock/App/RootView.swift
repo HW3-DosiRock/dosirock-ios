@@ -45,7 +45,7 @@ struct RootView: View {
             session.isLoggedIn = true
             do {
                 try await AppEnvironment.makeAuthService().refresh()
-            } catch let error as AuthError where error.code != nil {
+            } catch let error as APIError where error.code != nil {
                 // 서버가 토큰을 거부함(만료 등) → 저장된 토큰 삭제 후 로그인 화면
                 session.expire(message: error.errorDescription)
             } catch {

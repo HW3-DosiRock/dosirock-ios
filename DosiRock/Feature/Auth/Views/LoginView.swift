@@ -117,7 +117,7 @@ struct LoginView: View {
     LoginView(
         vm: .init(
             service: MockAuthService(
-                scenario: .failure(AuthError.invalidCredentials)
+                scenario: .failure(APIError.invalidCredentials)
             )
         )
     )

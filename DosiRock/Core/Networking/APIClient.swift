@@ -54,7 +54,7 @@ struct APIClient {
         do {
             return try await sendOnce(
                 path, method: method, body: body, authorized: authorized, as: type)
-        } catch let error as AuthError
+        } catch let error as APIError
             where authorized && error.code == "AUTH_ACCESS_TOKEN_INVALID"
         {
             try await refreshOnce()
@@ -66,7 +66,7 @@ struct APIClient {
     // 리프레시 토큰으로 새 토큰을 받아 저장한다
     func refresh() async throws {
         guard let refreshToken = TokenStore.read(.refresh) else {
-            throw AuthError.unknown
+            throw APIError.unknown
         }
         let result = try await sendOnce(
             "auth/refresh",
@@ -75,7 +75,7 @@ struct APIClient {
             authorized: false,
             as: LoginTokenData.self
         )
-        guard let tokens = result else { throw AuthError.server }
+        guard let tokens = result else { throw APIError.server }
         TokenStore.save(tokens.accessToken, for: .access)
         TokenStore.save(tokens.refreshToken, for: .refresh)
     }
@@ -91,7 +91,7 @@ struct APIClient {
 
         do {
             try await task.value
-        } catch let error as AuthError where error.code != nil {
+        } catch let error as APIError where error.code != nil {
             // 서버가 리프레시 토큰을 거부함(만료, 다른 기기 로그인 등) → 로그인 화면으로
             SessionStore.shared.expire(message: error.errorDescription)
             throw error
@@ -123,15 +123,15 @@ struct APIClient {
         do {
             data = try await URLSession.shared.data(for: request).0
         } catch {
-            throw AuthError.network  // 서버 꺼짐, 인터넷 끊김 등
+            throw APIError.network  // 서버 꺼짐, 인터넷 끊김 등
         }
 
         // 서버 공통 응답 형식이 아니면 서버 문제로 처리
         guard let response = try? JSONDecoder().decode(APIResponse<T>.self, from: data)
-        else { throw AuthError.server }
+        else { throw APIError.server }
 
         if let e = response.error {
-            throw AuthError.api(code: e.code, message: e.message, details: e.details)
+            throw APIError.api(code: e.code, message: e.message, details: e.details)
         }
         return response.data
     }

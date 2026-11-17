@@ -33,7 +33,7 @@ struct IngredientRepositoryImpl: IngredientRepository {
             authorized: true,
             as: IngredientListResponse.self
         )
-        guard let result else { throw AuthError.server }
+        guard let result else { throw APIError.server }
         return result.items
     }
 }
@@ -49,7 +49,7 @@ struct IngredientRepositoryImpl: IngredientRepository {
             switch scenario {
             case .filled: return IngredientItem.samples
             case .empty: return []
-            case .failure: throw AuthError.network
+            case .failure: throw APIError.network
             }
         }
     }

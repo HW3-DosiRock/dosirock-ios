@@ -10,7 +10,7 @@ struct MockAuthService: AuthService {
 
         enum Scenario {
             case success, network, slow, server
-            case failure(AuthError)
+            case failure(APIError)
         }
 
         nonisolated enum Method: Hashable {
@@ -79,10 +79,10 @@ struct MockAuthService: AuthService {
                 try await Task.sleep(for: .seconds(5))
             case .network:
                 try await Task.sleep(for: .milliseconds(500))
-                throw AuthError.network
+                throw APIError.network
             case .server:
                 try await Task.sleep(for: .milliseconds(500))
-                throw AuthError.server
+                throw APIError.server
             case .failure(let error):
                 try await Task.sleep(for: .milliseconds(500))
                 throw error

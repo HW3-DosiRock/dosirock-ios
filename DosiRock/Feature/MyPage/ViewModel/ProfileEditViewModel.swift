@@ -52,7 +52,7 @@ final class ProfileEditViewModel {
             return trimmed
         } catch {
             errorMessage =
-                (error as? AuthError)?.errorDescription
+                (error as? APIError)?.errorDescription
                 ?? String(localized: "common_save_failed")
             return nil
         }

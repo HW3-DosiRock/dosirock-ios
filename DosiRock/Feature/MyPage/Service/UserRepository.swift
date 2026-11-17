@@ -33,7 +33,7 @@ struct UserRepositoryImpl: UserRepository {
             as: UserProfile.self
         )
 
-        guard let profile = result else { throw AuthError.server }
+        guard let profile = result else { throw APIError.server }
         return profile
     }
 
@@ -77,7 +77,7 @@ struct UserRepositoryImpl: UserRepository {
         var shouldFail = false  // true면 불러오기 실패 상태를 볼 수 있다
 
         func fetchMe() async throws -> UserProfile {
-            if shouldFail { throw AuthError.network }
+            if shouldFail { throw APIError.network }
             return UserProfile(
                 email: "dosirak@example.com",
                 nickname: "배고픈돌멩",

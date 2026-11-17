@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AuthError: LocalizedError {
+enum APIError: LocalizedError {
 
     //signin
     case invalidCredentials  //이메일,비밀번호 불일치
