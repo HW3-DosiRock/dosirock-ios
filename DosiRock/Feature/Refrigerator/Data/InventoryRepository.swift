@@ -1,5 +1,5 @@
 //
-//  InventoryRepositpry.swift
+//  InventoryRepository.swift
 //  DosiRock
 //
 //  Created by Admin on 11/16/26.

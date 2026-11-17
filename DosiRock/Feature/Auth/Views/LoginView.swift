@@ -110,13 +110,13 @@ struct LoginView: View {
 
 #if DEBUG
 #Preview("성공") {
-    LoginView(vm: .init(service: MockAuthService(scenario: .success)))
+    LoginView(vm: .init(service: PreviewAuthService(scenario: .success)))
         .environment(Router<AuthRoute>())
 }
 #Preview("실패") {
     LoginView(
         vm: .init(
-            service: MockAuthService(
+            service: PreviewAuthService(
                 scenario: .failure(APIError.invalidCredentials)
             )
         )

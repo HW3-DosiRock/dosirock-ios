@@ -434,7 +434,7 @@ struct MyPageView: View {
         MyPageView(
             vm: MyPageViewModel(
                 users: PreviewUserRepository(),
-                auth: MockAuthService()
+                auth: PreviewAuthService()
             )
         )
     }
@@ -443,7 +443,7 @@ struct MyPageView: View {
         MyPageView(
             vm: MyPageViewModel(
                 users: PreviewUserRepository(shouldFail: true),
-                auth: MockAuthService()
+                auth: PreviewAuthService()
             )
         )
     }

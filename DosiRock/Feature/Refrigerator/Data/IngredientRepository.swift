@@ -33,7 +33,6 @@ struct IngredientRepositoryImpl: IngredientRepository {
             authorized: true,
             as: IngredientListResponse.self
         )
-        
         return result.items
     }
 }

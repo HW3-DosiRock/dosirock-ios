@@ -20,7 +20,7 @@ enum AppEnvironment {
         ?? "-"
 
     static func makeAuthService() -> AuthService {
-        RealAuthService(baseURL: baseURL)
+        AuthServiceImpl(baseURL: baseURL)
     }
 
     static func makeUserRepository() -> UserRepository {

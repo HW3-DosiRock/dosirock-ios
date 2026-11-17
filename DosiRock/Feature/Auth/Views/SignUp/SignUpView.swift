@@ -64,7 +64,7 @@ struct SignUpView: View {
 
 #if DEBUG
 #Preview {
-    SignUpView(vm: .init(service: MockAuthService()))
+    SignUpView(vm: .init(service: PreviewAuthService()))
         .environment(Router<AuthRoute>())
 
 }

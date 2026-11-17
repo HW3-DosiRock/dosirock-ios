@@ -1,12 +1,12 @@
 //
-//  MockAuthService.swift
+//  PreviewAuthService.swift
 //  DosiRock
 //
 //  Created by Seungyeon Jeon on 11/7/26.
 //
 
 #if DEBUG
-struct MockAuthService: AuthService {
+struct PreviewAuthService: AuthService {
 
         enum Scenario {
             case success, network, slow, server

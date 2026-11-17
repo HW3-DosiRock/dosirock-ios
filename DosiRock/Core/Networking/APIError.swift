@@ -79,39 +79,3 @@ enum APIError: LocalizedError {
         }
     }
 }
-
-//인증 번호 요청 용도
-enum VerificationPurpose: String {
-    case signup = "SIGNUP"
-    case passwordReset = "PASSWORD_RESET"
-}
-
-//약관 버전
-struct SignUpAgreement {
-    let serviceTermsVersion: String
-    let privacyConsentVersion: String
-}
-
-protocol AuthService {
-    func login(email: String, password: String) async throws
-    func requestVerificationNumber(email: String, purpose: VerificationPurpose)
-        async throws
-    func checkVerificationNumber(
-        email: String,
-        vNumber: String,
-        purpose: VerificationPurpose
-    ) async throws
-        -> String?
-    func signUp(
-        email: String,
-        password: String,
-        nickName: String,
-        signupToken: String,
-        agreement: SignUpAgreement
-    ) async throws
-    func resetPassword(email: String, code: String, newPassword: String)
-        async throws
-    func refresh() async throws  // 리프레시 토큰으로 새 토큰 발급·저장
-    func logout() async throws
-
-}
