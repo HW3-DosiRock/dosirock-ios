@@ -1,5 +1,5 @@
 //
-//  AuthError.swift
+//  APIError.swift
 //  DosiRock
 //
 //  Created by Seungyeon Jeon on 11/7/26.

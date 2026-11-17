@@ -13,7 +13,7 @@ final class PasswordFields {
     var password = ""
     var passwordConfirm = ""
 
-    // 영문·숫자 포함 8~20자 (AuthError.weakPassword 문구 기준)
+    // 영문·숫자 포함 8~20자 (APIError.weakPassword 문구 기준)
     var isValid: Bool {
         password.range(
             of: #"^(?=.*[A-Za-z])(?=.*\d).{8,20}$"#,

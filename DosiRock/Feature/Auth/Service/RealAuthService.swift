@@ -20,12 +20,6 @@ struct RealAuthService {
         client = APIClient(baseURL: baseURL)
     }
 
-    // 로그인 응답의 data
-    nonisolated struct LoginTokenData: Decodable {
-        let accessToken: String
-        let refreshToken: String
-    }
-
 }
 
 extension RealAuthService: AuthService {
@@ -85,13 +79,11 @@ extension RealAuthService: AuthService {
 
     func login(email: String, password: String) async throws {
 
-        let result = try await client.send(
+        let tokens = try await client.sendRequired(
             "auth/login",
             body: ["email": email, "password": password],
             as: LoginTokenData.self
         )
-
-        guard let tokens = result else { throw APIError.server }
 
         TokenStore.save(tokens.accessToken, for: .access)
         TokenStore.save(tokens.refreshToken, for: .refresh)

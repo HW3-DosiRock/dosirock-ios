@@ -26,15 +26,13 @@ struct UserRepositoryImpl: UserRepository {
     }
 
     func fetchMe() async throws -> UserProfile {
-        let result = try await client.send(
+        try await client.sendRequired(
             "users/me",
             method: .get,
             authorized: true,
             as: UserProfile.self
         )
 
-        guard let profile = result else { throw APIError.server }
-        return profile
     }
 
     func updateNickname(_ nickname: String) async throws {

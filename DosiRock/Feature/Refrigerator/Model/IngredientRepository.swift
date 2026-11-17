@@ -27,13 +27,13 @@ struct IngredientRepositoryImpl: IngredientRepository {
     }
 
     func fetchAll() async throws -> [IngredientItem] {
-        let result = try await client.send(
+        let result = try await client.sendRequired(
             "ingredients",
             method: .get,
             authorized: true,
             as: IngredientListResponse.self
         )
-        guard let result else { throw APIError.server }
+        
         return result.items
     }
 }
