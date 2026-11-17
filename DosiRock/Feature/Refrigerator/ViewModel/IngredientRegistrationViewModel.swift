@@ -19,6 +19,9 @@ final class IngredientRegistrationViewModel {
     // TODO: 재고 API 명세가 나오면 InventoryItem의 수량에서 가져온다
     let previousQuantity: Double?
 
+    // 이미 냉장고에 있는 재료인지 (기본 재료는 수량이 없어서 previousQuantity만으로는 알 수 없음)
+    let isExisting: Bool
+
     // "지금 4개 → 14개 변경" (이미 등록된 재료이고, 입력이 올바르고, 값을 바꿨을 때만)
     var changeSummary: String? {
         guard let previous = previousQuantity,
@@ -103,9 +106,14 @@ final class IngredientRegistrationViewModel {
     var expiryDate: Date?
 
     //MARK: INIT
-    init(selectedItem: IngredientItem, previousQuantity: Double? = nil) {
+    init(
+        selectedItem: IngredientItem,
+        previousQuantity: Double? = nil,
+        isExisting: Bool? = nil
+    ) {
         self.selectedItem = selectedItem
         self.previousQuantity = previousQuantity
+        self.isExisting = isExisting ?? (previousQuantity != nil)
         // 이미 있는 재료는 저장해 둔 수량을 입력칸에 미리 채움
         if let previousQuantity { quantityText = plain(previousQuantity) }
     }

@@ -21,12 +21,14 @@ struct IngredientRegistrationSheet: View {
     init(
         ingredient: IngredientItem,
         refrigerVm: RefrigeratorViewModel,
-        previousQuantity: Double? = nil
+        previousQuantity: Double? = nil,
+        isExisting: Bool? = nil
     ) {
         _vm = State(
             initialValue: IngredientRegistrationViewModel(
                 selectedItem: ingredient,
-                previousQuantity: previousQuantity
+                previousQuantity: previousQuantity,
+                isExisting: isExisting
             )
         )
         self.refrigerVm = refrigerVm
@@ -87,7 +89,7 @@ struct IngredientRegistrationSheet: View {
                 ) { save() }
 
                 // 이미 냉장고에 있는 재료만
-                if vm.previousQuantity != nil {
+                if vm.isExisting {
                     TextLinkButton(
                         title: "fridge_register_delete",
                         textColor: .appAttention,

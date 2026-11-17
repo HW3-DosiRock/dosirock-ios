@@ -24,11 +24,12 @@ final class RefrigeratorViewModel {
 
     var showAddSheet = false
 
-    // 이번에 시트를 연 뒤로 등록한 재료 수 (등록 완료 배너용)
-    private(set) var registeredCount = 0
+    // 이번에 시트를 연 뒤로 새로 등록한 재료 (등록 완료 배너용, 삭제하면 빠짐)
+    private var registeredThisSession: Set<Int> = []
+    var registeredCount: Int { registeredThisSession.count }
 
     func openAddSheet() {
-        registeredCount = 0
+        registeredThisSession = []
         showAddSheet = true
     }
 
@@ -63,6 +64,7 @@ final class RefrigeratorViewModel {
     // 냉장고에서 삭제하고 목록을 다시 읽음 (마지막 재료였으면 빈 냉장고 화면)
     func remove(_ ingredient: IngredientItem) async throws {
         try await inventory.remove(ingredientId: ingredient.id)
+        registeredThisSession.remove(ingredient.id)  // 방금 등록한 걸 지우면 배너 숫자도 줄어듦
         items = try await inventory.fetch()
         state = items.isEmpty ? .empty : .loaded(items)
     }
@@ -73,7 +75,7 @@ final class RefrigeratorViewModel {
         try await inventory.add(ingredient, quantity: quantity)  // 1. 장부에 적어 달라고 시킨다
         items = try await inventory.fetch()  // 2. 장부를 다시 읽어서 최신 상태로 맞춘다
         state = items.isEmpty ? .empty : .loaded(items)  // 첫 등록이면 빈 화면 → 목록 화면
-        if isNew { registeredCount += 1 }
+        if isNew { registeredThisSession.insert(ingredient.id) }
 
     }
 }

@@ -61,7 +61,8 @@ struct AddIngredientSheet: View {
             IngredientRegistrationSheet(
                 ingredient: item,
                 refrigerVm: refrigerVm,
-                previousQuantity: refrigerVm.quantity(of: item)
+                previousQuantity: refrigerVm.quantity(of: item),
+                isExisting: refrigerVm.isRegistered(item)
             )
         }
     }
