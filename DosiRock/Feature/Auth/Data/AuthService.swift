@@ -38,11 +38,7 @@ nonisolated struct SignupTokenData: Decodable {
 
 struct AuthServiceImpl {
 
-    private let client: APIClient
-
-    init(baseURL: URL) {
-        client = APIClient(baseURL: baseURL)
-    }
+    let client: APIClient
 
 }
 

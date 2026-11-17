@@ -12,19 +12,21 @@ enum AppEnvironment {
     private static let baseURL = URL(
         string: "https://dosirock.duckdns.org/api"
     )!
-//         private static let baseURL = URL(string: "http://0.0.0.0:3001/api")!   // Mockoon
+    //         private static let baseURL = URL(string: "http://0.0.0.0:3001/api")!   // Mockoon
 
     // 번들(MARKETING_VERSION)에 적힌 앱 버전
     static let appVersion =
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         ?? "-"
 
+    private static let client = APIClient(baseURL: baseURL)
+
     static func makeAuthService() -> AuthService {
-        AuthServiceImpl(baseURL: baseURL)
+        AuthServiceImpl(client: client)
     }
 
     static func makeUserRepository() -> UserRepository {
-        UserRepositoryImpl(baseURL: baseURL)
+        UserRepositoryImpl(client: client)
     }
 
     static func makeInventoryRepository() -> InventoryRepository {
@@ -36,6 +38,6 @@ enum AppEnvironment {
     }
 
     static func makeIngredientRepository() -> IngredientRepository {
-        IngredientRepositoryImpl(baseURL: baseURL)
+        IngredientRepositoryImpl(client: client)
     }
 }

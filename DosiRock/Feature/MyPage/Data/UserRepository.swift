@@ -19,12 +19,8 @@ protocol UserRepository {
 
 struct UserRepositoryImpl: UserRepository {
 
-    private let client: APIClient
-
-    init(baseURL: URL) {
-        client = APIClient(baseURL: baseURL)
-    }
-
+    let client: APIClient
+    
     func fetchMe() async throws -> UserProfile {
         try await client.sendRequired(
             "users/me",

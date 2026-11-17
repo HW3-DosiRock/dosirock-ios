@@ -20,12 +20,8 @@ private nonisolated struct IngredientListResponse: Decodable {
 
 struct IngredientRepositoryImpl: IngredientRepository {
 
-    private let client: APIClient
-
-    init(baseURL: URL) {
-        client = APIClient(baseURL: baseURL)
-    }
-
+    let client: APIClient
+ 
     func fetchAll() async throws -> [IngredientItem] {
         let result = try await client.sendRequired(
             "ingredients",
