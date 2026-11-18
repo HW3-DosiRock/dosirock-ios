@@ -9,13 +9,13 @@ import SwiftUI
 
 struct InputTextField: View {
 
-    var label: LocalizedStringKey? = nil
-    let placeHolder: LocalizedStringKey
+    var label: LocalizedStringResource? = nil
+    let placeHolder: LocalizedStringResource
     @Binding var text: String
     var inputType: InputType = .text
-    var suffix: LocalizedStringKey? = nil  // ← 추가: "원", "개", "g" 등 단위
+    var suffix: LocalizedStringResource? = nil  // ← 추가: "원", "개", "g" 등 단위
     var errorMsg: String? = nil
-    var infoMsg: LocalizedStringKey? = nil
+    var infoMsg: LocalizedStringResource? = nil
     var showsErrorAfterBlur = false  // true면 한 번 포커스를 잃은 뒤부터 에러 표시 (입력 중 깜빡임 방지)
     var submitLabel: SubmitLabel = .done  // 키보드 Return 키 모양 (다음/완료)
     var onSubmit: () -> Void = {}  // Return을 눌렀을 때 (예: 다음 칸으로 이동)
@@ -122,10 +122,10 @@ struct InputTextField: View {
     @ViewBuilder
     private var inputField: some View {
         if inputType.isSecure {
-            SecureField(placeHolder, text: $text)
+            SecureField(text: $text) { Text(placeHolder) }
                 .focused($isFocused)
         } else {
-            TextField(placeHolder, text: $text)
+            TextField(text: $text) { Text(placeHolder) }
                 .focused($isFocused)
         }
     }

@@ -11,10 +11,10 @@ import SwiftUI
 /// 예) "수량 7        눌러서 수량 추가·수정"
 struct SectionHeader: View {
 
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     var titleStyle: AppTypography = .heading
     var count: Int? = nil
-    var caption: LocalizedStringKey? = nil
+    var caption: LocalizedStringResource? = nil
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Spacing.xs) {

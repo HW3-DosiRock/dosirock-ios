@@ -37,7 +37,7 @@ final class ThisWeekViewModel {
         let end = cal.dateComponents([.month, .day], from: friday)
 
         if start.month == end.month {
-            return "\(start.month ?? 0)월 \(start.day ?? 0)일~\(end.day ?? 0)일"
+            return "\(start.month ?? 0)월 \(start.day ?? 0)일~\(end.day ?? 0)일 도시락"
         }
         return
             "\(start.month ?? 0)월 \(start.day ?? 0)일~\(end.month ?? 0)월 \(end.day ?? 0)일 도시락"
@@ -49,6 +49,16 @@ final class ThisWeekViewModel {
     func load() async {
         // TODO API 연동 시 교체: 응답을 보고 아래처럼 상태를 정한다
         //   재료 없음 → .emptyIngredient / 재료 있고 레시피 없음 → .emptyRecipe ...
-        state = .emptyIngredient
+        state = .makingRecipe
+    }
+
+    // 레시피를 너무 오래 기다리면 이전 화면(재료는 있고 레시피 없음)으로 돌려보낸다
+    static let makingTimeout: Duration = .seconds(200)
+
+    // "만드는 중" 화면이 떠 있는 동안 호출. 화면이 사라지면(결과 도착 등) 같이 취소된다
+    func waitForRecipe() async {
+        try? await Task.sleep(for: Self.makingTimeout)
+        guard !Task.isCancelled, state == .makingRecipe else { return }
+        state = .emptyRecipe
     }
 }

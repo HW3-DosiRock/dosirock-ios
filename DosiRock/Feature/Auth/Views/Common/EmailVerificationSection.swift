@@ -10,7 +10,7 @@ import SwiftUI
 struct EmailVerificationSection: View {
 
     @Bindable var flow: EmailVerificationFlow
-    var title: LocalizedStringKey = "sign_up_email_section_title"
+    var title: LocalizedStringResource = "sign_up_email_section_title"
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -27,7 +27,7 @@ struct EmailVerificationSection: View {
                 text: $flow.email,
                 inputType: .email,
                 suffix: flow.resendSeconds > 0
-                    ? LocalizedStringKey("00:\(flow.resendSeconds)") : "",
+                    ? LocalizedStringResource(stringLiteral: "00:\(flow.resendSeconds)") : "",
                 errorMsg: flow.emailErrorMessage,
                 labelColor: .appTextPrimary,
                 trailing: AnyView(
@@ -50,7 +50,7 @@ struct EmailVerificationSection: View {
                     placeHolder: "sign_up_verification_placeholder",
                     text: $flow.vNumber,
                     inputType: .number,
-                    suffix: LocalizedStringKey(flow.remainingText),
+                    suffix: LocalizedStringResource(stringLiteral: flow.remainingText),
                     errorMsg: flow.errorMessage,
                     infoMsg: "sign_up_verification_description",
                     maxLength: 6,

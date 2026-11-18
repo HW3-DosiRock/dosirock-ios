@@ -11,12 +11,12 @@ struct FoundPasswordView: View {
 
     @State private var vm: FoundPasswordViewModel
     @Environment(Router<AuthRoute>.self) private var router: Router<AuthRoute>?
-    private let leadingTitle: LocalizedStringKey
+    private let leadingTitle: LocalizedStringResource
     private let onBack: (() -> Void)?  // 마이페이지처럼 AuthRoute 밖에서 쓸 때 뒤로가기 동작
 
     init(
         vm: FoundPasswordViewModel,
-        leadingTitle: LocalizedStringKey = "find_password_header_back",
+        leadingTitle: LocalizedStringResource = "find_password_header_back",
         onBack: (() -> Void)? = nil
     ) {
         _vm = State(initialValue: vm)

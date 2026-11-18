@@ -214,8 +214,8 @@ struct RefrigeratorContentView: View {
     // 섹션 하나: 제목(개수) + 타일 그리드. 재료가 없으면 섹션 자체를 숨김
     @ViewBuilder
     private func inventorySection(
-        titleKey: LocalizedStringKey,
-        captionKey: LocalizedStringKey,
+        titleKey: LocalizedStringResource,
+        captionKey: LocalizedStringResource,
         items: [InventoryItem],
         showsQuantity: Bool
     ) -> some View {

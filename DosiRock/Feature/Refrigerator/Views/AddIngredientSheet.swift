@@ -13,10 +13,6 @@ struct AddIngredientSheet: View {
     @State private var vm: IngredientPickerViewModel
     let refrigerVm: RefrigeratorViewModel
     @State private var selectedItem: IngredientItem?  // 눌린 재료 (두 번째 시트용)
-    private let columns = Array(
-        repeating: GridItem(.flexible(), spacing: Spacing.s),
-        count: 4
-    )
 
     init(
         refrigerVm: RefrigeratorViewModel,
@@ -38,18 +34,14 @@ struct AddIngredientSheet: View {
                 onLeadingTap: { dismiss() }
             )
 
-            searchField
-                .padding(.horizontal, Spacing.screenHorizontal)
-                .padding(.vertical, Spacing.s)
-
-            ScrollView {
-                content
-                    .padding(.horizontal, Spacing.screenHorizontal)
-                    .padding(.vertical, Spacing.l)
-            }
+            // 체크 = 냉장고에 등록된 재료, 누르면 수량 입력 시트
+            IngredientPickerContent(
+                vm: vm,
+                isChecked: { refrigerVm.isRegistered($0) },
+                onTap: { selectedItem = $0 }
+            )
         }
         .background(Color.appBackground)
-        .task { await vm.load() }
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(Radius.xLarge)
         .modifier(PageSheetSizing())
@@ -60,116 +52,6 @@ struct AddIngredientSheet: View {
                 previousQuantity: refrigerVm.quantity(of: item),
                 isExisting: refrigerVm.isRegistered(item)
             )
-        }
-    }
-
-    // 검색창: 돋보기 + 입력 + 지우기(✕)
-    private var searchField: some View {
-        @Bindable var vm = vm
-        return HStack(spacing: Spacing.s) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(Color.appTextSecondary)
-
-            TextField("fridge_picker_search_placeholder", text: $vm.query)
-                .appFont(.body)
-                .foregroundStyle(Color.appTextPrimary)
-                .autocorrectionDisabled()
-
-            if !vm.query.isEmpty {
-                Button {
-                    vm.query = ""
-                } label: {
-                    Image(systemName: "xmark")
-                        .foregroundStyle(Color.appTextSecondary)
-                }
-            }
-        }
-        .padding(.horizontal, Spacing.l)
-        .frame(height: Size.buttonHeight)
-        .background(Color.appSurfaceSubtle)
-        .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-    }
-
-    @ViewBuilder
-    private var content: some View {
-        switch vm.state {
-        case .loading:
-            LoadingView().frame(maxWidth: .infinity).padding(.top, Spacing.xl)
-        case .failed:
-            VStack(spacing: Spacing.l) {
-                Text("my_load_failed")
-                    .appFont(.body)
-                    .foregroundStyle(Color.appTextSecondary)
-                PrimaryButton(title: "common_retry") {
-                    Task { await vm.load() }
-                }
-                .frame(width: 160)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.top, Spacing.xl)
-        case .loaded:
-            loadedContent
-        }
-    }
-
-    // 검색 결과가 없을 때 제목 (검색어가 있으면 검색어를 넣어서)
-    private var emptyTitle: String {
-        vm.query.isEmpty
-            ? String(localized: "fridge_picker_empty")
-            : String(
-                format: String(localized: "fridge_picker_empty_query"),
-                vm.query
-            )
-    }
-
-    @ViewBuilder
-    private var loadedContent: some View {
-
-        if vm.isEmptyResult {
-            VStack(spacing: Spacing.s) {
-                Image("logo-stone")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 104)
-                    .padding(.bottom, Spacing.xs)
-
-                Text(emptyTitle)
-                    .appFont(.brandSubtitle)
-                    .foregroundStyle(Color.appTextPrimary)
-                    .multilineTextAlignment(.center)
-
-                if !vm.query.isEmpty {
-                    Text("fridge_picker_search_hint")
-                        .appFont(.body)
-                        .foregroundStyle(Color.appTextSecondary)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.top, Spacing.xl)
-        } else {
-            LazyVStack(alignment: .leading, spacing: Spacing.xl) {
-                ForEach(vm.grouped, id: \.category) { group in
-                    VStack(alignment: .leading, spacing: Spacing.m) {
-                        Text(group.category.title)
-                            .appFont(.subbody)
-                            .foregroundStyle(Color.appTextSecondary)
-
-                        LazyVGrid(columns: columns, spacing: Spacing.s) {
-                            ForEach(group.items) { item in
-                                IngredientTile(
-                                    label: IngredientNameBreak.display(
-                                        item.mainName
-                                    ),
-                                    imageName: item.imageName,
-                                    subLabel: item.subName,
-                                    reservesNameSpace: true,
-                                    isChecked: refrigerVm.isRegistered(item)
-                                ) { selectedItem = item }
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 

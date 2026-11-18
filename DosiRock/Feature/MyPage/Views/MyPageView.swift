@@ -15,7 +15,7 @@ struct MyPageView: View {
     @State private var vm: MyPageViewModel
     @State private var router = Router<MyPageRoute>()
     @State private var viewportHeight: CGFloat = 0
-    @State private var toast: LocalizedStringKey?
+    @State private var toast: LocalizedStringResource?
 
     init(vm: MyPageViewModel) {
         _vm = State(initialValue: vm)
@@ -48,14 +48,14 @@ struct MyPageView: View {
                             ),
                             onSaved: {
                                 vm.applyNickname($0)
-                                toast = "my_profile_saved_toast"
+                                toast = .myProfileSavedToast
                             }
                         )
                     }
                 case .passwordChange:
                     PasswordChangeView(
                         vm: PasswordChangeViewModel(users: vm.users),
-                        onChanged: { toast = "my_password_changed_toast" }
+                        onChanged: { toast = .myPasswordChangedToast }
                     )
                 case .findPassword:
                     findPasswordView
@@ -63,11 +63,11 @@ struct MyPageView: View {
                 case .appInfo: AppInfoView()
                 case .privacyPolicy:
                     if let doc = TermDocument.privacyPolicy {
-                        TermDocumentView(document: doc, backTitle: "tab_my_page")
+                        TermDocumentView(document: doc, backTitle: .tabMyPage)
                     }
                 case .storageGuide:
                     if let doc = TermDocument.recommendedUseGuide {
-                        TermDocumentView(document: doc, backTitle: "tab_my_page")
+                        TermDocumentView(document: doc, backTitle: .tabMyPage)
                     }
                 case .diningOutCost:
                     if let profile = vm.profile {
@@ -78,14 +78,7 @@ struct MyPageView: View {
                             ),
                             onSaved: {
                                 vm.applyDiningOutCost($0)
-                                toast = LocalizedStringKey(
-                                    String(
-                                        format: String(
-                                            localized: "my_eat_out_saved_toast"
-                                        ),
-                                        $0.formatted()
-                                    )
-                                )
+                                toast = .myEatOutSavedToast($0.formatted())
                             }
                         )
                     }
@@ -98,18 +91,18 @@ struct MyPageView: View {
         .task { await vm.load() }
         .appDialog(
             isPresented: $vm.showLogoutDialog,
-            title: "dialog_logout_title",
+            title: .dialogLogoutTitle,
             message: "",
-            cancelTitle: "common_cancel",
-            confirmTitle: "dialog_logout_confirm",
+            cancelTitle: .commonCancel,
+            confirmTitle: .dialogLogoutConfirm,
             onConfirm: { Task { await vm.logout() } }
         )
         .appDialog(
             isPresented: $vm.showWithdrawDialog,
-            title: "dialog_withdraw_title",
-            message: "dialog_withdraw_message",
-            cancelTitle: "common_cancel",
-            confirmTitle: "dialog_withdraw_confirm",
+            title: .dialogWithdrawTitle,
+            message: .dialogWithdrawMessage,
+            cancelTitle: .commonCancel,
+            confirmTitle: .dialogWithdrawConfirm,
             onConfirm: {}  // TODO: 탈퇴 API가 나오면 연결
         )
     }
@@ -122,11 +115,11 @@ struct MyPageView: View {
         reset.onCompleted = {
             router.pop()  // 비밀번호 재설정 화면
             router.pop()  // 프로필 수정 화면
-            toast = "find_password_toast_completed"
+            toast = .findPasswordToastCompleted
         }
         return FoundPasswordView(
             vm: reset,
-            leadingTitle: "my_password_title",
+            leadingTitle: .myPasswordTitle,
             onBack: { router.pop() }
         )
     }
@@ -141,7 +134,7 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 0) {
 
-                    SectionHeader(title: "tab_my_page", titleStyle: .brandTitle)
+                    SectionHeader(title: .tabMyPage, titleStyle: .brandTitle)
 
                     Spacer(minLength: Spacing.xl)  // 최소 간격 xl, 남는 공간은 Spacer끼리 똑같이 나눠 가짐
 
@@ -179,10 +172,10 @@ struct MyPageView: View {
     // 불러오기 실패 화면
     var failedView: some View {
         VStack(spacing: Spacing.l) {
-            Text("my_load_failed")
+            Text(.myLoadFailed)
                 .appFont(.body)
                 .foregroundStyle(Color.appTextSecondary)
-            PrimaryButton(title: "common_retry") {
+            PrimaryButton(title: .commonRetry) {
                 Task { await vm.load() }
             }
             .frame(width: 160)
@@ -253,7 +246,7 @@ struct MyPageView: View {
             HStack(alignment: .top) {
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("my_menu_complete_subtitle")
+                    Text(.myMenuCompleteSubtitle)
                         .appFont(.subbody)
                         .foregroundStyle(Color.appTextSecondary)
                     Text(
@@ -270,7 +263,7 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(spacing: Spacing.xs) {
-                        Text("my_menu_complete_price")
+                        Text(.myMenuCompletePrice)
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
 
@@ -280,7 +273,7 @@ struct MyPageView: View {
                             .scaledToFit()
                             .frame(width: Size.Icon.medium)
                             .foregroundStyle(Color.appTextSecondary)
-                            .appToolTip(String(localized: "my_menu_saving_tip"))
+                            .appToolTip(.myMenuSavingTip)
                             .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
                     }
                     .zIndex(1)  // 툴팁이 바로 아래 금액 글자 위에 그려지게
@@ -308,19 +301,19 @@ struct MyPageView: View {
 
     private struct MenuItem: Identifiable {
         let id: String
-        let title: LocalizedStringKey
+        let title: LocalizedStringResource
         var trailing: String? = nil  // 오른쪽에 보여줄 값 (없으면 화살표만)
         var trailingStyle: AppTypography = .caption
     }
 
     func settingSection(_ profile: UserProfile) -> some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
-            SectionHeader(title: "my_menu_setting")
+            SectionHeader(title: .myMenuSetting)
             GroupedListCard(
                 items: [
                     MenuItem(
                         id: "diningOut",
-                        title: "my_eat_out_title",
+                        title: .myEatOutTitle,
                         trailing: won(profile.diningOutCost),
                         trailingStyle: .heading
                     )
@@ -338,15 +331,15 @@ struct MyPageView: View {
 
     var infoSection: some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
-            SectionHeader(title: "my_menu_info")
+            SectionHeader(title: .myMenuInfo)
             GroupedListCard(
                 items: [
-                    MenuItem(id: "privacy", title: "my_menu_privacy"),
-                    MenuItem(id: "priceInfo", title: "my_menu_price_info"),
-                    MenuItem(id: "storageGuide", title: "my_menu_storage_guide"),
+                    MenuItem(id: "privacy", title: .myMenuPrivacy),
+                    MenuItem(id: "priceInfo", title: .myMenuPriceInfo),
+                    MenuItem(id: "storageGuide", title: .myMenuStorageGuide),
                     MenuItem(
                         id: "appInfo",
-                        title: "my_menu_app_info",
+                        title: .myMenuAppInfo,
                         trailing: AppInfo.appVersion
                     ),
                 ]
@@ -401,9 +394,9 @@ struct MyPageView: View {
 
     var bottomActions: some View {
         HStack(spacing: Spacing.xl) {
-            Button("my_menu_logout") { vm.showLogoutDialog = true }
+            Button(.myMenuLogout) { vm.showLogoutDialog = true }
                 .foregroundStyle(Color.appTextSecondary)
-            Button("my_menu_withdraw") { vm.showWithdrawDialog = true }
+            Button(.myMenuWithdraw) { vm.showWithdrawDialog = true }
                 .foregroundStyle(Color.appAttention)
         }
         .appFont(.subbody)

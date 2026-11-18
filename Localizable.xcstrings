@@ -2516,13 +2516,178 @@
         }
       }
     },
+    "thisweek_like_ingredient_add" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 선택"
+          }
+        }
+      }
+    },
+    "thisweek_like_ingredient_sub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택"
+          }
+        }
+      }
+    },
+    "thisweek_like_ingredient_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 먹고 싶은 재료"
+          }
+        }
+      }
+    },
+    "thisweek_making_recipe_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI가 이번 주 메뉴를 짜고 있어요"
+          }
+        }
+      }
+    },
+    "thisweek_making_slow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "조금 더 걸리고 있어요. 잠시만 기다려 주세요"
+          }
+        }
+      }
+    },
+    "thisweek_making_step_fridge" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고 재료 살펴보는 중…"
+          }
+        }
+      }
+    },
+    "thisweek_making_step_menu" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "요일별 메뉴 고르는 중…"
+          }
+        }
+      }
+    },
+    "thisweek_making_step_priority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "먼저 쓸 재료 챙기는 중…"
+          }
+        }
+      }
+    },
+    "thisweek_priority_first_use" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "먼저 사용"
+          }
+        }
+      }
+    },
     "thisweek_show_ingredientPriorityInfo" : {
       "extractionState" : "manual",
       "localizations" : {
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "먼저 사용을 켜면\n사용 권장일이 7일 이내인 재료를\n주 초반 메뉴에 먼저 넣어드려요"
+            "value" : "먼저 사용을 ON 하면\n사용 권장일이 7일 이내인 재료를\n주 초반 메뉴에 먼저 사용"
+          }
+        }
+      }
+    },
+    "thisweek_show_likeIngredientInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일부 메뉴에만 사용\n냉장고에 없는 재료는 추가로 필요한 재료로 표시"
+          }
+        }
+      }
+    },
+    "thisweek_show_soupInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "포함해도 매일 제안하지 않음"
+          }
+        }
+      }
+    },
+    "thisweek_soup_except" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제외"
+          }
+        }
+      }
+    },
+    "thisweek_soup_include" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "포함"
+          }
+        }
+      }
+    },
+    "thisweek_soup_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "국물 메뉴"
+          }
+        }
+      }
+    },
+    "thisweek_suggest_with_condition" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 조건으로 다시 제안받기"
           }
         }
       }
@@ -2552,7 +2717,7 @@
     "가\n가" : {
 
     },
-    "레시피 만드는 중" : {
+    "권장 사용일까지 %lld일" : {
 
     },
     "레시피 목록" : {

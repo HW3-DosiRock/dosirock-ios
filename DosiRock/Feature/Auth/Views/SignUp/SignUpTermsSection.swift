@@ -55,7 +55,7 @@ struct SignUpTermsSection: View {
                 HStack {
                     CheckBox(
                         isChecked: vm.binding(for: term),
-                        message: LocalizedStringKey(term.title)
+                        message: LocalizedStringResource(stringLiteral: term.title)
                     )
                     Spacer()
                     if term.hasDocument {

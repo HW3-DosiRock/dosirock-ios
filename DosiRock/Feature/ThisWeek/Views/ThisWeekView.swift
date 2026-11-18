@@ -30,7 +30,8 @@ struct ThisWeekView: View {
                 case .error:
                     Text("에러 화면")  // TODO
                 case .makingRecipe:
-                    Text("레시피 만드는 중")  // TODO
+                    ThisWeekMakingRecipe()
+                        .task { await vm.waitForRecipe() }  // 200초 지나면 이전 화면으로
                 case .recipeList:
                     Text("레시피 목록")  // TODO
                 }
