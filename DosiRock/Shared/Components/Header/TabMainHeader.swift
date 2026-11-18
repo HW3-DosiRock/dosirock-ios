@@ -30,7 +30,7 @@ struct TabMainHeader: View {
                 )
             }
         }
-        .padding(.horizontal, Spacing.screenHorizontal)
+        // 좌우 여백은 쓰는 화면이 준다 (탭 화면은 바깥에 이미 Spacing.screenHorizontal이 있음)
     }
 }
 
@@ -46,5 +46,6 @@ struct TabMainHeader: View {
         TabMainHeader(title: "냉장고")
         TabMainHeader(title: "마이페이지")
     }
+    .padding(.horizontal, Spacing.screenHorizontal)
     .background(Color.appBackground)
 }
