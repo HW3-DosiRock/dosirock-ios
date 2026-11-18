@@ -20,15 +20,19 @@ struct ThisWeekEmptyIngredientView: View {
                 .frame(width: 104)
                 .padding(.bottom, Spacing.xs)
 
-            Text("thisweek_empty_desc")
+            Text(.thisweekEmptyDesc)
                 .appFont(.brandSubtitle)
                 .multilineTextAlignment(.center)  // 여러 줄일 때 가운데 정렬
             
+            PrimaryButton(title: .fridgeAddIngredient) {
+                
+            }
+            .frame(width: 140)
+            .padding(.top, Spacing.m)
+
             Spacer()
             
-            BottomActionBar(title: "thisweek_add_ingredient") {
-                //TODO 재료 추가 바텀 시트 expand 
-            }
+             
 
         }
         .frame(maxWidth: .infinity , maxHeight: .infinity)
