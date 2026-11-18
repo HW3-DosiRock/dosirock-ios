@@ -50,7 +50,7 @@ struct ExpiryDatePickerSheet: View {
                 .padding(.horizontal, Spacing.screenHorizontal)
 
             PrimaryButton(
-                title: LocalizedStringKey(
+                title: LocalizedStringResource(stringLiteral: 
                     String(
                         format: String(localized: "fridge_register_expiry_select"),
                         draft.shortKorean

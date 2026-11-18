@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AppToolTip: View {
 
-    let message: String
+    let message: LocalizedStringResource
     var arrowOffset: CGFloat = Spacing.xl  // 화살표가 말풍선 왼쪽 끝에서 떨어진 거리
 
     var body: some View {
@@ -54,7 +54,7 @@ struct AppToolTip: View {
 // - 보일지 여부(상태)는 이 안에서 관리하므로 쓰는 쪽에 @State가 필요 없다.
 private struct AppToolTipModifier: ViewModifier {
 
-    let message: String
+    let message: LocalizedStringResource
     let width: CGFloat?
     let duration: Double
 
@@ -65,7 +65,7 @@ private struct AppToolTipModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .contentShape(Rectangle())  //아이콘의 사각형 전체를 누를 수 있게
-            .onTapGesture { show() }    //누르면 show 실행
+            .onTapGesture { show() }  //누르면 show 실행
             .overlay {
                 // GeometryReader로 "붙인 뷰"의 위치와 크기를 알아낸다
                 GeometryReader { host in
@@ -76,21 +76,24 @@ private struct AppToolTipModifier: ViewModifier {
             .zIndex(1)  // 아래쪽 뷰에 가려지지 않게
     }
 
+    // 기기 화면(screen)이 아니라 앱이 실제로 그려지는 창(window)의 폭
+    // (프리뷰·아이패드 분할 화면에서는 둘이 다를 수 있음)
     private var screenWidth: CGFloat {
         (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
-            .screen.bounds.width ?? 393
+            .keyWindow?.bounds.width ?? 393
     }
 
     private func tip(host: GeometryProxy) -> some View {
         let arrowHalf: CGFloat = 8  // 삼각형 폭(16)의 절반
         let hostMinX = host.frame(in: .global).minX  // 화면 왼쪽 끝에서 뷰까지 거리
         let hostCenter = host.size.width / 2
-
+        let maxTipWidth = screenWidth - Spacing.screenHorizontal * 2  //말풍선 최대 폭
         // 말풍선 왼쪽 끝 위치(뷰 왼쪽 끝 기준): 화살표 끝이 뷰 가운데에 오도록
         let ideal = hostCenter - Spacing.xl - arrowHalf
         // 화면 좌우 여백 안에 들어오도록 보정
         let minX = Spacing.screenHorizontal - hostMinX
-        let maxX = screenWidth - Spacing.screenHorizontal - tipSize.width - hostMinX
+        let maxX =
+            screenWidth - Spacing.screenHorizontal - tipSize.width - hostMinX
         let x = min(max(ideal, minX), max(minX, maxX))
 
         return AppToolTip(
@@ -98,9 +101,14 @@ private struct AppToolTipModifier: ViewModifier {
             // 말풍선을 밀었어도 화살표는 계속 뷰 가운데를 가리키게
             arrowOffset: max(Spacing.s, hostCenter - x - arrowHalf)
         )
-        .frame(width: width)  // nil이면 글자 길이만큼 (줄바꿈은 문구의 \n으로)
-        .fixedSize()
-        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { tipSize = $0 })
+        .onGeometryChange(
+            for: CGSize.self,
+            of: { $0.size },
+            action: { tipSize = $0 }
+        )
+        // 이 폭까지만 쓰고 넘으면 줄바꿈 (짧은 글은 글자 길이만큼만 차지)
+        .frame(width: width ?? maxTipWidth, alignment: .leading)
+        .fixedSize(horizontal: false, vertical: true)  //가로세로 원하는 만큼 크기를 가짐
         .offset(x: x, y: host.size.height + Spacing.xs)  // 뷰 바로 아래
         .transition(.opacity)
     }
@@ -120,11 +128,17 @@ extension View {
     // 이 뷰를 누르면 바로 아래에 툴팁을 보여준다.
     // width: 말풍선 폭을 고정하고 싶을 때만 지정 (보통은 생략하고 문구에 \n으로 줄바꿈)
     func appToolTip(
-        _ message: String,
+        _ message: LocalizedStringResource,
         width: CGFloat? = nil,
         duration: Double = 3
     ) -> some View {
-        modifier(AppToolTipModifier(message: message, width: width, duration: duration))
+        modifier(
+            AppToolTipModifier(
+                message: message,
+                width: width,
+                duration: duration
+            )
+        )
     }
 }
 

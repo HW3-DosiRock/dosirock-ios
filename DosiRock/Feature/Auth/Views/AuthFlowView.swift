@@ -14,7 +14,7 @@ struct AuthFlowView: View {
     @State private var router = Router<AuthRoute>()
 
     @State private var loginVM: LoginViewModel
-    @State private var toastMessage: LocalizedStringKey?
+    @State private var toastMessage: LocalizedStringResource?
 
     init(auth: AuthService , onLoginSuccess: @escaping () -> Void) {
 
@@ -41,7 +41,7 @@ struct AuthFlowView: View {
         .onAppear {
             // 로그인이 강제로 풀려서 넘어왔다면 이유를 토스트로 안내
             if let message = SessionStore.shared.expiredMessage {
-                toastMessage = LocalizedStringKey(message)
+                toastMessage = LocalizedStringResource(stringLiteral: message)
                 SessionStore.shared.expiredMessage = nil
             }
         }

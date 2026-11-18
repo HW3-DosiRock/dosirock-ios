@@ -45,8 +45,8 @@ struct IngredientRegistrationSheet: View {
         VStack(spacing: 0) {
             NavigationHeader(
                 title: refrigerVm.isRegistered(item)
-                    ? "fridge_register_title_2" : "fridge_register_title",
-                leadingTitle: "fridge_register_back",
+                    ? .fridgeRegisterTitle2 : .fridgeRegisterTitle,
+                leadingTitle: .fridgeRegisterBack,
                 titleStyle: .heading,
                 onLeadingTap: { dismiss() }
             )
@@ -58,11 +58,11 @@ struct IngredientRegistrationSheet: View {
                     // 기본 재료(있음/없음 관리)는 수량 입력이 없음
                     if item.managementType == .quantity {
                         InputTextField(
-                            label: "fridge_register_quantity_label",
-                            placeHolder: "fridge_register_quantity_placeholder",
+                            label: .fridgeRegisterQuantityLabel,
+                            placeHolder: .fridgeRegisterQuantityPlaceholder,
                             text: $vm.quantityText,
                             inputType: .decimal,
-                            suffix: LocalizedStringKey(item.unit),
+                            suffix: LocalizedStringResource(stringLiteral: item.unit),
                             errorMsg: vm.quantityError,
                             labelColor: .appTextPrimary
                         )
@@ -98,7 +98,7 @@ struct IngredientRegistrationSheet: View {
                     AppBanner(type: .attention, message: errorMessage)
                 }
                 PrimaryButton(
-                    title: "common_save",
+                    title: .commonSave,
                     isEnable: vm.canSave,
                     isLoading: isSaving
                 ) { save() }
@@ -106,7 +106,7 @@ struct IngredientRegistrationSheet: View {
                 // 이미 냉장고에 있는 재료만
                 if vm.isExisting {
                     TextLinkButton(
-                        title: "fridge_register_delete",
+                        title: .fridgeRegisterDelete,
                         textColor: .appAttention,
                         textStyle: .heading,
                         isEnable: !isSaving
@@ -131,10 +131,10 @@ struct IngredientRegistrationSheet: View {
         .presentationDetents([.height(sheetHeight)])
         .appDialog(
             isPresented: $showsDeleteDialog,
-            title: "fridge_delete_dialog_title",
-            message: "fridge_delete_dialog_message",
-            cancelTitle: "common_cancel",
-            confirmTitle: "fridge_delete_dialog_confirm",
+            title: .fridgeDeleteDialogTitle,
+            message: .fridgeDeleteDialogMessage,
+            cancelTitle: .commonCancel,
+            confirmTitle: .fridgeDeleteDialogConfirm,
             onConfirm: { delete() }
         )
         .sheet(isPresented: $showsExpiryPicker) {
@@ -158,7 +158,7 @@ struct IngredientRegistrationSheet: View {
                 )
                 dismiss()
             } catch {
-                errorMessage = String(localized: "common_save_failed")
+                errorMessage = String(localized: .commonSaveFailed)
             }
             isSaving = false
         }
@@ -174,7 +174,7 @@ struct IngredientRegistrationSheet: View {
                 dismiss()
             } catch {
                 errorMessage = String(
-                    localized: "fridge_register_delete_failed"
+                    localized: .fridgeRegisterDeleteFailed
                 )
             }
             isSaving = false
@@ -201,7 +201,7 @@ struct IngredientRegistrationSheet: View {
             VStack(alignment: .leading, spacing: Spacing.s) {
 
                 HStack {
-                    Text("fridge_register_recommended_title")
+                    Text(.fridgeRegisterRecommendedTitle)
                         .appFont(.heading)
                         .foregroundStyle(Color.appTextPrimary)
                     Image("info")
@@ -210,11 +210,7 @@ struct IngredientRegistrationSheet: View {
                         .scaledToFit()
                         .frame(width: Size.Icon.medium)
                         .foregroundStyle(Color.appTextSecondary)
-                        .appToolTip(
-                            String(
-                                localized: "fridge_register_recommended_tooltip"
-                            )
-                        )
+                        .appToolTip(.fridgeRegisterRecommendedTooltip)
                         .zIndex(1)
                         .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
                 }.zIndex(1)  // 툴팁이 아래 입력 칸에 가려지지 않게 (zIndex는 같은 부모 안의 형제끼리만 비교됨)
@@ -301,14 +297,14 @@ struct IngredientRegistrationSheet: View {
         if vm.showsExpiryInput, let date = vm.expiryDate {
             VStack(alignment: .leading, spacing: Spacing.s) {
                 HStack {
-                    Text("fridge_register_expiry_title")
+                    Text(.fridgeRegisterExpiryTitle)
                         .appFont(.heading)
                         .foregroundStyle(Color.appTextPrimary)
                     Spacer()
                     Button {
                         vm.toggleExpiryInput()
                     } label: {
-                        Text("fridge_register_expiry_clear")
+                        Text(.fridgeRegisterExpiryClear)
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
                     }
@@ -339,7 +335,7 @@ struct IngredientRegistrationSheet: View {
             }
         } else {
             TextLinkButton(
-                title: "fridge_register_expiry_add",
+                title: .fridgeRegisterExpiryAdd,
                 icon: "plus",
                 textColor: .appTextPrimary,
                 textStyle: .subbody

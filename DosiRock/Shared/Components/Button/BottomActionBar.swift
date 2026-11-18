@@ -11,7 +11,8 @@ import SwiftUI
 // 부모가 .padding(Spacing.screenHorizontal)을 준 화면에서 쓴다 (구분선만 그 여백을 상쇄해서 화면 끝까지 늘림)
 struct BottomActionBar: View {
 
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
+    var icon: String? = nil
     var isEnable: Bool = true
     var isLoading: Bool = false
     let action: () -> Void
@@ -26,6 +27,7 @@ struct BottomActionBar: View {
 
             PrimaryButton(
                 title: title,
+                icon: icon,
                 isEnable: isEnable,
                 isLoading: isLoading,
                 action: action

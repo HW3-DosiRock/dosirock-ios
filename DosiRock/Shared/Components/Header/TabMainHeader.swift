@@ -9,8 +9,8 @@ import SwiftUI
  
 struct TabMainHeader: View {
 
-    let title: LocalizedStringKey
-    var actionTitle: LocalizedStringKey? = nil
+    let title: LocalizedStringResource
+    var actionTitle: LocalizedStringResource? = nil
     var actionIcon: String? = nil
     var action: () -> Void = {}
 

@@ -10,7 +10,7 @@ import SwiftUI
 struct PasswordSection: View {
 
     @Bindable var fields: PasswordFields
-    var title: LocalizedStringKey = "sign_up_password_section_title"
+    var title: LocalizedStringResource = "sign_up_password_section_title"
     var submitError: String? = nil  // 최종 요청 실패 문구 (확인 칸 아래)
     var timerText: String? = nil  // 인증번호 남은 시간 (재설정에서만 표시, 예: "04:32")
     @State private var confirmFocused = false
@@ -29,7 +29,7 @@ struct PasswordSection: View {
                 placeHolder: "sign_up_password_placeholder",
                 text: $fields.password,
                 inputType: .password,
-                suffix: timerText.map { LocalizedStringKey($0) },
+                suffix: timerText.map { LocalizedStringResource(stringLiteral: $0) },
                 errorMsg: fields.error,
                 infoMsg: "sign_up_password_description",
                 showsErrorAfterBlur: true,

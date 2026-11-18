@@ -10,14 +10,14 @@ import SwiftUI
 struct TermDocumentView: View {
 
     let document: TermDocument
-    var backTitle: LocalizedStringKey? = nil  // 지정하면 시트가 아닌 별도 화면 모양(‹ 뒤로)
+    var backTitle: LocalizedStringResource? = nil  // 지정하면 시트가 아닌 별도 화면 모양(‹ 뒤로)
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
 
         VStack {
             NavigationHeader(
-                title: LocalizedStringKey(document.title),
+                title: LocalizedStringResource(stringLiteral: document.title),
                 leadingTitle: backTitle ?? "common_close",
                 showsBackIcon: backTitle != nil,
                 onLeadingTap: { dismiss() }

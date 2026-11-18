@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TextLinkButton: View {
 
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     var icon: String? = nil
     var textColor: Color = .appSurface
     var textStyle : AppTypography = .body

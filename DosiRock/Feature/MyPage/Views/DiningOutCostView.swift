@@ -19,8 +19,8 @@ struct DiningOutCostView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.l) {
             NavigationHeader(
-                title: "my_eat_out_title",
-                leadingTitle: "tab_my_page",
+                title: .myEatOutTitle,
+                leadingTitle: .tabMyPage,
                 onLeadingTap: { router.pop() }
             )
 
@@ -29,10 +29,10 @@ struct DiningOutCostView: View {
                     .zIndex(1)  // 툴팁이 입력칸에 가려지지 않게
 
                 InputTextField(
-                    placeHolder: "my_eat_out_title",
+                    placeHolder: .myEatOutTitle,
                     text: $vm.text,
                     inputType: .number,
-                    suffix: "my_eat_out_unit",
+                    suffix: .myEatOutUnit,
                     errorMsg: vm.error ?? vm.errorMessage,
                     maxLength: 6,
                     labelColor: .appTextPrimary
@@ -40,7 +40,7 @@ struct DiningOutCostView: View {
             }
 
             PrimaryButton(
-                title: "common_save",
+                title: .commonSave,
                 isEnable: vm.canSave,
                 isLoading: vm.isSaving
             ) {
@@ -52,7 +52,7 @@ struct DiningOutCostView: View {
                 }
             }
 
-            Button("my_eat_out_default") { vm.useDefault() }
+            Button(.myEatOutDefault) { vm.useDefault() }
                 .appFont(.body)
                 .foregroundStyle(Color.appPrimary)
                 .frame(maxWidth: .infinity)
@@ -69,7 +69,7 @@ struct DiningOutCostView: View {
     // "외식 기준 금액 ⓘ" (ⓘ를 누르면 설명이 잠깐 보임)
     private var titleRow: some View {
         HStack(spacing: Spacing.xs) {
-            Text("my_eat_out_title")
+            Text(.myEatOutTitle)
                 .appFont(.heading)
                 .foregroundStyle(Color.appTextPrimary)
 
@@ -79,7 +79,7 @@ struct DiningOutCostView: View {
                 .scaledToFit()
                 .frame(width: Size.Icon.medium)
                 .foregroundStyle(Color.appTextSecondary)
-                .appToolTip(String(localized: "my_eat_out_tip"))
+                .appToolTip(.myEatOutTip)
                 .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
  
         }
