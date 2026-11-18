@@ -68,16 +68,9 @@ struct IngredientPickerContent: View {
         case .loading:
             LoadingView().frame(maxWidth: .infinity).padding(.top, Spacing.xl)
         case .failed:
-            VStack(spacing: Spacing.l) {
-                Text("my_load_failed")
-                    .appFont(.body)
-                    .foregroundStyle(Color.appTextSecondary)
-                PrimaryButton(title: "common_retry") {
-                    Task { await vm.load() }
-                }
-                .frame(width: 160)
+            LoadFailedView(title: .fridgePickerLoadFailed) {
+                Task { await vm.load() }
             }
-            .frame(maxWidth: .infinity)
             .padding(.top, Spacing.xl)
         case .loaded:
             loadedContent

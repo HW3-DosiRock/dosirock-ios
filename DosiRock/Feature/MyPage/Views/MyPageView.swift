@@ -171,16 +171,10 @@ struct MyPageView: View {
 
     // 불러오기 실패 화면
     var failedView: some View {
-        VStack(spacing: Spacing.l) {
-            Text(.myLoadFailed)
-                .appFont(.body)
-                .foregroundStyle(Color.appTextSecondary)
-            PrimaryButton(title: .commonRetry) {
-                Task { await vm.load() }
-            }
-            .frame(width: 160)
+        LoadFailedView(title: .myLoadFailedTitle) {
+            Task { await vm.load() }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(Spacing.screenHorizontal)
     }
 
     func profileCard(_ profile: UserProfile) -> some View {

@@ -279,15 +279,7 @@ struct RefrigeratorContentView: View {
     }
 
     private var failedContent: some View {
-        VStack(spacing: Spacing.l) {
-            Spacer()
-            Text("my_load_failed")
-                .appFont(.body)
-                .foregroundStyle(Color.appTextSecondary)
-            PrimaryButton(title: "common_retry") { onRetry() }
-                .frame(width: 160)
-            Spacer()
-        }
+        LoadFailedView(title: .fridgeLoadFailed, onRetry: onRetry)
     }
 }
 
