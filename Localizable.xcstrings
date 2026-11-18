@@ -154,6 +154,17 @@
         }
       }
     },
+    "common_load_failed_desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연결을 확인하고 다시 시도해 주세요."
+          }
+        }
+      }
+    },
     "common_retry" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -588,6 +599,17 @@
         }
       }
     },
+    "fridge_load_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "냉장고 정보를 불러오지 못했어요"
+          }
+        }
+      }
+    },
     "fridge_picker_empty" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -606,6 +628,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "'%@' 재료가 목록에 없어요"
+          }
+        }
+      }
+    },
+    "fridge_picker_load_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료 목록을 불러오지 못했어요"
           }
         }
       }
@@ -1259,13 +1292,13 @@
         }
       }
     },
-    "my_load_failed" : {
+    "my_load_failed_title" : {
       "extractionState" : "manual",
       "localizations" : {
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "정보를 불러오지 못했어요"
+            "value" : "마이페이지 정보를 불러오지 못했어요"
           }
         }
       }
@@ -2494,6 +2527,17 @@
         }
       }
     },
+    "thisweek_change_condition" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추천 조건 변경"
+          }
+        }
+      }
+    },
     "thisweek_empty_desc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2545,6 +2589,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이번 주 먹고 싶은 재료"
+          }
+        }
+      }
+    },
+    "thisweek_load_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 정보를 불러오지 못했어요"
           }
         }
       }
@@ -2718,9 +2773,6 @@
 
     },
     "권장 사용일까지 %lld일" : {
-
-    },
-    "레시피 목록" : {
 
     },
     "로딩 화면" : {
