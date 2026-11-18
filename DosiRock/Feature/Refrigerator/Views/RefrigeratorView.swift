@@ -64,7 +64,7 @@ struct RefrigeratorContentView: View {
             Group {
                 switch state {
                 case .loading:
-                    LoadingView()
+                    TabSkeletonView()
                 case .failed:
                     failedContent
                 case .empty:

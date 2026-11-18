@@ -27,8 +27,8 @@ struct MyPageView: View {
             Group {
                 switch vm.state {
                 case .loading:
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    TabSkeletonView()
+                        .padding(Spacing.screenHorizontal)
                 case .failed:
                     failedView
                 case .loaded(let profile):

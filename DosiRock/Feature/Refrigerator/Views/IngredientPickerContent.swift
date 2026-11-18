@@ -66,7 +66,7 @@ struct IngredientPickerContent: View {
     private var content: some View {
         switch vm.state {
         case .loading:
-            LoadingView().frame(maxWidth: .infinity).padding(.top, Spacing.xl)
+            TabSkeletonView()
         case .failed:
             LoadFailedView(title: .fridgePickerLoadFailed) {
                 Task { await vm.load() }

@@ -21,7 +21,7 @@ struct ThisWeekView: View {
             Group {
                 switch vm.state {
                 case .loading:
-                    Text("로딩 화면")  //TODO
+                    TabSkeletonView()
                 case .emptyIngredient: ThisWeekEmptyIngredientView()
                 case .emptyRecipe:
                     ThisWeekRecipeEmptyView(

@@ -143,17 +143,6 @@
         }
       }
     },
-    "common_next" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다음"
-          }
-        }
-      }
-    },
     "common_load_failed_desc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -161,6 +150,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "연결을 확인하고 다시 시도해 주세요."
+          }
+        }
+      }
+    },
+    "common_loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "불러오는 중"
+          }
+        }
+      }
+    },
+    "common_next" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음"
           }
         }
       }
@@ -2773,12 +2784,6 @@
 
     },
     "권장 사용일까지 %lld일" : {
-
-    },
-    "로딩 화면" : {
-
-    },
-    "에러 화면" : {
 
     }
   },
