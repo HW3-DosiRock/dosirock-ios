@@ -10,20 +10,28 @@ import SwiftUI
 struct FoundPasswordView: View {
 
     @State private var vm: FoundPasswordViewModel
-    @Environment(Router<AuthRoute>.self) private var router
+    @Environment(Router<AuthRoute>.self) private var router: Router<AuthRoute>?
+    private let leadingTitle: LocalizedStringResource
+    private let onBack: (() -> Void)?  // 마이페이지처럼 AuthRoute 밖에서 쓸 때 뒤로가기 동작
 
-    init(vm: FoundPasswordViewModel) {
+    init(
+        vm: FoundPasswordViewModel,
+        leadingTitle: LocalizedStringResource = "find_password_header_back",
+        onBack: (() -> Void)? = nil
+    ) {
         _vm = State(initialValue: vm)
+        self.leadingTitle = leadingTitle
+        self.onBack = onBack
     }
 
     var body: some View {
         VStack {
             NavigationHeader(
-                title: "비밀번호 찾기",
-                leadingTitle: "로그인",
+                title: "find_password_header_title",
+                leadingTitle: leadingTitle,
                 trailingText:
                     "\(vm.step.rawValue + 1)/\(FoundPasswordViewModel.Step.allCases.count)",
-                onLeadingTap: { router.pop() }
+                onLeadingTap: { onBack?() ?? router?.pop() }
             )
 
             switch vm.step {
@@ -40,15 +48,9 @@ struct FoundPasswordView: View {
 
             Spacer()
 
-            Rectangle()
-                .fill(Color.appBorder)
-                .frame(height: 1)
-                .padding(.horizontal, -Spacing.l)  // 바깥 좌우 패딩을 상쇄해서 화면 끝까지 늘림
-                .padding(.bottom, Spacing.l)  // 선과 버튼 사이 간격
-
-            PrimaryButton(
+            BottomActionBar(
                 title: vm.step == .password
-                    ? "find_password_button_complete" : "다음",
+                    ? "find_password_button_complete" : "common_next",
                 isEnable: vm.canProceed,
                 isLoading: vm.isLoading
             ) {
@@ -65,7 +67,7 @@ struct FoundPasswordView: View {
 
 #if DEBUG
 #Preview {
-    FoundPasswordView(vm: .init(service: MockAuthService()))
+    FoundPasswordView(vm: .init(service: PreviewAuthService()))
         .environment(Router<AuthRoute>())
 }
 #endif

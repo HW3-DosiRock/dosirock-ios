@@ -9,23 +9,16 @@ import SwiftUI
 
 // 마이페이지 탭
 struct MyPageView: View {
-
+    
+    @Environment(\.container) private var container
+    
     @State private var vm: MyPageViewModel
     @State private var router = Router<MyPageRoute>()
+    @State private var viewportHeight: CGFloat = 0
+    @State private var toast: LocalizedStringResource?
 
-    //프리뷰 테스트 용
     init(vm: MyPageViewModel) {
         _vm = State(initialValue: vm)
-    }
-
-    //실제 앱 용
-    init() {
-        self.init(
-            vm: MyPageViewModel(
-                users: AppEnvironment.makeUserRepository(),
-                auth: AppEnvironment.makeAuthService()
-            )
-        )
     }
 
     var body: some View {
@@ -34,8 +27,8 @@ struct MyPageView: View {
             Group {
                 switch vm.state {
                 case .loading:
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    TabSkeletonView()
+                        .padding(Spacing.screenHorizontal)
                 case .failed:
                     failedView
                 case .loaded(let profile):
@@ -46,28 +39,88 @@ struct MyPageView: View {
             .background(Color.appBackground.ignoresSafeArea())
             .navigationDestination(for: MyPageRoute.self) { route in
                 switch route {
-                case .profileEdit: ProfileEditView()
+                case .profileEdit:
+                    if let profile = vm.profile {
+                        ProfileEditView(
+                            vm: ProfileEditViewModel(
+                                users: vm.users,
+                                profile: profile
+                            ),
+                            onSaved: {
+                                vm.applyNickname($0)
+                                toast = .myProfileSavedToast
+                            }
+                        )
+                    }
+                case .passwordChange:
+                    PasswordChangeView(
+                        vm: PasswordChangeViewModel(users: vm.users),
+                        onChanged: { toast = .myPasswordChangedToast }
+                    )
+                case .findPassword:
+                    findPasswordView
+                case .priceInfo: PriceInfoView()
+                case .appInfo: AppInfoView()
+                case .privacyPolicy:
+                    if let doc = TermDocument.privacyPolicy {
+                        TermDocumentView(document: doc, backTitle: .tabMyPage)
+                    }
+                case .storageGuide:
+                    if let doc = TermDocument.recommendedUseGuide {
+                        TermDocumentView(document: doc, backTitle: .tabMyPage)
+                    }
+                case .diningOutCost:
+                    if let profile = vm.profile {
+                        DiningOutCostView(
+                            vm: DiningOutCostViewModel(
+                                users: vm.users,
+                                cost: profile.diningOutCost
+                            ),
+                            onSaved: {
+                                vm.applyDiningOutCost($0)
+                                toast = .myEatOutSavedToast($0.formatted())
+                            }
+                        )
+                    }
                 }
             }
         }
         .environment(router)
+        .toast($toast)
         // task와 대화상자는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행/가려짐)
         .task { await vm.load() }
         .appDialog(
             isPresented: $vm.showLogoutDialog,
-            title: "dialog_logout_title",
+            title: .dialogLogoutTitle,
             message: "",
-            cancelTitle: "common_cancel",
-            confirmTitle: "dialog_logout_confirm",
+            cancelTitle: .commonCancel,
+            confirmTitle: .dialogLogoutConfirm,
             onConfirm: { Task { await vm.logout() } }
         )
         .appDialog(
             isPresented: $vm.showWithdrawDialog,
-            title: "dialog_withdraw_title",
-            message: "dialog_withdraw_message",
-            cancelTitle: "common_cancel",
-            confirmTitle: "dialog_withdraw_confirm",
+            title: .dialogWithdrawTitle,
+            message: .dialogWithdrawMessage,
+            cancelTitle: .commonCancel,
+            confirmTitle: .dialogWithdrawConfirm,
             onConfirm: {}  // TODO: 탈퇴 API가 나오면 연결
+        )
+    }
+
+    // 현재 비밀번호를 모를 때: 이메일 인증으로 재설정 (로그인 전 '비밀번호 찾기'와 같은 화면)
+    private var findPasswordView: some View {
+        let reset = FoundPasswordViewModel(
+            service: container.auth
+        )
+        reset.onCompleted = {
+            router.pop()  // 비밀번호 재설정 화면
+            router.pop()  // 프로필 수정 화면
+            toast = .findPasswordToastCompleted
+        }
+        return FoundPasswordView(
+            vm: reset,
+            leadingTitle: .myPasswordTitle,
+            onBack: { router.pop() }
         )
     }
 
@@ -81,7 +134,7 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 0) {
 
-                    SectionHeader(title: "tab_my_page", titleStyle: .brandTitle)
+                    SectionHeader(title: .tabMyPage, titleStyle: .brandTitle)
 
                     Spacer(minLength: Spacing.xl)  // 최소 간격 xl, 남는 공간은 Spacer끼리 똑같이 나눠 가짐
 
@@ -92,7 +145,6 @@ struct MyPageView: View {
 
                     // 예상 절약액
                     summary
-                        .zIndex(1)  // 툴팁이 아래 섹션에 가려지지 않게
 
                     Spacer(minLength: Spacing.xl)
 
@@ -119,16 +171,10 @@ struct MyPageView: View {
 
     // 불러오기 실패 화면
     var failedView: some View {
-        VStack(spacing: Spacing.l) {
-            Text("my_load_failed")
-                .appFont(.body)
-                .foregroundStyle(Color.appTextSecondary)
-            PrimaryButton(title: "common_retry") {
-                Task { await vm.load() }
-            }
-            .frame(width: 160)
+        LoadFailedView(title: .myLoadFailedTitle) {
+            Task { await vm.load() }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(Spacing.screenHorizontal)
     }
 
     func profileCard(_ profile: UserProfile) -> some View {
@@ -194,7 +240,7 @@ struct MyPageView: View {
             HStack(alignment: .top) {
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("조리 완료")
+                    Text(.myMenuCompleteSubtitle)
                         .appFont(.subbody)
                         .foregroundStyle(Color.appTextSecondary)
                     Text(
@@ -211,20 +257,20 @@ struct MyPageView: View {
 
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(spacing: Spacing.xs) {
-                        Text("예상 절약액")
+                        Text(.myMenuCompletePrice)
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
 
-                        // TODO: feat/this-week가 dev에 머지되면 아래 줄 추가 (누르면 툴팁이 보였다가 사라짐)
-                        //   .appToolTip(String(localized: "my_menu_saving_tip"))
-                        //   .accessibilityAddTraits(.isButton)
                         Image("info")
                             .renderingMode(.template)
                             .resizable()
                             .scaledToFit()
                             .frame(width: Size.Icon.medium)
                             .foregroundStyle(Color.appTextSecondary)
+                            .appToolTip(.myMenuSavingTip)
+                            .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
                     }
+                    .zIndex(1)  // 툴팁이 바로 아래 금액 글자 위에 그려지게
                     Text(won(vm.estimatedSaving))
                         .appFont(.brandEmphasis)
                         .foregroundStyle(Color.appSuccess)
@@ -232,14 +278,16 @@ struct MyPageView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(Spacing.l)
-            .background(
-                Color.appSurface,
-                in: RoundedRectangle(cornerRadius: Radius.large)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: Radius.large)
-                    .stroke(Color.appBorder)
-            )
+            .background {
+                RoundedRectangle(cornerRadius: Radius.large).fill(
+                    Color.appSurface
+                )
+                //테두리 최상단으로 오버레이 하면 툴팁위로 테두리 그려져서 백그라운드에 같이 그리게 위치 변경함
+                RoundedRectangle(cornerRadius: Radius.large).stroke(
+                    Color.appBorder
+                )
+            }
+
         }
     }
 
@@ -247,42 +295,65 @@ struct MyPageView: View {
 
     private struct MenuItem: Identifiable {
         let id: String
-        let title: LocalizedStringKey
+        let title: LocalizedStringResource
         var trailing: String? = nil  // 오른쪽에 보여줄 값 (없으면 화살표만)
         var trailingStyle: AppTypography = .caption
     }
 
     func settingSection(_ profile: UserProfile) -> some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
-            SectionHeader(title: "설정")
+            SectionHeader(title: .myMenuSetting)
             GroupedListCard(
                 items: [
                     MenuItem(
                         id: "diningOut",
-                        title: "my_eat_out_title",
+                        title: .myEatOutTitle,
                         trailing: won(profile.diningOutCost),
                         trailingStyle: .heading
                     )
                 ]
-            ) { menuRow($0) }
+            ) { item in
+                Button {
+                    router.push(.diningOutCost)
+                } label: {
+                    menuRow(item).contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 
     var infoSection: some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
-            SectionHeader(title: "안내")
+            SectionHeader(title: .myMenuInfo)
             GroupedListCard(
                 items: [
-                    MenuItem(id: "privacy", title: "my_menu_privacy"),
-                    MenuItem(id: "priceInfo", title: "my_menu_price_info"),
-                    // 임시 값: 앱 버전은 번들 정보로 교체
+                    MenuItem(id: "privacy", title: .myMenuPrivacy),
+                    MenuItem(id: "priceInfo", title: .myMenuPriceInfo),
+                    MenuItem(id: "storageGuide", title: .myMenuStorageGuide),
                     MenuItem(
                         id: "appInfo",
-                        title: "my_menu_app_info",
-                        trailing: "0.2 프로토타입"
+                        title: .myMenuAppInfo,
+                        trailing: AppInfo.appVersion
                     ),
                 ]
-            ) { menuRow($0) }
+            ) { item in
+                Button {
+                    openInfo(item.id)
+                } label: {
+                    menuRow(item).contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private func openInfo(_ id: String) {
+        switch id {
+        case "privacy": router.push(.privacyPolicy)
+        case "priceInfo": router.push(.priceInfo)
+        case "storageGuide": router.push(.storageGuide)
+        default: router.push(.appInfo)
         }
     }
 
@@ -317,13 +388,14 @@ struct MyPageView: View {
 
     var bottomActions: some View {
         HStack(spacing: Spacing.xl) {
-            Button("my_menu_logout") { vm.showLogoutDialog = true }
+            Button(.myMenuLogout) { vm.showLogoutDialog = true }
                 .foregroundStyle(Color.appTextSecondary)
-            Button("my_menu_withdraw") { vm.showWithdrawDialog = true }
+            Button(.myMenuWithdraw) { vm.showWithdrawDialog = true }
                 .foregroundStyle(Color.appAttention)
         }
         .appFont(.subbody)
         .frame(maxWidth: .infinity)
+        .padding(.bottom, Spacing.l)
     }
 
     // 12000 → "12,000원"
@@ -340,7 +412,7 @@ struct MyPageView: View {
         MyPageView(
             vm: MyPageViewModel(
                 users: PreviewUserRepository(),
-                auth: MockAuthService()
+                auth: PreviewAuthService()
             )
         )
     }
@@ -349,7 +421,7 @@ struct MyPageView: View {
         MyPageView(
             vm: MyPageViewModel(
                 users: PreviewUserRepository(shouldFail: true),
-                auth: MockAuthService()
+                auth: PreviewAuthService()
             )
         )
     }

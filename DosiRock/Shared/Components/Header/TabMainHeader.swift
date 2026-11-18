@@ -9,8 +9,8 @@ import SwiftUI
  
 struct TabMainHeader: View {
 
-    let title: LocalizedStringKey
-    var actionTitle: LocalizedStringKey? = nil
+    let title: LocalizedStringResource
+    var actionTitle: LocalizedStringResource? = nil
     var actionIcon: String? = nil
     var action: () -> Void = {}
 
@@ -30,14 +30,14 @@ struct TabMainHeader: View {
                 )
             }
         }
-        .padding(.horizontal, Spacing.screenHorizontal)
+        // 좌우 여백은 쓰는 화면이 준다 (탭 화면은 바깥에 이미 Spacing.screenHorizontal이 있음)
     }
 }
 
 #Preview {
     VStack(spacing: Spacing.m) {
         TabMainHeader(
-            title: "이번 주",
+            title: "이번주",
             actionTitle: "추천 조건 변경",
             actionIcon: "slider.horizontal.3"
         ) {
@@ -46,5 +46,6 @@ struct TabMainHeader: View {
         TabMainHeader(title: "냉장고")
         TabMainHeader(title: "마이페이지")
     }
+    .padding(.horizontal, Spacing.screenHorizontal)
     .background(Color.appBackground)
 }

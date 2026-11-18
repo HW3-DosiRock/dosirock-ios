@@ -22,7 +22,7 @@ struct OnboardingView: View {
             HStack {
                 Spacer()
                 TextLinkButton(
-                    title: "건너뛰기",
+                    title: "onboarding_button_skip",
                     textColor: .appTextSecondary,
                     textStyle: .heading,
                     action: onFinish
@@ -48,7 +48,7 @@ struct OnboardingView: View {
             PageIndicator(count: pages.count, current: current)
 
             // 다음 / 시작하기
-            PrimaryButton(title: isLast ? "시작하기" : "다음") {
+            PrimaryButton(title: isLast ? "onboarding_button_start" : "onboarding_button_next") {
                 if isLast {
                     onFinish()
                 } else {

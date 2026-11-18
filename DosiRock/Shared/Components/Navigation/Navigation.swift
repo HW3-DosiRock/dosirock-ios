@@ -12,14 +12,14 @@ enum Navigation : CaseIterable, Hashable {
     case fridge
     case mypage
 
-    var label: String {
+    var label: LocalizedStringKey {
         switch self {
         case .thisweek:
-            "이번주"
+            "tab_this_week"
         case .fridge:
-            "냉장고"
+            "tab_fridge"
         case .mypage:
-            "마이페이지"
+            "tab_my_page"
         }
     }
     

@@ -55,14 +55,14 @@ struct SignUpTermsSection: View {
                 HStack {
                     CheckBox(
                         isChecked: vm.binding(for: term),
-                        message: LocalizedStringKey(term.title)
+                        message: LocalizedStringResource(stringLiteral: term.title)
                     )
                     Spacer()
                     if term.hasDocument {
                         Button {
                             viewing = term
                         } label: {
-                            Text("보기")
+                            Text("sign_up_terms_view")
                                 .appFont(.subbody)
                                 .foregroundStyle(Color.appTextSecondary)
                         }
@@ -99,7 +99,7 @@ struct SignUpTermsSection: View {
 
 #if DEBUG
 #Preview {
-    SignUpTermsSection(vm: .init(service: MockAuthService()))
+    SignUpTermsSection(vm: .init(service: PreviewAuthService()))
         .background(Color.appBackground)
         .padding()
 

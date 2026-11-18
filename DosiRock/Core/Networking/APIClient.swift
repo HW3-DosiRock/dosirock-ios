@@ -7,9 +7,7 @@
 
 import Foundation
 
-import Foundation
-
-// 서버 공통 응답: { success, data, error }
+//MARK: 서버 공통 응답: { success, data, error }
 nonisolated struct APIResponse<T: Decodable>: Decodable {
     let success: Bool
     let data: T?
@@ -34,7 +32,11 @@ nonisolated struct LoginTokenData: Decodable {
 // 서버에 요청을 보내는 공용 클라이언트 (인증, 마이페이지 등 모든 API가 사용)
 struct APIClient {
 
-    enum Method: String { case get = "GET", post = "POST", patch = "PATCH" }
+    enum Method: String {
+        case get = "GET"
+        case post = "POST"
+        case patch = "PATCH"
+    }
 
     let baseURL: URL
 
@@ -53,20 +55,30 @@ struct APIClient {
     ) async throws -> T? {
         do {
             return try await sendOnce(
-                path, method: method, body: body, authorized: authorized, as: type)
-        } catch let error as AuthError
+                path,
+                method: method,
+                body: body,
+                authorized: authorized,
+                as: type
+            )
+        } catch let error as APIError
             where authorized && error.code == "AUTH_ACCESS_TOKEN_INVALID"
         {
             try await refreshOnce()
             return try await sendOnce(
-                path, method: method, body: body, authorized: authorized, as: type)
+                path,
+                method: method,
+                body: body,
+                authorized: authorized,
+                as: type
+            )
         }
     }
 
     // 리프레시 토큰으로 새 토큰을 받아 저장한다
     func refresh() async throws {
         guard let refreshToken = TokenStore.read(.refresh) else {
-            throw AuthError.unknown
+            throw APIError.unknown
         }
         let result = try await sendOnce(
             "auth/refresh",
@@ -75,7 +87,7 @@ struct APIClient {
             authorized: false,
             as: LoginTokenData.self
         )
-        guard let tokens = result else { throw AuthError.server }
+        guard let tokens = result else { throw APIError.server }
         TokenStore.save(tokens.accessToken, for: .access)
         TokenStore.save(tokens.refreshToken, for: .refresh)
     }
@@ -91,7 +103,7 @@ struct APIClient {
 
         do {
             try await task.value
-        } catch let error as AuthError where error.code != nil {
+        } catch let error as APIError where error.code != nil {
             // 서버가 리프레시 토큰을 거부함(만료, 다른 기기 로그인 등) → 로그인 화면으로
             SessionStore.shared.expire(message: error.errorDescription)
             throw error
@@ -112,10 +124,16 @@ struct APIClient {
         request.httpMethod = method.rawValue
         // 로그인이 필요한 API는 액세스 토큰을 헤더에 붙인다
         if authorized, let access = TokenStore.read(.access) {
-            request.setValue("Bearer \(access)", forHTTPHeaderField: "Authorization")
+            request.setValue(
+                "Bearer \(access)",
+                forHTTPHeaderField: "Authorization"
+            )
         }
         if let body {
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(
+                "application/json",
+                forHTTPHeaderField: "Content-Type"
+            )
             request.httpBody = try JSONSerialization.data(withJSONObject: body)
         }
 
@@ -123,16 +141,48 @@ struct APIClient {
         do {
             data = try await URLSession.shared.data(for: request).0
         } catch {
-            throw AuthError.network  // 서버 꺼짐, 인터넷 끊김 등
+            throw APIError.network  // 서버 꺼짐, 인터넷 끊김 등
         }
 
         // 서버 공통 응답 형식이 아니면 서버 문제로 처리
-        guard let response = try? JSONDecoder().decode(APIResponse<T>.self, from: data)
-        else { throw AuthError.server }
+        guard
+            let response = try? JSONDecoder().decode(
+                APIResponse<T>.self,
+                from: data
+            )
+        else { throw APIError.server }
 
         if let e = response.error {
-            throw AuthError.api(code: e.code, message: e.message, details: e.details)
+            throw APIError.api(
+                code: e.code,
+                message: e.message,
+                details: e.details
+            )
         }
         return response.data
+    }
+
+    func sendRequired<T: Decodable>(
+        _ path: String,
+        method: Method = .post,
+        body: [String: Any]? = nil,
+        authorized: Bool = false,
+        as type: T.Type
+    ) async throws -> T {
+
+        guard
+            let value = try await send(
+                path,
+                method: method,
+                body: body,
+                authorized: authorized,
+                as: type
+            )
+        else {
+            throw APIError.server
+        }
+
+        return value
+
     }
 }

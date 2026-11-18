@@ -10,10 +10,10 @@ import SwiftUI
 // 제목 + 안내 문구 + 가로 2버튼(왼쪽: 취소 성격, 오른쪽: 확정 성격) 다이얼로그
 struct AppDialog: View {
 
-    let title: LocalizedStringKey
-    let message: LocalizedStringKey
-    let cancelTitle: LocalizedStringKey
-    let confirmTitle: LocalizedStringKey
+    let title: LocalizedStringResource
+    let message: LocalizedStringResource
+    let cancelTitle: LocalizedStringResource
+    let confirmTitle: LocalizedStringResource
     var isDestructive = true  // 오른쪽 버튼을 경고색으로
     var onCancel: () -> Void = {}
     var onConfirm: () -> Void = {}
@@ -53,7 +53,7 @@ struct AppDialog: View {
     }
 
     private func button(
-        _ title: LocalizedStringKey,
+        _ title: LocalizedStringResource,
         color: Color,
         action: @escaping () -> Void
     ) -> some View {
@@ -72,10 +72,10 @@ extension View {
     /// 화면 위에 딤 + 다이얼로그를 띄움. 어느 버튼이든 누르면 먼저 닫힘.
     func appDialog(
         isPresented: Binding<Bool>,
-        title: LocalizedStringKey,
-        message: LocalizedStringKey,
-        cancelTitle: LocalizedStringKey,
-        confirmTitle: LocalizedStringKey,
+        title: LocalizedStringResource,
+        message: LocalizedStringResource,
+        cancelTitle: LocalizedStringResource,
+        confirmTitle: LocalizedStringResource,
         isDestructive: Bool = true,
         onConfirm: @escaping () -> Void
     ) -> some View {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ToastView: View {
 
-    let message: LocalizedStringKey
+    let message: LocalizedStringResource
 
     var body: some View {
 
@@ -32,7 +32,7 @@ struct ToastView: View {
 }
 
 extension View {
-    func toast(_ message: Binding<LocalizedStringKey?>) -> some View {
+    func toast(_ message: Binding<LocalizedStringResource?>) -> some View {
             overlay(alignment: .bottom) {
                 if let text = message.wrappedValue {
                     ToastView(message: text)

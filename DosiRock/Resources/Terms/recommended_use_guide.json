@@ -1,0 +1,201 @@
+{
+  "version": "1.0",
+  "title": "보관 기준 안내",
+  "sections": [
+    {
+      "heading": "권장 사용일이란",
+      "body": [
+        "권장 사용일은 먼저 쓸 재료를 고르기 위한 참고 날짜입니다.",
+        "법정 소비기한이나 안전 판정값이 아닙니다.",
+        "제품에 표시된 소비기한과 보관 안내를 우선해 주세요."
+      ]
+    },
+    {
+      "heading": "적용 기준",
+      "body": [
+        "• 냉장 4°C 이하, 냉동 -18°C 이하, 실온은 직사광선을 피한 서늘하고 건조한 곳",
+        "• 새로 구입해 바로 알맞게 보관한 재료 기준. 우유와 두부는 개봉 시점, 맛김은 개별 봉지를 연 시점",
+        "• 이미 보관하던 재료는 구입과 개봉 경과를 사용일에 반영할 것"
+      ]
+    },
+    {
+      "heading": "재료별 기준과 참고 자료",
+      "items": [
+        {
+          "label": "양파",
+          "text": "실온 14일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/extmedia/CFS/CFS-423-W.pdf)"
+        },
+        {
+          "label": "대파",
+          "text": "냉장 7일\n참고 자료: [Purdue University](https://extension.purdue.edu/foodlink/food.php?food=onion%2C+green+onion%2C+scallion)"
+        },
+        {
+          "label": "쪽파",
+          "text": "냉장 5일\n참고 자료: [Colorado State University](https://extension.colostate.edu/resource/food-storage-for-safety-and-quality/)"
+        },
+        {
+          "label": "마늘",
+          "text": "냉장 7일\n참고 자료: [Iowa State University](https://spendsmart.extension.iastate.edu/produce-item/garlic/)"
+        },
+        {
+          "label": "콩나물",
+          "text": "냉장 3일 · 서비스 기본값\n참고 자료: 국내 콩나물 상품 안내"
+        },
+        {
+          "label": "당근",
+          "text": "냉장 14일\n참고 자료: [Purdue University](https://extension.purdue.edu/foodlink/food.php?food=carrot)"
+        },
+        {
+          "label": "고구마",
+          "text": "실온 14일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/extmedia/CFS/CFS-423-W.pdf)"
+        },
+        {
+          "label": "감자",
+          "text": "실온 14일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/extmedia/CFS/CFS-423-W.pdf)"
+        },
+        {
+          "label": "무",
+          "text": "냉장 14일\n참고 자료: [Pacific Northwest Extension](https://extension.oregonstate.edu/sites/extd8/files/2023-08/pnw612.pdf)"
+        },
+        {
+          "label": "배추",
+          "text": "냉장 5일\n참고 자료: [농촌진흥청](https://www.nongsaro.go.kr/portal/ps/psb/psby/vodPlay.ps?mvpNo=2786)"
+        },
+        {
+          "label": "양배추",
+          "text": "냉장 14일\n참고 자료: [Virginia Cooperative Extension](https://www.pubs.ext.vt.edu/content/pubs_ext_vt_edu/en/348/348-960/348-960.html)"
+        },
+        {
+          "label": "양상추",
+          "text": "냉장 7일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/extmedia/CFS/CFS-424-W.pdf)"
+        },
+        {
+          "label": "상추",
+          "text": "냉장 3일\n참고 자료: [농촌진흥청](https://astis.rda.go.kr/api/field/consltCont.ps?cntntsNo=250787)"
+        },
+        {
+          "label": "깻잎",
+          "text": "냉장 3일\n참고 자료: [농촌진흥청](https://astis.rda.go.kr/api/field/consltCont.ps?cntntsNo=250787)"
+        },
+        {
+          "label": "시금치",
+          "text": "냉장 3일\n참고 자료: [Pacific Northwest Extension](https://extension.oregonstate.edu/sites/extd8/files/2023-08/pnw612.pdf)"
+        },
+        {
+          "label": "애호박",
+          "text": "냉장 5일 · 서비스 기본값\n참고 자료: [농촌진흥청](https://www.rda.go.kr/board/board.do?boardId=farmprmninfo&currPage=6&dataNo=100000813032&mode=updateCnt&prgId=day_farmprmninfoEntry)"
+        },
+        {
+          "label": "오이",
+          "text": "냉장 7일\n참고 자료: [Purdue University](https://extension.purdue.edu/foodlink/food.php?food=cucumber)"
+        },
+        {
+          "label": "오이맛고추",
+          "text": "냉장 7일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/foodlink/food.php?food=hot+pepper)"
+        },
+        {
+          "label": "꽈리고추",
+          "text": "냉장 7일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/foodlink/food.php?food=hot+pepper)"
+        },
+        {
+          "label": "청양고추",
+          "text": "냉장 7일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/foodlink/food.php?food=hot+pepper)"
+        },
+        {
+          "label": "토마토",
+          "text": "냉장 5일\n참고 자료: [Pacific Northwest Extension](https://extension.oregonstate.edu/sites/extd8/files/2023-08/pnw612.pdf)"
+        },
+        {
+          "label": "가지",
+          "text": "냉장 5일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/foodlink/food.php?food=eggplant)"
+        },
+        {
+          "label": "미나리",
+          "text": "냉장 4일 · 서비스 기본값\n참고 자료: [국립식량과학원](https://www.nics.go.kr/food/kfi/foodMonth/view?fd_se=286&fd_snn=44&menu_tab=0)"
+        },
+        {
+          "label": "부추",
+          "text": "냉장 4일 · 서비스 기본값\n참고 자료: [농촌진흥청](https://www.nongsaro.go.kr/portal/ps/psv/psvr/psvrc/rdaInterDtl.ps?cntntsNo=207870&menuId=PS00063)"
+        },
+        {
+          "label": "팽이버섯",
+          "text": "냉장 5일\n참고 자료: [Utah State University](https://extension.usu.edu/nutrition/research/mushrooms)"
+        },
+        {
+          "label": "느타리버섯",
+          "text": "냉장 5일\n참고 자료: [Utah State University](https://extension.usu.edu/nutrition/research/mushrooms)"
+        },
+        {
+          "label": "새송이버섯",
+          "text": "냉장 7일\n참고 자료: [Utah State University](https://extension.usu.edu/nutrition/research/mushrooms)"
+        },
+        {
+          "label": "양송이버섯",
+          "text": "냉장 5일\n참고 자료: [Utah State University](https://extension.usu.edu/nutrition/research/mushrooms)"
+        },
+        {
+          "label": "표고버섯",
+          "text": "냉장 7일\n참고 자료: [Utah State University](https://extension.usu.edu/nutrition/research/mushrooms)"
+        },
+        {
+          "label": "돼지 앞다리살",
+          "text": "냉장 2일\n참고 자료: [캐나다 보건부](https://www.canada.ca/en/health-canada/services/general-food-safety-tips/safe-food-storage.html)"
+        },
+        {
+          "label": "돼지 목살",
+          "text": "냉장 2일\n참고 자료: [캐나다 보건부](https://www.canada.ca/en/health-canada/services/general-food-safety-tips/safe-food-storage.html)"
+        },
+        {
+          "label": "삼겹살",
+          "text": "냉장 2일\n참고 자료: [캐나다 보건부](https://www.canada.ca/en/health-canada/services/general-food-safety-tips/safe-food-storage.html)"
+        },
+        {
+          "label": "삼겹살(수입)",
+          "text": "냉장 2일\n참고 자료: [캐나다 보건부](https://www.canada.ca/en/health-canada/services/general-food-safety-tips/safe-food-storage.html)"
+        },
+        {
+          "label": "소고기(수입)",
+          "text": "냉장 3일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/extmedia/CFS/CFS-424-W.pdf)"
+        },
+        {
+          "label": "닭고기",
+          "text": "냉장 2일\n참고 자료: [Purdue University](https://www.extension.purdue.edu/extmedia/CFS/CFS-424-W.pdf)"
+        },
+        {
+          "label": "마른미역",
+          "text": "실온 60일 · 서비스 기본값\n참고 자료: [샘표](https://www.sempio.com/research/result/32)"
+        },
+        {
+          "label": "맛김",
+          "text": "냉동 30일 · 서비스 기본값\n참고 자료: [경기도보건환경연구원](https://gnews.gg.go.kr/briefing/brief_gongbo_view.do?BS_CODE=s017&number=41549&subject_Code=BO01)"
+        },
+        {
+          "label": "북어",
+          "text": "냉동 180일 · 서비스 기본값\n참고 자료: 황태채 상품 안내"
+        },
+        {
+          "label": "달걀",
+          "text": "냉장 21일\n참고 자료: [캐나다 보건부](https://www.canada.ca/en/health-canada/services/general-food-safety-tips/safe-food-storage.html)"
+        },
+        {
+          "label": "두부",
+          "text": "냉장 4일\n참고 자료: [Oregon State University](https://extension.oregonstate.edu/ask-extension/featured/does-tofu-expire)"
+        },
+        {
+          "label": "우유",
+          "text": "냉장 3일\n참고 자료: [캐나다 보건부](https://www.canada.ca/en/health-canada/services/general-food-safety-tips/safe-food-storage.html)"
+        },
+        {
+          "label": "김치",
+          "text": "냉장 30일 · 서비스 기본값\n참고 자료: 포기김치 상품 안내"
+        }
+      ]
+    },
+    {
+      "heading": "기본 재료",
+      "body": [
+        "기본 재료 16종은 보유 여부만 관리하므로 권장 사용일을 제공하지 않습니다."
+      ]
+    }
+  ]
+}

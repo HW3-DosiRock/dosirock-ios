@@ -35,6 +35,8 @@ struct IngredientTile: View {
 
     let label: String
     let imageName: String
+    var subLabel: String? = nil  // 이름 바로 아래 작은 글씨 (예: 삼겹살 / 수입)
+    var reservesNameSpace = false  // true면 이름 두 줄 자리를 항상 확보 (그리드에서 높이를 맞출 때)
     var details: [String] = []  // 이름 아래 보조 텍스트 (예: "300g", "사용 11/10(화)")
     var type: IngredientTileType = .selectable
     var isChecked: Bool = false  // selectable 에서만 의미 있음
@@ -46,6 +48,30 @@ struct IngredientTile: View {
             return Image(imageName)
         }
         return Image(systemName: "questionmark.circle")  // 대체 이미지 (임시)
+    }
+
+    // 이름 영역: 보조 글씨가 없고 자리를 확보하는 타일만 이름을 두 줄까지 허용
+    private var nameBlock: some View {
+        ZStack(alignment: .top) {
+            if reservesNameSpace {
+                Text("가\n가")  // 보이지 않는 두 줄: 글자 크기 설정이 바뀌어도 자리가 따라감
+                    .appFont(.subbody)
+                    .hidden()
+            }
+            VStack(spacing: 0) {
+                Text(label)
+                    .appFont(.subbody)
+                    .foregroundStyle(Color.appTextPrimary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(reservesNameSpace && subLabel == nil ? 2 : 1)
+                if let subLabel {
+                    Text(subLabel)
+                        .appFont(.caption)
+                        .foregroundStyle(Color.appTextSecondary)
+                        .lineLimit(1)
+                }
+            }
+        }
     }
 
     var body: some View {
@@ -66,10 +92,7 @@ struct IngredientTile: View {
                 .foregroundStyle(Color.appDisabled)
 
             VStack(spacing: Spacing.xs) {
-                Text(label)
-                    .appFont(.subbody)
-                    .foregroundStyle(Color.appTextPrimary)
-                    .lineLimit(1)
+                nameBlock
 
                 ForEach(details, id: \.self) { detail in
                     Text(detail)
@@ -109,6 +132,9 @@ struct IngredientTile: View {
         ("당근", "ingredient_vegetable_carrot"),
         ("애호박", "ingredient_vegetable_zucchini"),
         ("알 수 없음", "dragonfruit"),
+        ("돼지 앞다리살", "ingredient_vegetable_carrot"),
+        ("느타리\n버섯", "ingredient_vegetable_carrot"),
+        ("삼겹살", "ingredient_vegetable_carrot"),
     ]
 
     VStack(spacing: Spacing.l) {
@@ -124,6 +150,8 @@ struct IngredientTile: View {
                 IngredientTile(
                     label: name,
                     imageName: code,
+                    subLabel: name == "삼겹살" ? "수입" : nil,
+                    reservesNameSpace: true,
                     details: name == "당근" ? ["120g", "사용 11/18(수)"] : [],
                     isChecked: selected.contains(code)
                 ) {

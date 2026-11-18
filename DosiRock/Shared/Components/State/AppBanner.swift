@@ -41,7 +41,8 @@ struct AppBanner: View {
 
     let type: BannerType
     let message: String
-    var actionMessage: LocalizedStringKey? = nil
+    var showIcon = true
+    var actionMessage: LocalizedStringResource? = nil
     var action: () -> Void = {}
 
     var body: some View {
@@ -50,23 +51,29 @@ struct AppBanner: View {
 
             //title
             HStack(alignment: .top, spacing: Spacing.s) {
-                Image(systemName: type.icon)
-                    .foregroundStyle(type.foreground)
 
-                Text(message)
-                    .foregroundStyle(type.foreground)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .fixedSize(horizontal: false, vertical: true)  // 긴 문구는 줄바꿈
-            }
+                if showIcon {
+                    Image(systemName: type.icon)
+                        .foregroundStyle(type.foreground)
+                }
 
-            //Action
-            if let actionMessage {
-                TextLinkButton(
-                    title: actionMessage,
-                    textColor: .appPrimary,
-                    textStyle: .subbody
-                ) {
-                    action()
+                VStack(alignment: .leading) {
+                    
+                    Text(message)
+                        .foregroundStyle(type.foreground)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)  // 긴 문구는 줄바꿈
+                    
+                    //Action
+                    if let actionMessage {
+                        TextLinkButton(
+                            title: actionMessage,
+                            textColor: .appPrimary,
+                            textStyle: .subbody
+                        ) {
+                            action()
+                        }
+                    }
                 }
             }
         }
@@ -74,7 +81,7 @@ struct AppBanner: View {
         .padding(Spacing.m)
         .background(type.background)
         .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-    
+
     }
 }
 
@@ -83,7 +90,7 @@ struct AppBanner: View {
         AppBanner(
             type: .info,
             message: "재료를 추가하면 추천이 더 정확해져요",
-            actionMessage: "이번주 메뉴 제안받기"
+            actionMessage: "이번 주 메뉴 제안받기"
         )
         AppBanner(type: .success, message: "이번 주 식단이 저장됐어요")
         AppBanner(type: .attention, message: "네트워크 연결을 확인해주세요")

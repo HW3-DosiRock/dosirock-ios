@@ -44,7 +44,7 @@ struct LoginView: View {
                 .frame(width: Layout.logoWidth)
                 .padding(.bottom, Spacing.xs)
 
-            Text("도시의 돌멩이")
+            Text("login_header_title")
                 .appFont(.brandTitle)
         }
     }
@@ -54,16 +54,16 @@ struct LoginView: View {
         VStack(spacing: Spacing.m) {
 
             InputTextField(
-                label: "이메일",
-                placeHolder: "이메일을 입력해주세요",
+                label: "login_email_label",
+                placeHolder: "login_email_placeholder",
                 text: $vm.email,
                 inputType: .email,
                 labelColor: .appTextPrimary
             )
 
             InputTextField(
-                label: "비밀번호",
-                placeHolder: "비밀번호를 입력해주세요",
+                label: "login_password_label",
+                placeHolder: "login_password_placeholder",
                 text: $vm.password,
                 inputType: .password,
                 errorMsg: vm.errorMessage,
@@ -72,7 +72,7 @@ struct LoginView: View {
             )
 
             PrimaryButton(
-                title: "로그인",
+                title: "login_button_submit",
                 isEnable: vm.canSubmit,
                 isLoading: vm.isLoading
             ) {
@@ -86,7 +86,7 @@ struct LoginView: View {
     private var footerSection: some View {
         HStack(spacing: Spacing.m) {
             TextLinkButton(
-                title: "비밀번호 찾기",
+                title: "login_footer_find_password",
                 textColor: .appPrimary,
                 textStyle: .subbody
             ) {
@@ -98,7 +98,7 @@ struct LoginView: View {
                 .frame(width: 1, height: 12)
 
             TextLinkButton(
-                title: "회원가입",
+                title: "login_footer_sign_up",
                 textColor: .appPrimary,
                 textStyle: .subbody
             ) {
@@ -110,14 +110,14 @@ struct LoginView: View {
 
 #if DEBUG
 #Preview("성공") {
-    LoginView(vm: .init(service: MockAuthService(scenario: .success)))
+    LoginView(vm: .init(service: PreviewAuthService(scenario: .success)))
         .environment(Router<AuthRoute>())
 }
 #Preview("실패") {
     LoginView(
         vm: .init(
-            service: MockAuthService(
-                scenario: .failure(AuthError.invalidCredentials)
+            service: PreviewAuthService(
+                scenario: .failure(APIError.invalidCredentials)
             )
         )
     )
