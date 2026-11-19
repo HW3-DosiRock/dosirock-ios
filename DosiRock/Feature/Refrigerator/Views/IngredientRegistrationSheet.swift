@@ -16,6 +16,7 @@ struct IngredientRegistrationSheet: View {
     @State private var isSaving = false
     @State private var errorMessage: String?  // 저장·삭제 실패 안내
     @State private var showsDeleteDialog = false
+    @State private var isQuantityFocused = false  // 달력·저장 전에 키보드를 내리려고 바깥에서 포커스를 잡음
     @State private var sheetHeight: CGFloat = 400  // 시트 초기 높이
     @State private var contentHeight: CGFloat = 0  // ScrollView 안쪽 내용 높이
 
@@ -74,6 +75,7 @@ struct IngredientRegistrationSheet: View {
                                 stringLiteral: item.unit
                             ),
                             errorMsg: vm.quantityError,
+                            focused: $isQuantityFocused,
                             labelColor: .appTextPrimary
                         )
                     }
@@ -110,8 +112,7 @@ struct IngredientRegistrationSheet: View {
                     AppBanner(type: .attention, message: errorMessage)
                 }
                 PrimaryButton(
-                    title: vm.isDeletingByZero
-                        ? .fridgeRegisterDelete : .commonSave,
+                    title: .commonSave,
                     isEnable: vm.canSave,
                     isLoading: isSaving
                 ) { save() }
@@ -162,6 +163,7 @@ struct IngredientRegistrationSheet: View {
 
     // 저장: 성공하면 시트를 닫고, 실패하면 입력값은 그대로 두고 안내 배너를 보여 줌
     private func save() {
+        isQuantityFocused = false
 
         if vm.isDeletingByZero {  //0이면 저장 x , 삭제 o
             showsDeleteDialog = true
@@ -235,6 +237,8 @@ struct IngredientRegistrationSheet: View {
             }.zIndex(1)  // 툴팁이 아래 날짜 칸에 가려지지 않게 (zIndex는 같은 부모 안의 형제끼리만 비교됨)
 
             Button {
+                // 포커스를 안 풀면 달력이 닫힐 때 시스템이 입력칸에 포커스를 돌려줘서 키보드가 다시 뜸
+                isQuantityFocused = false
                 showsExpiryPicker = true
             } label: {
                 HStack {
