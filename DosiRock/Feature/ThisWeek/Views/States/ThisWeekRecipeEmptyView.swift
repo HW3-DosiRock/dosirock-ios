@@ -280,44 +280,21 @@ enum SoupOption: CaseIterable {
         }
     }
 }
-
-//TODO: 임시 , api나오면 실제 모델로 교체
+ 
 struct PriorityItem: Identifiable {
-    let id = UUID()
+    let id: Int
     let code: String
     let name: String
     let amount: String
     let daysLeft: Int
     var isOn: Bool = true
 }
-
-extension PriorityItem {
-    static let samples: [PriorityItem] = [
-        PriorityItem(
-            code: "ingredient_mushroom_king_oyster_mushroom",
-            name: "팽이버섯",
-            amount: "300g",
-            daysLeft: 1
-        ),
-        PriorityItem(
-            code: "ingredient_meat_chicken",
-            name: "닭고기",
-            amount: "200g",
-            daysLeft: 1
-        ),
-        PriorityItem(
-            code: "ingredient_etc_tofu",
-            name: "두부",
-            amount: "300g",
-            daysLeft: 2
-        ),
-    ]
-}
-
+ 
 #Preview {
     ThisWeekRecipeEmptyView(
         vm: ThisWeekViewModel(
-            mealPlans: PreviewMealRepository(scenario: .noPlan)
+            mealPlans: PreviewMealRepository(scenario: .noPlan),
+            inventory: PreviewInventoryRepository()      
         )
     )
     .padding()

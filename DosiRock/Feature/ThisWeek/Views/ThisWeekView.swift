@@ -62,28 +62,32 @@ struct ThisWeekView: View {
     #Preview("계획 있음") {
         ThisWeekView(
             vm: ThisWeekViewModel(
-                mealPlans: PreviewMealRepository(scenario: .hasPlan)
+                mealPlans: PreviewMealRepository(scenario: .hasPlan),
+                inventory: PreviewInventoryRepository()
             )
         )
     }
     #Preview("추천 조건") {
         ThisWeekView(
             vm: ThisWeekViewModel(
-                mealPlans: PreviewMealRepository(scenario: .noPlan)
+                mealPlans: PreviewMealRepository(scenario: .noPlan),
+                inventory: PreviewInventoryRepository()
             )
         )
     }
     #Preview("재료 없음") {
         ThisWeekView(
             vm: ThisWeekViewModel(
-                mealPlans: PreviewMealRepository(scenario: .noInventory)
+                mealPlans: PreviewMealRepository(scenario: .noInventory),
+                inventory: PreviewInventoryRepository()
             )
         )
     }
     #Preview("불러오기 실패") {
         ThisWeekView(
             vm: ThisWeekViewModel(
-                mealPlans: PreviewMealRepository(scenario: .failure)
+                mealPlans: PreviewMealRepository(scenario: .failure),
+                inventory: PreviewInventoryRepository()
             )
         )
     }
