@@ -10,7 +10,7 @@ import SwiftUI
 struct TextLinkButton: View {
 
     let title: LocalizedStringResource
-    var icon: String? = nil
+    var icon: ImageResource? = nil
     var textColor: Color = .appSurface
     var textStyle : AppTypography = .body
     var bgColor: Color = .appPrimary
@@ -25,7 +25,7 @@ struct TextLinkButton: View {
         Button(action: action) {
             HStack(spacing: Spacing.xs) {
                 if let icon {
-                    Image(systemName: icon)
+                    AppIcon(icon)
                 }
                 Text(title)
             }
@@ -42,7 +42,7 @@ struct TextLinkButton: View {
 #Preview {
     VStack(alignment: .leading, spacing: Spacing.s) {
         TextLinkButton(title: "비밀번호를 잊으셨나요?") {}
-        TextLinkButton(title: "전체 보기", icon: "chevron.right", textColor: .appTextSecondary, textStyle: .caption) {}
+        TextLinkButton(title: "전체 보기", icon: .chevronRight, textColor: .appTextSecondary, textStyle: .caption) {}
         TextLinkButton(title: "회원 탈퇴", textColor: .appAttention) {}
         TextLinkButton(title: "비활성 링크", isEnable: false) {}
     }

@@ -40,7 +40,7 @@ struct CheckBox: View {
                 Circle()
                     .fill(Color.appSuccess)                    // 배경 초록
                     .overlay(
-                        Image("check-agree")
+                        Image(.checkAgree)
                             .renderingMode(.template)          // 색을 입히려면 필요
                             .resizable()
                             .scaledToFit()

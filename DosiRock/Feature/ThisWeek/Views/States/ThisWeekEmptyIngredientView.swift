@@ -14,7 +14,7 @@ struct ThisWeekEmptyIngredientView: View {
             
             Spacer()
             
-            Image("logo-stone")
+            Image(.logoStone)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 104)

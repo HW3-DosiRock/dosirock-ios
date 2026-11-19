@@ -73,11 +73,7 @@ struct DiningOutCostView: View {
                 .appFont(.heading)
                 .foregroundStyle(Color.appTextPrimary)
 
-            Image("info")
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .frame(width: Size.Icon.medium)
+            AppIcon(.info, decorative: false)
                 .foregroundStyle(Color.appTextSecondary)
                 .appToolTip(.myEatOutTip)
                 .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언

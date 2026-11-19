@@ -17,13 +17,8 @@ struct LoadFailedView: View {
 
     var body: some View {
         VStack(spacing: Spacing.s) {
-            Image("alert")
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .frame(width: Size.Icon.xLarge, height: Size.Icon.xLarge)
+            AppIcon(.alert, size: Size.Icon.xLarge)
                 .foregroundStyle(Color.appAttention)
-                .accessibilityHidden(true)
 
             Text(title)
                 .appFont(.brandSubtitle)

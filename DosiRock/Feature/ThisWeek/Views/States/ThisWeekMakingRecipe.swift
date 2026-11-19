@@ -60,7 +60,7 @@ struct ThisWeekMakingRecipe: View {
 
     @ViewBuilder
     private var stone: some View {
-        let image = Image("logo-stone")
+        let image = Image(.logoStone)
             .resizable()
             .scaledToFit()
             .frame(width: 104)

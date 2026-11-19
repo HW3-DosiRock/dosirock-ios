@@ -60,13 +60,8 @@ struct ListRow<Badges: View>: View {
             }
 
             if showsChevron {
-                Image("chevron-right")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Size.Icon.medium, height: Size.Icon.medium)
+                AppIcon(.chevronRight)
                     .foregroundStyle(Color.appDisabled)
-                    .accessibilityHidden(true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
