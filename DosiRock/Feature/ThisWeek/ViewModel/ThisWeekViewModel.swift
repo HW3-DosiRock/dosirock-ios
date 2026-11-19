@@ -16,6 +16,11 @@ final class ThisWeekViewModel {
     private let mealPlans: MealRepository
     private(set) var plan: MealPlan?  // 응답 받은 계힉
 
+    // 추천 조건
+    var priorityItems = PriorityItem.samples  // TODO: 7단계에서 inventory/priority로 교체
+    var likeIngredients: [IngredientItem] = []  // 먹고 싶은 재료 (고른 순서대로)
+    var soupOption: SoupOption = .exclude  // 국물 기본값: 제외
+
     init(mealPlans: MealRepository, state: ThisWeekState = .loading) {
         self.mealPlans = mealPlans
         self.state = state
@@ -51,7 +56,7 @@ final class ThisWeekViewModel {
             let current = try await mealPlans.fetchCurrent()
             plan = current.plan
             if current.plan != nil {
-                state = .recipeList // 계획 있음 -> 목록
+                state = .recipeList  // 계획 있음 -> 목록
             } else if current.hasInventory {
                 state = .emptyRecipe  // 계획 없음 + 재료 있음 -> 추천 조건
             } else {
@@ -63,13 +68,21 @@ final class ThisWeekViewModel {
         }
     }
 
-    // 레시피를 너무 오래 기다리면 이전 화면(재료는 있고 레시피 없음)으로 돌려보낸다
-    static let makingTimeout: Duration = .seconds(200)
+    func suggest() async {
 
-    // "만드는 중" 화면이 떠 있는 동안 호출. 화면이 사라지면(결과 도착 등) 같이 취소된다
-    func waitForRecipe() async {
-        try? await Task.sleep(for: Self.makingTimeout)
-        guard !Task.isCancelled, state == .makingRecipe else { return }
-        state = .emptyRecipe
+        state = .makingRecipe
+
+        do {
+            plan = try await mealPlans.suggest(
+                priorityIngredientIds: [],
+                preferredIngredientIds: likeIngredients.map(\.id),
+                includeSoup: soupOption == .include
+            )
+            
+            state = .recipeList
+        } catch {
+            state = .emptyRecipe
+        }
     }
+
 }

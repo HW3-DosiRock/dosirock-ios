@@ -40,9 +40,20 @@ struct MealPlanRepositoryImpl: MealRepository {
         priorityIngredientIds: [Int],
         preferredIngredientIds: [Int],
         includeSoup: Bool
-    ) async throws -> MealPlan  {
-        //TODO: 수정
-        throw APIError.unknown 
+    ) async throws -> MealPlan {
+
+        try await client.sendRequired(
+            "meal-plans",
+            method: .post,
+            body: [
+                "priorityIngredientIds": priorityIngredientIds,
+                "preferredIngredientIds": preferredIngredientIds,
+                "includeSoup": includeSoup,
+            ],
+            timeout: 200,
+            authorized: true,
+            as: MealPlan.self
+        )
     }
 
 }
@@ -55,17 +66,33 @@ struct MealPlanRepositoryImpl: MealRepository {
         var scenario: Scenario = .hasPlan
 
         // shortcut: 계획 내용은 비어 있음, 계획 목록 화면 만들 때 샘플 채우기
-        static let samplePlan = MealPlan(weekStartDate: "2026-11-16", days: [], shortages: [])
+        static let samplePlan = MealPlan(
+            weekStartDate: "2026-11-16",
+            days: [],
+            shortages: []
+        )
 
         func fetchCurrent() async throws -> MealPlanCurrent {
             try await Task.sleep(for: .milliseconds(500))  // 로딩 화면 잠깐 보이게
             switch scenario {
             case .hasPlan:
-                return MealPlanCurrent(hasInventory: true, status: .draft, plan: Self.samplePlan)
+                return MealPlanCurrent(
+                    hasInventory: true,
+                    status: .draft,
+                    plan: Self.samplePlan
+                )
             case .noPlan:
-                return MealPlanCurrent(hasInventory: true, status: .none, plan: nil)
+                return MealPlanCurrent(
+                    hasInventory: true,
+                    status: .none,
+                    plan: nil
+                )
             case .noInventory:
-                return MealPlanCurrent(hasInventory: false, status: .none, plan: nil)
+                return MealPlanCurrent(
+                    hasInventory: false,
+                    status: .none,
+                    plan: nil
+                )
             case .failure:
                 throw APIError.network
             }
