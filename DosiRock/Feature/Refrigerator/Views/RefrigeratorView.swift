@@ -155,7 +155,7 @@ struct RefrigeratorContentView: View {
                 )
                 GroupedListCard(items: soon) { item in
                     Button {
-                        // TODO: 재료 상세(사용 우선순위) 화면으로 이동
+                        onSelectItem(item)  // 타일과 같은 재료 수정 시트
                     } label: {
                         ListRow(
                             iconCodes: [item.imageName],
