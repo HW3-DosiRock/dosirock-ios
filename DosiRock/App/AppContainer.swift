@@ -12,6 +12,7 @@ struct AppContainer {
     let user: UserRepository
     let ingredients: IngredientRepository
     let inventory: InventoryRepository
+    let mealPlan : MealRepository
     
     // 서버 주소는 여기서만 교체
     private static let baseURL = URL(
@@ -27,7 +28,8 @@ struct AppContainer {
             auth: AuthServiceImpl(client: client),
             user: UserRepositoryImpl(client: client),
             ingredients: IngredientRepositoryImpl(client: client),
-            inventory: InventoryRepositoryImpl(client: client)
+            inventory: InventoryRepositoryImpl(client: client),
+            mealPlan: MealPlanRepositoryImpl(client: client)
         )
     }
 }

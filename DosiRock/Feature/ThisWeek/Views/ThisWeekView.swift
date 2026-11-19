@@ -10,30 +10,31 @@ import SwiftUI
 // 이번주 탭 (임시 화면)
 struct ThisWeekView: View {
 
-    @State private var vm = ThisWeekViewModel()
+    @State private var vm: ThisWeekViewModel
+
+    init(vm: ThisWeekViewModel) {
+        _vm = State(initialValue: vm)
+    }
 
     var body: some View {
 
         VStack {
-            
+
             header
-            
+
             Group {
                 switch vm.state {
                 case .loading:
                     TabSkeletonView()
                 case .emptyIngredient: ThisWeekEmptyIngredientView()
                 case .emptyRecipe:
-                    ThisWeekRecipeEmptyView(
-                        weekRangeText: vm.weekRangeText
-                    )
+                    ThisWeekRecipeEmptyView(vm: vm)
                 case .error:
                     LoadFailedView(title: .thisweekLoadFailed) {
                         Task { await vm.load() }
                     }
                 case .makingRecipe:
                     ThisWeekMakingRecipe()
-                        .task { await vm.waitForRecipe() }  // 200초 지나면 이전 화면으로
                 case .recipeList:
                     ThisWeekRecipeListView()
                 }
@@ -48,7 +49,8 @@ struct ThisWeekView: View {
     private var header: some View {
         TabMainHeader(
             title: .tabThisWeek,
-            actionTitle: vm.state == .recipeList ? .thisweekChangeCondition : nil,
+            actionTitle: vm.state == .recipeList
+                ? .thisweekChangeCondition : nil,
             actionIcon: "slider.horizontal.3"
         ) {
             // TODO: 조건 변경 화면 열기
@@ -56,6 +58,37 @@ struct ThisWeekView: View {
     }
 }
 
-#Preview {
-    ThisWeekView()
-}
+#if DEBUG
+    #Preview("계획 있음") {
+        ThisWeekView(
+            vm: ThisWeekViewModel(
+                mealPlans: PreviewMealRepository(scenario: .hasPlan),
+                inventory: PreviewInventoryRepository()
+            )
+        )
+    }
+    #Preview("추천 조건") {
+        ThisWeekView(
+            vm: ThisWeekViewModel(
+                mealPlans: PreviewMealRepository(scenario: .noPlan),
+                inventory: PreviewInventoryRepository()
+            )
+        )
+    }
+    #Preview("재료 없음") {
+        ThisWeekView(
+            vm: ThisWeekViewModel(
+                mealPlans: PreviewMealRepository(scenario: .noInventory),
+                inventory: PreviewInventoryRepository()
+            )
+        )
+    }
+    #Preview("불러오기 실패") {
+        ThisWeekView(
+            vm: ThisWeekViewModel(
+                mealPlans: PreviewMealRepository(scenario: .failure),
+                inventory: PreviewInventoryRepository()
+            )
+        )
+    }
+#endif

@@ -52,6 +52,7 @@ struct APIClient {
         _ path: String,
         method: Method = .post,
         body: [String: Any]? = nil,  // GET처럼 본문이 없으면 생략
+        timeout: TimeInterval? = nil,
         authorized: Bool = false,
         as type: T.Type
     ) async throws -> T? {
@@ -60,6 +61,7 @@ struct APIClient {
                 path,
                 method: method,
                 body: body,
+                timeout: timeout,
                 authorized: authorized,
                 as: type
             )
@@ -71,6 +73,7 @@ struct APIClient {
                 path,
                 method: method,
                 body: body,
+                timeout: timeout,
                 authorized: authorized,
                 as: type
             )
@@ -118,12 +121,14 @@ struct APIClient {
         _ path: String,
         method: Method,
         body: [String: Any]?,
+        timeout: TimeInterval? = nil,
         authorized: Bool,
         as type: T.Type
     ) async throws -> T? {
 
         var request = URLRequest(url: baseURL.appending(path: path))
         request.httpMethod = method.rawValue
+        if let timeout { request.timeoutInterval = timeout }
         // 로그인이 필요한 API는 액세스 토큰을 헤더에 붙인다
         if authorized, let access = TokenStore.read(.access) {
             request.setValue(
@@ -168,6 +173,7 @@ struct APIClient {
         _ path: String,
         method: Method = .post,
         body: [String: Any]? = nil,
+        timeout: TimeInterval? = nil,
         authorized: Bool = false,
         as type: T.Type
     ) async throws -> T {
@@ -177,6 +183,7 @@ struct APIClient {
                 path,
                 method: method,
                 body: body,
+                timeout: timeout,
                 authorized: authorized,
                 as: type
             )
