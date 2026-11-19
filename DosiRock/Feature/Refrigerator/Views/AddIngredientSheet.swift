@@ -53,6 +53,7 @@ struct AddIngredientSheet: View {
                 previousExpirationDate: refrigerVm.expirationDate(of: item),
                 isExisting: refrigerVm.isRegistered(item)
             )
+            .id(item.id)
         }
     }
 

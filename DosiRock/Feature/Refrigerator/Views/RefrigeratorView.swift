@@ -45,6 +45,7 @@ struct RefrigeratorView: View {
                 previousExpirationDate: vm.expirationDate(of: item),
                 isExisting: vm.isRegistered(item)
             )
+            .id(item.id)    // 재료가 바뀌면 새 시트로 ( 안하면 이전에 선택 했던 재료로 노출됨) 
         }
     }
 
