@@ -172,12 +172,12 @@ struct RefrigeratorContentView: View {
         }
     }
 
-    // 오늘·내일·N일 안에 (같은 분홍색 뱃지)
-    // shortcut: 기한 지난 재료(음수)도 "오늘까지"로 보임, 지난 재료 디자인 나오면 분리
+    // 기한 지남·오늘·내일·N일 안에 (같은 분홍색 뱃지)
     private func priorityBadge(_ days: Int) -> some View {
         let title: LocalizedStringKey =
             switch days {
-            case ...0: "fridge_priority_badge_today"
+            case ..<0: "fridge_priority_badge_expired"
+            case 0: "fridge_priority_badge_today"
             case 1: "recipe_badge_tomorrow"
             default:
                 LocalizedStringKey(
