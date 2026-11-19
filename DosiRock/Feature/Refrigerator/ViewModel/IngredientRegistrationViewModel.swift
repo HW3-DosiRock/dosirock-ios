@@ -18,6 +18,7 @@ final class IngredientRegistrationViewModel {
     // 이미 냉장고에 있는 수량 (처음 등록하는 재료는 nil)
     // TODO: 재고 API 명세가 나오면 InventoryItem의 수량에서 가져온다
     let previousQuantity: Double?
+    let previousExpirationDate: Date?  // 이미 있는 재료의 저장된 소비기한 (변경 여부 비교용)
 
     // 이미 냉장고에 있는 재료인지 (기본 재료는 수량이 없어서 previousQuantity만으로는 알 수 없음)
     let isExisting: Bool
@@ -96,6 +97,7 @@ final class IngredientRegistrationViewModel {
     ) {
         self.selectedItem = selectedItem
         self.previousQuantity = previousQuantity
+        self.previousExpirationDate = previousExpirationDate
         self.isExisting = isExisting ?? (previousQuantity != nil)
         // 이미 있는 재료는 저장해 둔 수량을 입력칸에 미리 채움
         if let previousQuantity { quantityText = plain(previousQuantity) }
@@ -109,9 +111,25 @@ final class IngredientRegistrationViewModel {
 
     //MARK: 재료 저장
     var canSave: Bool {
-        selectedItem.managementType == .presence  // 기본 재료는 수량 입력이 없음
+        let isValid =
+            selectedItem.managementType == .presence  // 기본 재료는 수량 입력이 없음
             || (!quantityText.isEmpty && quantityError == nil
                 && expirationDate != nil)
+        return isValid && hasChanges
+    }
+
+    // 이미 있는 재료면 수량·소비기한 중 하나라도 바뀌었는지 (처음 등록은 항상 true)
+    var hasChanges: Bool {
+        guard isExisting else { return true }
+        let quantityChanged = quantity != previousQuantity  // "200"과 "200.0"은 같은 값
+        let dateChanged: Bool
+        if let expirationDate, let previousExpirationDate {
+            // 서버 날짜는 0시, 달력 날짜는 시각이 섞일 수 있어서 "같은 날"로 비교
+            dateChanged = !Calendar.current.isDate(expirationDate, inSameDayAs: previousExpirationDate)
+        } else {
+            dateChanged = expirationDate != previousExpirationDate  // 한쪽만 nil이면 바뀐 것
+        }
+        return quantityChanged || dateChanged
     }
 
 }
