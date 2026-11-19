@@ -575,7 +575,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "권장 사용일이 가까운 순"
+            "value" : "소비기한이 가까운 순"
           }
         }
       }
@@ -698,6 +698,17 @@
         }
       }
     },
+    "fridge_priority_badge_expired" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기한 지남"
+          }
+        }
+      }
+    },
     "fridge_priority_badge_today" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -715,7 +726,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ · 권장 사용일 %2$@"
+            "value" : "%1$@ · 소비기한 %2$@"
           }
         }
       }
