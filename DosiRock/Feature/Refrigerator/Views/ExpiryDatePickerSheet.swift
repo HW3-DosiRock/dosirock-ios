@@ -15,6 +15,14 @@ extension Date {
         f.dateFormat = "M/d(E)"
         return f.string(from: self)
     }
+
+    // "2026년 11월 14일 (토)"
+    var longKorean: String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ko_KR")
+        f.dateFormat = "yyyy년 M월 d일 (E)"
+        return f.string(from: self)
+    }
 }
 
 // 포장 소비기한 달력 시트 (F-06)
@@ -23,10 +31,12 @@ struct ExpiryDatePickerSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var draft: Date  // "선택"을 눌러야 바깥에 반영됨
     @State private var sheetHeight: CGFloat = 560  // 시트 높이 (내용 높이를 재서 갱신)
+    let range: ClosedRange<Date>  // 고를 수 있는 날짜 범위
     let onSelect: (Date) -> Void
 
-    init(initial: Date, onSelect: @escaping (Date) -> Void) {
+    init(initial: Date, range: ClosedRange<Date>, onSelect: @escaping (Date) -> Void) {
         _draft = State(initialValue: initial)
+        self.range = range
         self.onSelect = onSelect
     }
 
@@ -40,7 +50,7 @@ struct ExpiryDatePickerSheet: View {
                 onLeadingTap: { dismiss() }
             )
 
-            DatePicker("", selection: $draft, displayedComponents: .date)
+            DatePicker("", selection: $draft, in: range, displayedComponents: .date)
                 .datePickerStyle(.graphical)
                 .labelsHidden()
                 .tint(Color.appPrimary)
@@ -80,5 +90,5 @@ struct ExpiryDatePickerSheet: View {
 }
 
 #if DEBUG
-    #Preview { ExpiryDatePickerSheet(initial: Date()) { _ in } }
+    #Preview { ExpiryDatePickerSheet(initial: Date(), range: Date()...Date().addingTimeInterval(60 * 60 * 24 * 60)) { _ in } }
 #endif

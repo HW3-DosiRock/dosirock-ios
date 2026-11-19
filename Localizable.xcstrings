@@ -575,7 +575,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "권장 사용일이 가까운 순"
+            "value" : "소비기한이 가까운 순"
           }
         }
       }
@@ -698,6 +698,17 @@
         }
       }
     },
+    "fridge_priority_badge_expired" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기한 지남"
+          }
+        }
+      }
+    },
     "fridge_priority_badge_today" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -715,18 +726,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ · 권장 사용일 %2$@"
-          }
-        }
-      }
-    },
-    "fridge_priority_subtitle_no_quantity" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "권장 사용일 %@"
+            "value" : "%1$@ · 소비기한 %2$@"
           }
         }
       }
@@ -748,7 +748,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "냉동 보관 %lld일 기준"
+            "value" : "냉동 보관 %lld일 권장"
           }
         }
       }
@@ -759,7 +759,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "냉장 보관 %lld일 기준"
+            "value" : "냉장 보관 %lld일 권장"
           }
         }
       }
@@ -770,7 +770,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "실온 보관 %lld일 기준"
+            "value" : "실온 보관 %lld일 권장"
           }
         }
       }
@@ -852,28 +852,6 @@
         }
       }
     },
-    "fridge_register_expiry_add" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "포장에 적힌 소비기한 입력"
-          }
-        }
-      }
-    },
-    "fridge_register_expiry_clear" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "지우기"
-          }
-        }
-      }
-    },
     "fridge_register_expiry_select" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -891,7 +869,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "포장 소비기한"
+            "value" : "소비기한"
           }
         }
       }
@@ -918,35 +896,13 @@
         }
       }
     },
-    "fridge_register_recommended_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "권장 사용일"
-          }
-        }
-      }
-    },
     "fridge_register_recommended_tooltip" : {
       "extractionState" : "manual",
       "localizations" : {
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "먼저 쓸 재료를 고르기 위한 권장 사용일 기본값\n제품의 소비기한과 개봉 후 안내 우선\n구입과 개봉 시점, 보관 상태에 따라 조정"
-          }
-        }
-      }
-    },
-    "fridge_register_recommended_value" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ · %2$lld일 안에"
+            "value" : "기본값은 권장 소비기한으로 설정됨"
           }
         }
       }

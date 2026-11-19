@@ -7,15 +7,15 @@
 
 import Foundation
 
-// TODO 명세 나오면 수정 예정
 nonisolated struct InventoryItem : Identifiable , Hashable {
-    let id : String
+    
+    var id: Int { ingredientId }
     let name : String
     let ingredientId: Int
-    var quantity: Double? = nil  // 보유 수량 (기본 재료는 nil) / TODO 명세 나오면 확정
-    var unit: String = ""  // 단위 (g, 개 ...) / TODO 명세 나오면 확정
+    var quantity: Double? = nil  // 보유 수량 (기본 재료는 nil)
+    var unit: String = ""  // 단위 (g, 개 ...)
     var managementType: IngredientItem.ManagementType = .quantity  // 수량 재료 / 기본 재료 구분
-    var recommendedDate: Date? = nil  // 권장 사용일 / TODO 명세 나오면 확정
+    var recommendedDate: Date? = nil  // 권장 사용일
 
     // 오늘부터 권장 사용일까지 남은 일수 (0 = 오늘, 1 = 내일, 지났으면 음수)
     func daysUntilRecommended(from today: Date = Date()) -> Int? {
