@@ -56,10 +56,10 @@ struct InventoryRepositoryImpl: InventoryRepository {
                 quantity: item.quantity,
                 unit: item.unit,
                 managementType: item.managementType,
-                recommendedDate: item.expirationDate.flatMap{
+                recommendedDate: item.expirationDate.flatMap {
                     try? Date(
                         $0,
-                        strategy: .iso8601.year().month().day()
+                        strategy: Date.ISO8601FormatStyle(timeZone: .current).year().month().day()
                     )
                 }
             )
@@ -71,13 +71,45 @@ struct InventoryRepositoryImpl: InventoryRepository {
         quantity: Double?,
         recommendedDate: Date?
     ) async throws {
-        // TODO: 등록/삭제 명세 나오면 연결
-        throw APIError.unknown
+
+        let body: [String: Any]
+
+        switch ingredient.managementType {
+
+        case .quantity:
+            guard let quantity, let recommendedDate else {
+                throw APIError.unknown
+            }
+            body = [
+                "quantity": quantity,
+                "expirationDate": recommendedDate.formatted(
+                    Date.ISO8601FormatStyle(timeZone: .current).year().month()
+                        .day()
+                ),
+            ]
+
+        case .presence:
+            body = ["present": true]
+        }
+
+        _ = try await client.send(
+            "inventory/\(ingredient.id)",
+            method: .put,
+            body: body,
+            authorized: true,
+            as: Empty.self
+        )
     }
 
     func remove(ingredientId: Int) async throws {
-        // TODO: 등록/삭제 명세 나오면 연결
-        throw APIError.unknown
+       
+        _ = try await client.send(
+            "inventory/\(ingredientId)",
+            method: .delete,
+            authorized: true,
+            as: Empty.self
+        )
+        
     }
 
 }
