@@ -47,6 +47,11 @@ final class RefrigeratorViewModel {
         items.first { $0.ingredientId == ingredient.id }?.quantity
     }
 
+    // 이 재료의 저장된 소비기한 (등록 안 된 재료는 nil)
+    func expirationDate(of ingredient: IngredientItem) -> Date? {
+        items.first { $0.ingredientId == ingredient.id }?.recommendedDate
+    }
+
     // 재료 기준 정보 (id → 재료). 냉장고 타일을 눌렀을 때 등록 시트에 넘길 재료를 찾는 데 씀
     private let ingredientRepository: IngredientRepository
     private var ingredients: [Int: IngredientItem] = [:]

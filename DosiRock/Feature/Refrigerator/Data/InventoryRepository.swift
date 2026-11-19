@@ -8,23 +8,108 @@ import Foundation
 
 protocol InventoryRepository {
     func fetch() async throws -> [InventoryItem]
-    func add(_ ingredient: IngredientItem, quantity: Double?, recommendedDate: Date?) async throws  // 이미 있으면 값을 바꿈
+    func add(
+        _ ingredient: IngredientItem,
+        quantity: Double?,
+        recommendedDate: Date?
+    ) async throws  // 이미 있으면 값을 바꿈
     func remove(ingredientId: Int) async throws
 }
 
-//TODO 삭제 (API 구현 전까지)
-struct EmptyInventoryRepository: InventoryRepository {
+// 서버 응답: data { items, totalCount }
+private nonisolated struct InventoryListResponse: Decodable {
+    let items: [Item]
+    let totalCount: Int
+
+    struct Item: Decodable {
+        let ingredientId: Int
+        let name: String
+        let unit: String
+        let managementType: IngredientItem.ManagementType
+        let quantity: Double?
+        let expirationDate: String?
+        let present: Bool?
+        let category: String
+        let decimalPlaces: Int
+        let storageMethod: String?
+        let storageDays: Int?
+    }
+}
+
+struct InventoryRepositoryImpl: InventoryRepository {
+
+    let client: APIClient
 
     func fetch() async throws -> [InventoryItem] {
-        []
+
+        let result = try await client.sendRequired(
+            "inventory",
+            method: .get,
+            authorized: true,
+            as: InventoryListResponse.self
+        )
+
+        return result.items.map { item in
+            InventoryItem(
+                name: item.name,
+                ingredientId: item.ingredientId,
+                quantity: item.quantity,
+                unit: item.unit,
+                managementType: item.managementType,
+                recommendedDate: item.expirationDate.flatMap {
+                    try? Date(
+                        $0,
+                        strategy: Date.ISO8601FormatStyle(timeZone: .current).year().month().day()
+                    )
+                }
+            )
+        }
     }
 
-    func add(_ ingredient: IngredientItem, quantity: Double?, recommendedDate: Date?) async throws {
+    func add(
+        _ ingredient: IngredientItem,
+        quantity: Double?,
+        recommendedDate: Date?
+    ) async throws {
 
+        let body: [String: Any]
+
+        switch ingredient.managementType {
+
+        case .quantity:
+            guard let quantity, let recommendedDate else {
+                throw APIError.unknown
+            }
+            body = [
+                "quantity": quantity,
+                "expirationDate": recommendedDate.formatted(
+                    Date.ISO8601FormatStyle(timeZone: .current).year().month()
+                        .day()
+                ),
+            ]
+
+        case .presence:
+            body = ["present": true]
+        }
+
+        _ = try await client.send(
+            "inventory/\(ingredient.id)",
+            method: .put,
+            body: body,
+            authorized: true,
+            as: Empty.self
+        )
     }
 
     func remove(ingredientId: Int) async throws {
-
+       
+        _ = try await client.send(
+            "inventory/\(ingredientId)",
+            method: .delete,
+            authorized: true,
+            as: Empty.self
+        )
+        
     }
 
 }
@@ -56,15 +141,20 @@ struct EmptyInventoryRepository: InventoryRepository {
             return items  // 장부를 읽는다
         }
 
-        func add(_ ingredient: IngredientItem, quantity: Double?, recommendedDate: Date?) async throws {
+        func add(
+            _ ingredient: IngredientItem,
+            quantity: Double?,
+            recommendedDate: Date?
+        ) async throws {
             // 이미 있는 재료는 수량만 바꾸고, 없으면 새로 추가 (서버의 등록·수정과 같은 동작)
-            if let index = items.firstIndex(where: { $0.ingredientId == ingredient.id }) {
+            if let index = items.firstIndex(where: {
+                $0.ingredientId == ingredient.id
+            }) {
                 items[index].quantity = quantity
                 items[index].recommendedDate = recommendedDate
             } else {
                 items.append(
                     InventoryItem(
-                        id: UUID().uuidString,
                         name: ingredient.name,
                         ingredientId: ingredient.id,
                         quantity: quantity,
@@ -82,12 +172,12 @@ struct EmptyInventoryRepository: InventoryRepository {
 
         // 오늘로부터 n일 뒤 (샘플 권장 사용일용)
         private static func day(_ n: Int) -> Date {
-            Calendar.current.date(byAdding: .day, value: n, to: Date()) ?? Date()
+            Calendar.current.date(byAdding: .day, value: n, to: Date())
+                ?? Date()
         }
 
         static let samples: [InventoryItem] = [
             InventoryItem(
-                id: "enoki",
                 name: "팽이버섯",
                 ingredientId: 25,
                 quantity: 300,
@@ -95,7 +185,6 @@ struct EmptyInventoryRepository: InventoryRepository {
                 recommendedDate: day(1)
             ),
             InventoryItem(
-                id: "chicken",
                 name: "닭고기",
                 ingredientId: 35,
                 quantity: 500,
@@ -103,7 +192,6 @@ struct EmptyInventoryRepository: InventoryRepository {
                 recommendedDate: day(1)
             ),
             InventoryItem(
-                id: "tofu",
                 name: "두부",
                 ingredientId: 40,
                 quantity: 2,
@@ -111,7 +199,6 @@ struct EmptyInventoryRepository: InventoryRepository {
                 recommendedDate: day(2)
             ),
             InventoryItem(
-                id: "salt",
                 name: "소금",
                 ingredientId: 46,
                 unit: "g",
