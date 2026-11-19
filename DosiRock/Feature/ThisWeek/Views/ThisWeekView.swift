@@ -10,8 +10,12 @@ import SwiftUI
 // 이번주 탭 (임시 화면)
 struct ThisWeekView: View {
 
-    @State private var vm = ThisWeekViewModel()
-
+    @State private var vm : ThisWeekViewModel
+    
+    init(vm: ThisWeekViewModel) {
+         _vm = State(initialValue: vm)
+    }
+    
     var body: some View {
 
         VStack {
@@ -56,6 +60,17 @@ struct ThisWeekView: View {
     }
 }
 
-#Preview {
-    ThisWeekView()
-}
+#if DEBUG
+    #Preview("계획 있음") {
+        ThisWeekView(vm: ThisWeekViewModel(mealPlans: PreviewMealRepository(scenario: .hasPlan)))
+    }
+    #Preview("추천 조건") {
+        ThisWeekView(vm: ThisWeekViewModel(mealPlans: PreviewMealRepository(scenario: .noPlan)))
+    }
+    #Preview("재료 없음") {
+        ThisWeekView(vm: ThisWeekViewModel(mealPlans: PreviewMealRepository(scenario: .noInventory)))
+    }
+    #Preview("불러오기 실패") {
+        ThisWeekView(vm: ThisWeekViewModel(mealPlans: PreviewMealRepository(scenario: .failure)))
+    }
+#endif

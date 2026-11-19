@@ -18,7 +18,7 @@ struct MainTabView: View {
         VStack(spacing: 0) {
             Group {
                 switch activeTab {
-                case .thisweek: ThisWeekView()
+                case .thisweek: ThisWeekView(vm: ThisWeekViewModel(mealPlans: container.mealPlan))
                 case .fridge:
                     RefrigeratorView(
                         vm: RefrigeratorViewModel(
