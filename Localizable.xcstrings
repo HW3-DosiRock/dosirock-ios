@@ -720,17 +720,6 @@
         }
       }
     },
-    "fridge_priority_subtitle_no_quantity" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "권장 사용일 %@"
-          }
-        }
-      }
-    },
     "fridge_register_back" : {
       "extractionState" : "manual",
       "localizations" : {

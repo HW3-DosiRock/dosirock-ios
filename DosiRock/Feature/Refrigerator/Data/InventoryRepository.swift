@@ -8,6 +8,7 @@ import Foundation
 
 protocol InventoryRepository {
     func fetch() async throws -> [InventoryItem]
+    func fetchPriority() async throws -> [InventoryPriorityItem]
     func add(
         _ ingredient: IngredientItem,
         quantity: Double?,
@@ -36,6 +37,19 @@ private nonisolated struct InventoryListResponse: Decodable {
     }
 }
 
+private nonisolated struct InventoryPriorityListResponse: Decodable {
+    let items: [Item]
+    let totalCount: Int
+
+    struct Item: Decodable {
+        let ingredientId: Int
+        let name: String
+        let quantity: Double
+        let unit: String
+        let expirationDate: String
+        let remainingDays: Int
+    }
+}
 struct InventoryRepositoryImpl: InventoryRepository {
 
     let client: APIClient
@@ -59,9 +73,35 @@ struct InventoryRepositoryImpl: InventoryRepository {
                 recommendedDate: item.expirationDate.flatMap {
                     try? Date(
                         $0,
-                        strategy: Date.ISO8601FormatStyle(timeZone: .current).year().month().day()
+                        strategy: Date.ISO8601FormatStyle(timeZone: .current)
+                            .year().month().day()
                     )
                 }
+            )
+        }
+    }
+
+    func fetchPriority() async throws -> [InventoryPriorityItem] {
+
+        let result = try await client.sendRequired(
+            "inventory/priority",
+            method: .get,
+            authorized: true,
+            as: InventoryPriorityListResponse.self
+        )
+
+        return result.items.map { item in
+            InventoryPriorityItem(
+                name: item.name,
+                ingredientId: item.ingredientId,
+                quantity: item.quantity,
+                unit: item.unit,
+                expirationDate: (try? Date(
+                    item.expirationDate,
+                    strategy: Date.ISO8601FormatStyle(timeZone: .current).year()
+                        .month().day()
+                )) ?? Date(),
+                remainingDays: item.remainingDays
             )
         }
     }
@@ -102,14 +142,14 @@ struct InventoryRepositoryImpl: InventoryRepository {
     }
 
     func remove(ingredientId: Int) async throws {
-       
+
         _ = try await client.send(
             "inventory/\(ingredientId)",
             method: .delete,
             authorized: true,
             as: Empty.self
         )
-        
+
     }
 
 }
@@ -141,6 +181,18 @@ struct InventoryRepositoryImpl: InventoryRepository {
             return items  // 장부를 읽는다
         }
 
+        func fetchPriority() async throws -> [InventoryPriorityItem] {
+            items.compactMap { item in
+                guard let quantity = item.quantity, let date = item.recommendedDate,
+                      let days = item.daysUntilRecommended(), days <= 7 else { return nil }
+                return InventoryPriorityItem(
+                    name: item.name, ingredientId: item.ingredientId,
+                    quantity: quantity, unit: item.unit,
+                    expirationDate: date, remainingDays: days
+                )
+            }
+        }
+        
         func add(
             _ ingredient: IngredientItem,
             quantity: Double?,

@@ -19,6 +19,7 @@ final class RefrigeratorViewModel {
 
     private let inventory: InventoryRepository
     private(set) var items: [InventoryItem] = []
+    private(set) var priorityItems: [InventoryPriorityItem] = []
 
     var state: State = .loading
 
@@ -41,7 +42,7 @@ final class RefrigeratorViewModel {
     func isRegistered(_ ingredient: IngredientItem) -> Bool {
         registeredIngredientIds.contains(ingredient.id)
     }
-    
+
     // 이 재료의 냉장고 보유 수량 (등록 안 된 재료는 nil)
     func quantity(of ingredient: IngredientItem) -> Double? {
         items.first { $0.ingredientId == ingredient.id }?.quantity
@@ -56,13 +57,13 @@ final class RefrigeratorViewModel {
     private let ingredientRepository: IngredientRepository
     private var ingredients: [Int: IngredientItem] = [:]
 
-    func ingredient(for item: InventoryItem) -> IngredientItem? {
-        ingredients[item.ingredientId]
+    func ingredient(for ingredientId: Int) -> IngredientItem? {
+        ingredients[ingredientId]
     }
 
     init(
         inventory: InventoryRepository,
-        ingredientRepository: IngredientRepository 
+        ingredientRepository: IngredientRepository
     ) {
         self.inventory = inventory
         self.ingredientRepository = ingredientRepository
@@ -71,30 +72,46 @@ final class RefrigeratorViewModel {
     func load() async {
         state = .loading
         do {
-            items = try await inventory.fetch()
-            state = items.isEmpty ? .empty : .loaded(items)
+            try await reload()
         } catch {
             state = .failed
         }
         if let list = try? await ingredientRepository.fetchAll() {
-            ingredients = Dictionary(list.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+            ingredients = Dictionary(
+                list.map { ($0.id, $0) },
+                uniquingKeysWith: { first, _ in first }
+            )
         }
+    }
+
+    private func reload() async throws {
+        async let all = inventory.fetch()
+        async let soon = try? inventory.fetchPriority()
+        items = try await all
+        priorityItems = await soon ?? []
+        state = items.isEmpty ? .empty : .loaded(items)
     }
 
     // 냉장고에서 삭제하고 목록을 다시 읽음 (마지막 재료였으면 빈 냉장고 화면)
     func remove(_ ingredient: IngredientItem) async throws {
         try await inventory.remove(ingredientId: ingredient.id)
         registeredThisSession.remove(ingredient.id)  // 방금 등록한 걸 지우면 배너 숫자도 줄어듦
-        items = try await inventory.fetch()
-        state = items.isEmpty ? .empty : .loaded(items)
+        try await reload()
     }
 
-    func register(_ ingredient: IngredientItem, quantity: Double?, recommendedDate: Date?) async throws {
+    func register(
+        _ ingredient: IngredientItem,
+        quantity: Double?,
+        recommendedDate: Date?
+    ) async throws {
 
         let isNew = !isRegistered(ingredient)  // 이미 있는 재료의 수정은 "N종 등록 완료"에 세지 않음
-        try await inventory.add(ingredient, quantity: quantity, recommendedDate: recommendedDate)  // 1. 장부에 적어 달라고 시킨다
-        items = try await inventory.fetch()  // 2. 장부를 다시 읽어서 최신 상태로 맞춘다
-        state = items.isEmpty ? .empty : .loaded(items)  // 첫 등록이면 빈 화면 → 목록 화면
+        try await inventory.add(
+            ingredient,
+            quantity: quantity,
+            recommendedDate: recommendedDate
+        )  // 1. 장부에 적어 달라고 시킨다
+        try await reload()  // 2. 냉장고·빨리 쓸 재료를 다시 읽어서 최신 상태로 맞춘다 (첫 등록이면 빈 화면 → 목록 화면)
         if isNew { registeredThisSession.insert(ingredient.id) }
 
     }
