@@ -118,6 +118,18 @@ final class IngredientRegistrationViewModel {
         return isValid && hasChanges
     }
 
+    // 고를 수 있는 소비기한: 오늘 ~ 24개월 뒤 그달 말일 (서버 규칙)
+    // 이미 저장된 날짜가 지난 날이면 그 날짜까지는 유지할 수 있게 시작일을 당김
+    var expirationRange: ClosedRange<Date> {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        let start = previousExpirationDate.map { min(today, cal.startOfDay(for: $0)) } ?? today
+        let after24 = cal.date(byAdding: .month, value: 24, to: today) ?? today
+        let monthStart = cal.date(from: cal.dateComponents([.year, .month], from: after24)) ?? after24
+        let end = cal.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart) ?? after24
+        return start...end
+    }
+
     // 이미 있는 재료면 수량·소비기한 중 하나라도 바뀌었는지 (처음 등록은 항상 true)
     var hasChanges: Bool {
         guard isExisting else { return true }

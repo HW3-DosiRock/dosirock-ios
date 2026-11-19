@@ -158,7 +158,7 @@ struct IngredientRegistrationSheet: View {
             onConfirm: { delete() }
         )
         .sheet(isPresented: $showsExpiryPicker) {
-            ExpiryDatePickerSheet(initial: vm.expirationDate ?? Date()) {
+            ExpiryDatePickerSheet(initial: vm.expirationDate ?? Date(), range: vm.expirationRange) {
                 date in
                 vm.expirationDate = date
             }
