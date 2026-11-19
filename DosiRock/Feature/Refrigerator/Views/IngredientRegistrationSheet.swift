@@ -111,11 +111,15 @@ struct IngredientRegistrationSheet: View {
                 if let errorMessage {
                     AppBanner(type: .attention, message: errorMessage)
                 }
-                PrimaryButton(
-                    title: .commonSave,
-                    isEnable: vm.canSave,
-                    isLoading: isSaving
-                ) { save() }
+
+                // 기본 재료를 이미 가지고 있으면 바꿀 값이 없으니 저장 버튼 숨김 (삭제만)
+                if !(item.managementType == .presence && vm.isExisting) {
+                    PrimaryButton(
+                        title: .commonSave,
+                        isEnable: vm.canSave,
+                        isLoading: isSaving
+                    ) { save() }
+                }
 
                 // 이미 냉장고에 있는 재료만
                 if vm.isExisting {
@@ -181,7 +185,9 @@ struct IngredientRegistrationSheet: View {
                 )
                 dismiss()
             } catch {
-                errorMessage = String(localized: .commonSaveFailed)
+                // 서버·네트워크가 알려준 이유가 있으면 그 문구, 없으면 기본 문구
+                errorMessage = (error as? LocalizedError)?.errorDescription
+                    ?? String(localized: .commonSaveFailed)
             }
             isSaving = false
         }
@@ -196,9 +202,8 @@ struct IngredientRegistrationSheet: View {
                 try await refrigerVm.remove(item)
                 dismiss()
             } catch {
-                errorMessage = String(
-                    localized: .fridgeRegisterDeleteFailed
-                )
+                errorMessage = (error as? LocalizedError)?.errorDescription
+                    ?? String(localized: .fridgeRegisterDeleteFailed)
             }
             isSaving = false
         }
