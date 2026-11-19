@@ -23,19 +23,11 @@ struct AppContainer {
 
         let client = APIClient(baseURL: baseURL)
 
-        #if DEBUG
-            let inventory: InventoryRepository = PreviewInventoryRepository(
-                scenario: .empty
-            )
-        #else
-            let inventory: InventoryRepository = EmptyInventoryRepository()
-        #endif
-
         return AppContainer(
             auth: AuthServiceImpl(client: client),
             user: UserRepositoryImpl(client: client),
             ingredients: IngredientRepositoryImpl(client: client),
-            inventory: inventory
+            inventory: InventoryRepositoryImpl(client: client)
         )
     }
 }
