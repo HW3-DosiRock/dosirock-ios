@@ -42,6 +42,7 @@ struct RefrigeratorView: View {
                 ingredient: item,
                 refrigerVm: vm,
                 previousQuantity: vm.quantity(of: item),
+                previousExpirationDate: vm.expirationDate(of: item),
                 isExisting: vm.isRegistered(item)
             )
         }

@@ -25,12 +25,14 @@ struct IngredientRegistrationSheet: View {
         ingredient: IngredientItem,
         refrigerVm: RefrigeratorViewModel,
         previousQuantity: Double? = nil,
+        previousExpirationDate: Date? = nil,
         isExisting: Bool? = nil
     ) {
         _vm = State(
             initialValue: IngredientRegistrationViewModel(
                 selectedItem: ingredient,
                 previousQuantity: previousQuantity,
+                previousExpirationDate: previousExpirationDate,
                 isExisting: isExisting
             )
         )
@@ -62,7 +64,9 @@ struct IngredientRegistrationSheet: View {
                             placeHolder: .fridgeRegisterQuantityPlaceholder,
                             text: $vm.quantityText,
                             inputType: .decimal,
-                            suffix: LocalizedStringResource(stringLiteral: item.unit),
+                            suffix: LocalizedStringResource(
+                                stringLiteral: item.unit
+                            ),
                             errorMsg: vm.quantityError,
                             labelColor: .appTextPrimary
                         )
@@ -77,8 +81,10 @@ struct IngredientRegistrationSheet: View {
                         )
                     }
 
-                    recommendedSection
-                    expirySection
+                    // 기본 재료는 소비기한이 없음
+                    if item.managementType == .quantity {
+                        expirySection
+                    }
                 }
                 .padding(.horizontal, Spacing.screenHorizontal)
                 .padding(.vertical, Spacing.l)
@@ -98,7 +104,8 @@ struct IngredientRegistrationSheet: View {
                     AppBanner(type: .attention, message: errorMessage)
                 }
                 PrimaryButton(
-                    title: .commonSave,
+                    title: vm.isDeletingByZero
+                        ? .fridgeRegisterDelete : .commonSave,
                     isEnable: vm.canSave,
                     isLoading: isSaving
                 ) { save() }
@@ -138,15 +145,21 @@ struct IngredientRegistrationSheet: View {
             onConfirm: { delete() }
         )
         .sheet(isPresented: $showsExpiryPicker) {
-            ExpiryDatePickerSheet(initial: vm.expiryDate ?? Date()) { date in
-                vm.expiryDate = date
-                vm.showsExpiryInput = true
+            ExpiryDatePickerSheet(initial: vm.expirationDate ?? Date()) {
+                date in
+                vm.expirationDate = date
             }
         }
     }
 
     // 저장: 성공하면 시트를 닫고, 실패하면 입력값은 그대로 두고 안내 배너를 보여 줌
     private func save() {
+
+        if vm.isDeletingByZero {  //0이면 저장 x , 삭제 o
+            showsDeleteDialog = true
+            return
+        }
+
         isSaving = true
         errorMessage = nil
         Task {
@@ -154,7 +167,7 @@ struct IngredientRegistrationSheet: View {
                 try await refrigerVm.register(
                     item,
                     quantity: vm.quantity,
-                    recommendedDate: vm.recommendedDate
+                    recommendedDate: vm.expirationDate
                 )
                 dismiss()
             } catch {
@@ -194,70 +207,56 @@ struct IngredientRegistrationSheet: View {
         }
     }
 
-    // 권장 사용일: < 11/14(토) · 5일 안에 >  (보관 일수가 없는 재료는 숨김)
-    @ViewBuilder
-    private var recommendedSection: some View {
-        if let date = vm.recommendedDate, let days = vm.daysUntilRecommended {
-            VStack(alignment: .leading, spacing: Spacing.s) {
+    // 소비기한: 제목(+툴팁) · 날짜 칸(누르면 달력) · "냉장 보관 5일 권장"
+    private var expirySection: some View {
+        VStack(alignment: .leading, spacing: Spacing.s) {
 
-                HStack {
-                    Text(.fridgeRegisterRecommendedTitle)
-                        .appFont(.heading)
-                        .foregroundStyle(Color.appTextPrimary)
-                    Image("info")
-                        .renderingMode(.template)  // 색을 입힐 수 있게 템플릿으로
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: Size.Icon.medium)
-                        .foregroundStyle(Color.appTextSecondary)
-                        .appToolTip(.fridgeRegisterRecommendedTooltip)
-                        .zIndex(1)
-                        .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
-                }.zIndex(1)  // 툴팁이 아래 입력 칸에 가려지지 않게 (zIndex는 같은 부모 안의 형제끼리만 비교됨)
-
-                HStack {
-                    stepButton("chevron.left", enabled: vm.canShiftEarlier) {
-                        vm.shiftRecommended(by: -1)
-                    }
-                    Spacer()
-                    Text(
-                        String(
-                            format: String(
-                                localized: "fridge_register_recommended_value"
-                            ),
-                            date.shortKorean,
-                            days
-                        )
-                    )
-                    .appFont(.body)
+            HStack {
+                Text(.fridgeRegisterExpiryTitle)
+                    .appFont(.heading)
                     .foregroundStyle(Color.appTextPrimary)
-                    Spacer()
-                    stepButton("chevron.right", enabled: true) {
-                        vm.shiftRecommended(by: 1)
-                    }
-                }
-                .padding(.horizontal, Spacing.s)
-                .frame(height: Size.buttonHeight)
-                .background {
-                    RoundedRectangle(cornerRadius: Radius.small).fill(
-                        Color.appSurface
-                    )
-                    RoundedRectangle(cornerRadius: Radius.small).stroke(
-                        Color.appBorder
-                    )
-                }
-                .clipShape(RoundedRectangle(cornerRadius: Radius.small))
+                Image("info")
+                    .renderingMode(.template)  // 색을 입힐 수 있게 템플릿으로
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: Size.Icon.medium)
+                    .foregroundStyle(Color.appTextSecondary)
+                    .appToolTip(.fridgeRegisterRecommendedTooltip)
+                    .zIndex(1)
+                    .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
+            }.zIndex(1)  // 툴팁이 아래 날짜 칸에 가려지지 않게 (zIndex는 같은 부모 안의 형제끼리만 비교됨)
 
-                if let basis = storageBasisText {
-                    Text(basis)
-                        .appFont(.subbody)
+            Button {
+                showsExpiryPicker = true
+            } label: {
+                HStack {
+                    Text(vm.expirationDate?.longKorean ?? "")
+                        .appFont(.body)
+                        .foregroundStyle(Color.appTextPrimary)
+                    Spacer()
+                    Image(systemName: "calendar")
                         .foregroundStyle(Color.appTextSecondary)
                 }
+                .padding(.horizontal, Spacing.l)
+                .frame(height: Size.buttonHeight)
+                .background(Color.appSurface)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.small))
+                .overlay(
+                    RoundedRectangle(cornerRadius: Radius.small)
+                        .stroke(Color.appBorder, lineWidth: 1)
+                )
+            }
+            .buttonStyle(.plain)
+
+            if let basis = storageBasisText {
+                Text(basis)
+                    .appFont(.subbody)
+                    .foregroundStyle(Color.appTextSecondary)
             }
         }
     }
 
-    // "냉장 보관 5일 기준"
+    // "냉장 보관 5일 권장"
     private var storageBasisText: String? {
         guard let days = item.storageDays, let method = item.storageMethod
         else {
@@ -273,74 +272,6 @@ struct IngredientRegistrationSheet: View {
             format: String(localized: String.LocalizationValue(key)),
             days
         )
-    }
-
-    private func stepButton(
-        _ icon: String,
-        enabled: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            Image(systemName: icon)
-                .foregroundStyle(
-                    enabled ? Color.appTextPrimary : Color.appDisabled
-                )
-                .frame(width: Size.minTouch, height: Size.minTouch)
-        }
-        .buttonStyle(.plain)
-        .disabled(!enabled)
-    }
-
-    // 포장 소비기한: 추가하면 날짜 칸이 생기고(누르면 달력), "지우기"로 제거
-    @ViewBuilder
-    private var expirySection: some View {
-        if vm.showsExpiryInput, let date = vm.expiryDate {
-            VStack(alignment: .leading, spacing: Spacing.s) {
-                HStack {
-                    Text(.fridgeRegisterExpiryTitle)
-                        .appFont(.heading)
-                        .foregroundStyle(Color.appTextPrimary)
-                    Spacer()
-                    Button {
-                        vm.toggleExpiryInput()
-                    } label: {
-                        Text(.fridgeRegisterExpiryClear)
-                            .appFont(.subbody)
-                            .foregroundStyle(Color.appTextSecondary)
-                    }
-                    .buttonStyle(.plain)
-                }
-
-                Button {
-                    showsExpiryPicker = true
-                } label: {
-                    HStack {
-                        Text(date.shortKorean)
-                            .appFont(.body)
-                            .foregroundStyle(Color.appTextPrimary)
-                        Spacer()
-                        Image(systemName: "calendar")
-                            .foregroundStyle(Color.appTextSecondary)
-                    }
-                    .padding(.horizontal, Spacing.l)
-                    .frame(height: Size.buttonHeight)
-                    .background(Color.appSurface)
-                    .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: Radius.small)
-                            .stroke(Color.appBorder, lineWidth: 1)
-                    )
-                }
-                .buttonStyle(.plain)
-            }
-        } else {
-            TextLinkButton(
-                title: .fridgeRegisterExpiryAdd,
-                icon: "plus",
-                textColor: .appTextPrimary,
-                textStyle: .subbody
-            ) { showsExpiryPicker = true }
-        }
     }
 }
 

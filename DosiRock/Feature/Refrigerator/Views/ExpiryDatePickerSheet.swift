@@ -15,6 +15,14 @@ extension Date {
         f.dateFormat = "M/d(E)"
         return f.string(from: self)
     }
+
+    // "2026년 11월 14일 (토)"
+    var longKorean: String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ko_KR")
+        f.dateFormat = "yyyy년 M월 d일 (E)"
+        return f.string(from: self)
+    }
 }
 
 // 포장 소비기한 달력 시트 (F-06)
