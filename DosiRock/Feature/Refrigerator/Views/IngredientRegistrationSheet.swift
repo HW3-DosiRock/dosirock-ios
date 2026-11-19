@@ -41,6 +41,12 @@ struct IngredientRegistrationSheet: View {
 
     private var item: IngredientItem { vm.selectedItem }
 
+    // 홈 인디케이터 영역 높이 (키보드와 무관)
+    private static var windowBottomInset: CGFloat {
+        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
+            .keyWindow?.safeAreaInsets.bottom ?? 0
+    }
+
     var body: some View {
         @Bindable var vm = vm
 
@@ -124,8 +130,10 @@ struct IngredientRegistrationSheet: View {
             .padding(.bottom, Spacing.l)
         }
         // 1) 내용 자체의 높이를 잼 (하단 안전 영역 포함). 아래 frame보다 먼저 와야 내용 높이가 나옴
+        // 하단 여백은 창(window) 값을 씀: 시트의 safeAreaInsets는 키보드가 뜨면 키보드 높이가 섞여서
+        // 시트가 커질수록 값도 커짐 → 높이 계산이 끝없이 반복되며 앱이 멈춤
         .onGeometryChange(for: CGFloat.self) {
-            $0.size.height + $0.safeAreaInsets.bottom
+            $0.size.height + Self.windowBottomInset
         } action: {
             sheetHeight = $0
         }
