@@ -1999,6 +1999,17 @@
         }
       }
     },
+    "recipe_badge_need_more" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가 재료 필요"
+          }
+        }
+      }
+    },
     "recipe_badge_next_week" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2505,6 +2516,39 @@
         }
       }
     },
+    "thisweek_confirm_plan" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 계획 확정"
+          }
+        }
+      }
+    },
+    "thisweek_day_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "반찬 도시락 · 한 끼 약 %lld분"
+          }
+        }
+      }
+    },
+    "thisweek_day_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 도시락"
+          }
+        }
+      }
+    },
     "thisweek_empty_desc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2633,6 +2677,61 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "먼저 사용"
+          }
+        }
+      }
+    },
+    "thisweek_resuggest_day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이날 메뉴 다시 제안"
+          }
+        }
+      }
+    },
+    "thisweek_rice_default" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기본 구성"
+          }
+        }
+      }
+    },
+    "thisweek_rice_included" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "밥과 함께"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_more" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ 외 %2$lld종"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가로 필요한 재료 %lld종"
           }
         }
       }

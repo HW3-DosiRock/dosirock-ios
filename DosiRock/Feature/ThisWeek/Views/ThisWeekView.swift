@@ -36,7 +36,7 @@ struct ThisWeekView: View {
                 case .makingRecipe:
                     ThisWeekMakingRecipe()
                 case .recipeList:
-                    ThisWeekRecipeListView()
+                    ThisWeekRecipeListView(vm : vm)
                 }
             }
             .task { await vm.load() }

@@ -254,7 +254,7 @@ struct ThisWeekRecipeEmptyView: View {
 
 // 이번 주 화면 섹션 카드 (흰 배경 + 테두리)
 extension View {
-    fileprivate func thisWeekCard() -> some View {
+    func thisWeekCard() -> some View {
         self
             .padding(Spacing.m)
             .background {

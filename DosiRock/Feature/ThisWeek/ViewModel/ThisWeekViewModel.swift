@@ -14,13 +14,41 @@ final class ThisWeekViewModel {
     var errorMessage: String?  // 불러오기 실패 문구
 
     private let mealPlans: MealRepository
-    private(set) var plan: MealPlan?  // 응답 받은 계힉
+    private(set) var plan: MealPlan?  // 응답 받은 계획
+
     private let inventory: InventoryRepository
 
     // 추천 조건
     var priorityItems: [PriorityItem] = []  // 우선 순위 아이템
     var likeIngredients: [IngredientItem] = []  // 먹고 싶은 재료 (고른 순서대로)
     var soupOption: SoupOption = .exclude  // 국물 기본값: 제외
+    
+    //계획 목록 화면
+    var selectedDate: String?  // 사용자가 고른 요일의 날짜 (고르기 전이면 첫날)
+    var days: [MealPlanDay] { plan?.days ?? [] }
+    var shortages: [Shortage] { plan?.shortages ?? [] }
+    // 고른 날이 새 계획에 없으면(다시 제안 등) 첫날로
+    var selectedDay: MealPlanDay? { days.first { $0.date == selectedDate } ?? days.first }
+    // 메뉴 카드 뱃지: 빨리 써야 할 재료를 쓰면 "빨리 쓸 재료 사용", 없는 재료가 있으면 "추가 재료 필요"
+    func badges(for menu: Menu) -> [RecipeState] {
+        let priorityIds = Set(priorityItems.map(\.id))
+        var result: [RecipeState] = []
+        if menu.ingredients.contains(where: { priorityIds.contains($0.ingredientId) }) {
+            result.append(.useSoon)
+        }
+        if menu.ingredients.contains(where: { !$0.owned }) {
+            result.append(.needMore)
+        }
+        return result
+    }
+
+    // "닭고기, 양파 외 4종" (2개 이하면 이름만)
+    var shortageSummary: String {
+        let names = shortages.prefix(2).map(\.name).joined(separator: ", ")
+        let rest = shortages.count - 2
+        guard rest > 0 else { return names }
+        return String(format: String(localized: "thisweek_shortage_more"), names, rest)
+    }
 
     init(
         mealPlans: MealRepository,
@@ -62,6 +90,7 @@ final class ThisWeekViewModel {
             let current = try await mealPlans.fetchCurrent()
             plan = current.plan
             if current.plan != nil {
+                await loadPriorityItems()  // 메뉴의 "빨리 쓸 재료 사용" 뱃지용
                 state = .recipeList  // 계획 있음 -> 목록
             } else if current.hasInventory {
                 await loadPriorityItems()
