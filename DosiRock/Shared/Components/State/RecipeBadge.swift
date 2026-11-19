@@ -13,6 +13,7 @@ enum RecipeState: String, Codable {
     case cooked
     case used
     case nextWeek
+    case needMore  // 메뉴에 냉장고에 없는 재료가 있음
 
     var title: LocalizedStringKey {
         switch self {
@@ -21,6 +22,7 @@ enum RecipeState: String, Codable {
         case .cooked: "recipe_badge_cooked"
         case .used: "recipe_badge_used"
         case .nextWeek: "recipe_badge_next_week"
+        case .needMore: "recipe_badge_need_more"
         }
     }
 
@@ -31,6 +33,7 @@ enum RecipeState: String, Codable {
         case .cooked: .appTextPrimary
         case .used: .appSurfaceSubtle
         case .nextWeek: .appInfoBackground
+        case .needMore: .appAttentionBackground
         }
     }
 
@@ -41,6 +44,7 @@ enum RecipeState: String, Codable {
         case .cooked: .appSurface
         case .used: .appTextSecondary
         case .nextWeek: .appInfo
+        case .needMore: .appAttention
         }
     }
 }

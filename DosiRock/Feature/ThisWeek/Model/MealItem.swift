@@ -56,3 +56,28 @@ nonisolated struct Shortage: Decodable {
     let amount: Double
     let unit: String
 }
+
+// 화면 표시용
+nonisolated extension MealPlanDay {
+    private static let dayFormat = Date.ISO8601FormatStyle(timeZone: .current).year().month().day()
+
+    private func formatted(_ pattern: String) -> String {
+        guard let parsed = try? Date(date, strategy: Self.dayFormat) else { return "" }
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ko_KR")
+        f.dateFormat = pattern
+        return f.string(from: parsed)
+    }
+
+    var weekdayText: String { formatted("E") }  // "월"
+    var dayText: String { formatted("M/d") }  // "11/16"
+    var weekdayFullText: String { formatted("EEEE") }  // "월요일"
+}
+
+nonisolated extension MenuIngredient {
+    var imageName: String { IngredientImageMap.assetName(for: name) }
+}
+
+nonisolated extension Shortage {
+    var imageName: String { IngredientImageMap.assetName(for: name) }
+}
