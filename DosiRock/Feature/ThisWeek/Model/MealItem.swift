@@ -80,4 +80,9 @@ nonisolated extension MenuIngredient {
 
 nonisolated extension Shortage {
     var imageName: String { IngredientImageMap.assetName(for: name) }
+
+    // 60 → "60g", 0.5 → "0.5개" (정수면 소수점 없이)
+    var amountText: String {
+        amount.formatted(.number.grouping(.never).precision(.fractionLength(0...2))) + unit
+    }
 }
