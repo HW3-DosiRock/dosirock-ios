@@ -285,6 +285,7 @@ struct PriorityItem: Identifiable {
     var isOn: Bool = true
 }
  
+#if DEBUG
 #Preview {
     ThisWeekRecipeEmptyView(
         vm: ThisWeekViewModel(
@@ -294,3 +295,4 @@ struct PriorityItem: Identifiable {
     )
     .padding()
 }
+#endif

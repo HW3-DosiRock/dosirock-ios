@@ -76,6 +76,11 @@ nonisolated extension MealPlanDay {
 
 nonisolated extension MenuIngredient {
     var imageName: String { IngredientImageMap.assetName(for: name) }
+
+    // 150 → "150g", 0.2 → "0.2포기" (정수면 소수점 없이)
+    var amountText: String {
+        amount.formatted(.number.grouping(.never).precision(.fractionLength(0...2))) + unit
+    }
 }
 
 nonisolated extension Shortage: Identifiable {

@@ -38,6 +38,7 @@ struct IngredientTile: View {
     var subLabel: String? = nil  // 이름 바로 아래 작은 글씨 (예: 삼겹살 / 수입)
     var reservesNameSpace = false  // true면 이름 두 줄 자리를 항상 확보 (그리드에서 높이를 맞출 때)
     var details: [String] = []  // 이름 아래 보조 텍스트 (예: "300g", "사용 11/10(화)")
+    var badge: RecipeBadge? = nil  // 맨 아래 상태 뱃지 (예: 레시피 재료의 충분 · 보유 · 부족 · 사용함)
     var type: IngredientTileType = .selectable
     var isChecked: Bool = false  // selectable 에서만 의미 있음
     var action: () -> Void = {}  // selectable 에서만 의미 있음
@@ -101,6 +102,8 @@ struct IngredientTile: View {
                         .lineLimit(1)
                 }
             }
+
+            if let badge { badge }
         }
         .padding(Spacing.m)
         .frame(maxWidth: .infinity)

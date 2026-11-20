@@ -121,7 +121,7 @@ struct ThisWeekRecipeListView: View {
                             badges: vm.badges(for: menu)
                         )
                     ) {
-                        // TODO: 메뉴 상세 (시안 확인 후)
+                        router.push(.recipe(date: day.date, menuIndex: index))
                     }
                 }
 
@@ -174,6 +174,7 @@ struct ThisWeekRecipeListView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let vm = ThisWeekViewModel(
         mealPlans: PreviewMealRepository(scenario: .hasPlan),
@@ -184,3 +185,4 @@ struct ThisWeekRecipeListView: View {
         .padding()
         .task { await vm.load() }  // 샘플 계획을 vm.plan에 넣음
 }
+#endif

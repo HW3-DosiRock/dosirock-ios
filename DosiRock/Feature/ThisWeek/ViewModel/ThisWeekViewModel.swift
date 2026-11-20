@@ -15,6 +15,8 @@ final class ThisWeekViewModel {
 
     private let mealPlans: MealRepository
     private(set) var plan: MealPlan?  // 응답 받은 계획
+    private(set) var planStatus: MealPlanStatus = .none  // 확정 전(DRAFT) / 확정(CONFIRMED)
+    var isConfirmed: Bool { planStatus == .confirmed }  // 확정된 계획만 조리 완료 가능
 
     private let inventory: InventoryRepository
 
@@ -89,6 +91,7 @@ final class ThisWeekViewModel {
 
             let current = try await mealPlans.fetchCurrent()
             plan = current.plan
+            planStatus = current.status
             if current.plan != nil {
                 await loadPriorityItems()  // 메뉴의 "빨리 쓸 재료 사용" 뱃지용
                 state = .recipeList  // 계획 있음 -> 목록
@@ -109,6 +112,7 @@ final class ThisWeekViewModel {
         state = .makingRecipe
 
         do {
+            planStatus = .draft  // 새로 제안받은 계획은 확정 전
             plan = try await mealPlans.suggest(
                 priorityIngredientIds: priorityItems.filter(\.isOn).map(\.id),
                 preferredIngredientIds: likeIngredients.map(\.id),
