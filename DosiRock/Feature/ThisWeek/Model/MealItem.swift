@@ -78,6 +78,16 @@ nonisolated extension MenuIngredient {
     var imageName: String { IngredientImageMap.assetName(for: name) }
 }
 
-nonisolated extension Shortage {
+nonisolated extension Shortage: Identifiable {
+    var id: Int { ingredientId }
+
     var imageName: String { IngredientImageMap.assetName(for: name) }
+
+    // shortcut: 응답에 관리 방식이 없어 부족한 양이 0이면 기본 재료(보유 여부만 관리)로 봄, managementType 필드가 오면 교체
+    var isPresence: Bool { amount == 0 }
+
+    // 60 → "60g", 0.5 → "0.5개" (정수면 소수점 없이)
+    var amountText: String {
+        amount.formatted(.number.grouping(.never).precision(.fractionLength(0...2))) + unit
+    }
 }
