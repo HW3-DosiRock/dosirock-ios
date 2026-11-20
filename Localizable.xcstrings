@@ -2714,6 +2714,83 @@
         }
       }
     },
+    "thisweek_shortage_back" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_buy_link" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "쿠팡에서 보기 · 광고"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_buy_notice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아래 링크는 쿠팡 파트너스 활동의 일환으로, 구매 시 일정액의 수수료를 제공받습니다."
+          }
+        }
+      }
+    },
+    "thisweek_shortage_buy_optional" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_buy_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구매 링크"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_lack_amount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 부족"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_market_price" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "참고 시세 %1$@ %2$@원 · 조사일 %3$@"
+          }
+        }
+      }
+    },
     "thisweek_shortage_more" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2721,6 +2798,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ 외 %2$lld종"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_nav_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가로 필요한 재료"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구매한 재료 등록"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_banner" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료를 사셨다면 산 양을 등록해 주세요"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_bought" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "샀어요"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_lack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "부족 %@"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "산 양"
           }
         }
       }
