@@ -121,6 +121,12 @@ final class ThisWeekViewModel {
         }
     }
 
+    // 구매한 재료 등록 → 성공하면 이번 주 계획을 다시 불러옴 (부족 재료·뱃지 갱신). 실패는 시트에서 안내
+    func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws {
+        try await mealPlans.registerBought(amounts: amounts, bought: bought)
+        await load()
+    }
+
     // 빨리 써야 할 재료 (실패하면 빈 목록, 조건 화면은 그대로)
     private func loadPriorityItems() async {
         let items = (try? await inventory.fetchPriority()) ?? []

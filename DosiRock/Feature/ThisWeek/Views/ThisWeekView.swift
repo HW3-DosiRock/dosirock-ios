@@ -48,7 +48,9 @@ struct ThisWeekView: View {
             .navigationDestination(for: ThisWeekRoute.self) { route in
                 switch route {
                 case .shortages:
-                    ShortageListView(shortages: vm.shortages, days: vm.days)
+                    ShortageListView(shortages: vm.shortages, days: vm.days) {
+                        try await vm.registerBought(amounts: $0, bought: $1)
+                    }
                 }
             }
         }
