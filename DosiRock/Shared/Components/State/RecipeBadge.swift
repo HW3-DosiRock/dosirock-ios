@@ -14,6 +14,7 @@ enum RecipeState: String, Codable {
     case used
     case nextWeek
     case needMore  // 메뉴에 냉장고에 없는 재료가 있음
+    case lacking  // 재료 타일의 "부족" (진한 빨강 바탕)
 
     var title: LocalizedStringKey {
         switch self {
@@ -23,6 +24,7 @@ enum RecipeState: String, Codable {
         case .used: "recipe_badge_used"
         case .nextWeek: "recipe_badge_next_week"
         case .needMore: "recipe_badge_need_more"
+        case .lacking: "recipe_badge_lacking"
         }
     }
 
@@ -34,6 +36,7 @@ enum RecipeState: String, Codable {
         case .used: .appSurfaceSubtle
         case .nextWeek: .appInfoBackground
         case .needMore: .appAttentionBackground
+        case .lacking: .appAttention
         }
     }
 
@@ -45,6 +48,7 @@ enum RecipeState: String, Codable {
         case .used: .appTextSecondary
         case .nextWeek: .appInfo
         case .needMore: .appAttention
+        case .lacking: .appAttentionBackground
         }
     }
 }

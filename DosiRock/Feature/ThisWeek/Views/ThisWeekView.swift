@@ -51,6 +51,18 @@ struct ThisWeekView: View {
                     ShortageListView(shortages: vm.shortages, days: vm.days) {
                         try await vm.registerBought(amounts: $0, bought: $1)
                     }
+                case .recipe(let date, let menuIndex):
+                    if let day = vm.days.first(where: { $0.date == date }),
+                        day.menus.indices.contains(menuIndex)
+                    {
+                        let menu = day.menus[menuIndex]
+                        RecipeDetailView(
+                            day: day,
+                            menu: menu,
+                            badges: vm.badges(for: menu),
+                            isConfirmed: vm.isConfirmed
+                        )
+                    }
                 }
             }
         }

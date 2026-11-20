@@ -1999,6 +1999,17 @@
         }
       }
     },
+    "recipe_badge_lacking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "부족"
+          }
+        }
+      }
+    },
     "recipe_badge_need_more" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2050,6 +2061,138 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "사용함"
+          }
+        }
+      }
+    },
+    "recipe_detail_back" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주"
+          }
+        }
+      }
+    },
+    "recipe_detail_complete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "조리 완료"
+          }
+        }
+      }
+    },
+    "recipe_detail_complete_locked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계획 확정 후 완료 가능"
+          }
+        }
+      }
+    },
+    "recipe_detail_cost" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예상 재료비"
+          }
+        }
+      }
+    },
+    "recipe_detail_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "레시피를 만들지 못했어요"
+          }
+        }
+      }
+    },
+    "recipe_detail_generating" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI가 레시피를 만들고 있어요"
+          }
+        }
+      }
+    },
+    "recipe_detail_generating_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "레시피 만드는 중…"
+          }
+        }
+      }
+    },
+    "recipe_detail_ingredients" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료"
+          }
+        }
+      }
+    },
+    "recipe_detail_minutes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld분"
+          }
+        }
+      }
+    },
+    "recipe_detail_show_shortages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가로 필요한 재료 보기"
+          }
+        }
+      }
+    },
+    "recipe_detail_steps" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "조리 순서"
+          }
+        }
+      }
+    },
+    "recipe_detail_usage_basis" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 사용량 기준"
           }
         }
       }
@@ -2994,6 +3137,17 @@
     },
     "권장 사용일까지 %lld일" : {
 
+    },
+    "recipe_tile_enough" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "충분"
+          }
+        }
+      }
     }
   },
   "version" : "1.3"
