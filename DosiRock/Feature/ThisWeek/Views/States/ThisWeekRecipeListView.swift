@@ -10,6 +10,7 @@ import SwiftUI
 struct ThisWeekRecipeListView: View {
 
     @Bindable var vm: ThisWeekViewModel
+    @Environment(Router<ThisWeekRoute>.self) private var router
 
     var body: some View {
 
@@ -51,7 +52,7 @@ struct ThisWeekRecipeListView: View {
     private var shortageCard: some View {
         if !vm.shortages.isEmpty {
             Button {
-                // TODO: 부족 재료 전체 목록 (시안 확인 후)
+                router.push(.shortages)
             } label: {
                 HStack(spacing: Spacing.m) {
                     AppIcon(.cart, size: Size.Icon.large)
@@ -179,6 +180,7 @@ struct ThisWeekRecipeListView: View {
         inventory: PreviewInventoryRepository()
     )
     ThisWeekRecipeListView(vm: vm)
+        .environment(Router<ThisWeekRoute>())
         .padding()
         .task { await vm.load() }  // 샘플 계획을 vm.plan에 넣음
 }
