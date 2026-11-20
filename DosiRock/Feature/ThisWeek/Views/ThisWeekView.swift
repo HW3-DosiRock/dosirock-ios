@@ -11,6 +11,7 @@ import SwiftUI
 struct ThisWeekView: View {
 
     @State private var vm: ThisWeekViewModel
+    @State private var router = Router<ThisWeekRoute>()
 
     init(vm: ThisWeekViewModel) {
         _vm = State(initialValue: vm)
@@ -18,31 +19,42 @@ struct ThisWeekView: View {
 
     var body: some View {
 
-        VStack {
+        NavigationStack(path: $router.path) {
+            VStack {
 
-            header
+                header
 
-            Group {
-                switch vm.state {
-                case .loading:
-                    TabSkeletonView()
-                case .emptyIngredient: ThisWeekEmptyIngredientView()
-                case .emptyRecipe:
-                    ThisWeekRecipeEmptyView(vm: vm)
-                case .error:
-                    LoadFailedView(title: .thisweekLoadFailed) {
-                        Task { await vm.load() }
+                Group {
+                    switch vm.state {
+                    case .loading:
+                        TabSkeletonView()
+                    case .emptyIngredient: ThisWeekEmptyIngredientView()
+                    case .emptyRecipe:
+                        ThisWeekRecipeEmptyView(vm: vm)
+                    case .error:
+                        LoadFailedView(title: .thisweekLoadFailed) {
+                            Task { await vm.load() }
+                        }
+                    case .makingRecipe:
+                        ThisWeekMakingRecipe()
+                    case .recipeList:
+                        ThisWeekRecipeListView(vm : vm)
                     }
-                case .makingRecipe:
-                    ThisWeekMakingRecipe()
-                case .recipeList:
-                    ThisWeekRecipeListView(vm : vm)
                 }
             }
-            .task { await vm.load() }
+            .padding(Spacing.screenHorizontal)
+            // NavigationStack이 자기 흰 배경을 칠해서 → 여기서 직접 칠함 (마이페이지와 같음)
+            .background(Color.appBackground.ignoresSafeArea())
+            .navigationDestination(for: ThisWeekRoute.self) { route in
+                switch route {
+                case .shortages:
+                    ShortageListView(shortages: vm.shortages, days: vm.days)
+                }
+            }
         }
-        .padding(Spacing.screenHorizontal)
-        .background(Color.appBackground)
+        .environment(router)
+        // task는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행됨)
+        .task { await vm.load() }
     }
 
     // 탭 제목. 레시피 목록일 때만 오른쪽에 "추천 조건 변경" 버튼
