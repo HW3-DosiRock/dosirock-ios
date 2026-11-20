@@ -38,7 +38,7 @@ struct LoginView: View {
     private var logoSection: some View {
 
         VStack {
-            Image("logo-stone")
+            Image(.logoStone)
                 .resizable()
                 .scaledToFit()
                 .frame(width: Layout.logoWidth)

@@ -10,7 +10,7 @@ import SwiftUI
 struct PrimaryButton: View {
 
     let title: LocalizedStringResource
-    var icon: String? = nil
+    var icon: ImageResource? = nil
     var textColor: Color = .appSurface
     var bgColor: Color = .appPrimary
     var isEnable: Bool = true
@@ -31,7 +31,7 @@ struct PrimaryButton: View {
                         lineWidth: Size.Spinner.smallLineWidth
                     )
                 } else if let icon {
-                    Image(systemName: icon)
+                    AppIcon(icon)
                 }
                 Text(title)
             }
@@ -75,7 +75,7 @@ private struct PrimaryButtonStyle: ButtonStyle {
 #Preview {
     VStack {
         PrimaryButton(title: "시작하기") {}
-        PrimaryButton(title: "좋아요", icon: "heart.fill") {}
+        PrimaryButton(title: "제안받기", icon: .sparkle) {}
         PrimaryButton(title: "저장 중...", isLoading: true) {}
         PrimaryButton(title: "다음", isEnable: false, isLoading: false) {}
         PrimaryButton(

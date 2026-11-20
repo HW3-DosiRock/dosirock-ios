@@ -15,7 +15,7 @@ struct ToastView: View {
 
         HStack {
 
-            Image("logo-stone")
+            Image(.logoStone)
                 .resizable()
                 .scaledToFit()                 // 비율 유지
                 .frame(width: Size.minTouch, height: Size.minTouch)  // 원하는 크기

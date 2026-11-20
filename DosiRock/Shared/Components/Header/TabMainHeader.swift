@@ -11,7 +11,7 @@ struct TabMainHeader: View {
 
     let title: LocalizedStringResource
     var actionTitle: LocalizedStringResource? = nil
-    var actionIcon: String? = nil
+    var actionIcon: ImageResource? = nil
     var action: () -> Void = {}
 
     var body: some View {
@@ -39,7 +39,7 @@ struct TabMainHeader: View {
         TabMainHeader(
             title: "이번주",
             actionTitle: "추천 조건 변경",
-            actionIcon: "slider.horizontal.3"
+            actionIcon: .sliders
         ) {
             print("눌림")
         }

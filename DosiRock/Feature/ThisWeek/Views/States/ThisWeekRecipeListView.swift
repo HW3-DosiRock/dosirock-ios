@@ -54,11 +54,7 @@ struct ThisWeekRecipeListView: View {
                 // TODO: 부족 재료 전체 목록 (시안 확인 후)
             } label: {
                 HStack(spacing: Spacing.m) {
-                    Image("cart")
-                        .renderingMode(.template)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: Size.Icon.large, height: Size.Icon.large)
+                    AppIcon(.cart, size: Size.Icon.large)
                         .foregroundStyle(Color.appPrimary)
                         .frame(width: Size.Icon.xLarge, height: Size.Icon.xLarge)
                         .background(Circle().fill(Color.appSurfaceSubtle))
@@ -86,13 +82,8 @@ struct ThisWeekRecipeListView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Image("chevron-right")
-                        .renderingMode(.template)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: Size.Icon.medium, height: Size.Icon.medium)
+                    AppIcon(.chevronRight)
                         .foregroundStyle(Color.appDisabled)
-                        .accessibilityHidden(true)
                 }
                 .thisWeekCard()
                 .contentShape(Rectangle())
@@ -137,7 +128,7 @@ struct ThisWeekRecipeListView: View {
 
                 TextLinkButton(
                     title: .thisweekResuggestDay,
-                    icon: "arrow.clockwise",
+                    icon: .refresh,
                     textColor: .appTextSecondary
                 ) {
                     // TODO: 이날 메뉴 다시 제안 (21번 API)
@@ -150,13 +141,8 @@ struct ThisWeekRecipeListView: View {
     // 밥은 메뉴에 없지만 항상 같이 나감 (안내용 줄)
     private var riceRow: some View {
         HStack(spacing: Spacing.s) {
-            Image("rice-bowl")
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .frame(width: Size.Icon.medium, height: Size.Icon.medium)
+            AppIcon(.riceBowl)
                 .foregroundStyle(Color.appTextSecondary)
-                .accessibilityHidden(true)
             Text(.thisweekRiceIncluded)
                 .appFont(.subbody)
                 .foregroundStyle(Color.appTextSecondary)

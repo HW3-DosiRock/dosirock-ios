@@ -23,25 +23,25 @@ enum Navigation : CaseIterable, Hashable {
         }
     }
     
-    var icDef: String {
+    var icDef: ImageResource {
         switch self {
         case .thisweek:
-            "tab-week"
+            .tabWeek
         case .fridge:
-            "fridge"
+            .fridge
         case .mypage:
-            "tab-my"
+            .tabMy
         }
     }
     
-    var icActive: String {
+    var icActive: ImageResource {
         switch self {
         case .thisweek:
-            "tab-week-active"
+            .tabWeekActive
         case .fridge:
-            "tab-fridge-active"
+            .tabFridgeActive
         case .mypage:
-            "tab-my-active"
+            .tabMyActive
         }
     }
 

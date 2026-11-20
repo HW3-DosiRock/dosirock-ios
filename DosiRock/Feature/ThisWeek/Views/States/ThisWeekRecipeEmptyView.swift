@@ -55,7 +55,7 @@ struct ThisWeekRecipeEmptyView: View {
             //이번 주 메뉴 제안 받기 버튼 (스크롤 밖에 둬서 하단에 고정)
             BottomActionBar(
                 title: .thisweekSuggestWithCondition,
-                icon: "sparkle"
+                icon: .sparkle
             ) {
                 Task { await vm.suggest() }
             }
@@ -65,11 +65,7 @@ struct ThisWeekRecipeEmptyView: View {
     //MARK: 섹션 제목 옆 정보 아이콘
     // 누르면 툴팁이 보였다가 몇 초 뒤 저절로 사라짐 (상태 변수는 modifier 안에서 관리)
     private func infoIcon(_ message: LocalizedStringResource) -> some View {
-        Image("info")
-            .renderingMode(.template)  // 색을 입힐 수 있게 템플릿으로
-            .resizable()
-            .scaledToFit()
-            .frame(width: Size.Icon.medium)
+        AppIcon(.info, decorative: false)
             .foregroundStyle(Color.appTextSecondary)
             .appToolTip(message)
             .accessibilityAddTraits(.isButton)
@@ -108,7 +104,7 @@ struct ThisWeekRecipeEmptyView: View {
                     showsLikeIngredientPicker = true
                 } label: {
                     HStack(spacing: Spacing.s) {
-                        Image(systemName: "plus")
+                        AppIcon(.plus, size: Size.Icon.small)
                         Text(.thisweekLikeIngredientAdd)
                     }
                     .appFont(.subbody)
@@ -141,8 +137,7 @@ struct ThisWeekRecipeEmptyView: View {
         } label: {
             HStack(spacing: Spacing.s) {
                 Text(item.name)
-                Image(systemName: "xmark")
-                    .accessibilityHidden(true)
+                AppIcon(.close, size: Size.Icon.small)
             }
             .appFont(.subbody)
             .foregroundStyle(Color.appSurface)

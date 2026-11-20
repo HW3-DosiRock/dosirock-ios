@@ -43,7 +43,7 @@ struct NavigationHeader: View {
         if let leadingTitle {
             TextLinkButton(
                 title: leadingTitle,
-                icon: showsBackIcon ? "chevron.left" : nil,
+                icon: showsBackIcon ? .chevronLeft : nil,
                 textColor: .appTextSecondary,
                 textStyle: .body,
                 action: onLeadingTap

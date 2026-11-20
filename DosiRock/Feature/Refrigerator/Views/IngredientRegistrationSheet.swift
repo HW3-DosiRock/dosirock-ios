@@ -230,11 +230,7 @@ struct IngredientRegistrationSheet: View {
                 Text(.fridgeRegisterExpiryTitle)
                     .appFont(.heading)
                     .foregroundStyle(Color.appTextPrimary)
-                Image("info")
-                    .renderingMode(.template)  // 색을 입힐 수 있게 템플릿으로
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Size.Icon.medium)
+                AppIcon(.info, decorative: false)
                     .foregroundStyle(Color.appTextSecondary)
                     .appToolTip(.fridgeRegisterRecommendedTooltip)
                     .zIndex(1)
@@ -251,7 +247,7 @@ struct IngredientRegistrationSheet: View {
                         .appFont(.body)
                         .foregroundStyle(Color.appTextPrimary)
                     Spacer()
-                    Image(systemName: "calendar")
+                    AppIcon(.calendar)
                         .foregroundStyle(Color.appTextSecondary)
                 }
                 .padding(.horizontal, Spacing.l)

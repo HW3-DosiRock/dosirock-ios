@@ -69,13 +69,8 @@ struct ProfileEditView: View {
                                 .appFont(.body)
                                 .foregroundStyle(Color.appTextPrimary)
                             Spacer()
-                            Image("chevron-right")
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: Size.Icon.medium, height: Size.Icon.medium)
+                            AppIcon(.chevronRight)
                                 .foregroundStyle(Color.appDisabled)
-                                .accessibilityHidden(true)
                         }
                         .contentShape(Rectangle())
                     }

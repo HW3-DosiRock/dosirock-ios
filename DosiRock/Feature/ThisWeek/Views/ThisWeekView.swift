@@ -51,7 +51,7 @@ struct ThisWeekView: View {
             title: .tabThisWeek,
             actionTitle: vm.state == .recipeList
                 ? .thisweekChangeCondition : nil,
-            actionIcon: "slider.horizontal.3"
+            actionIcon: .sliders
         ) {
             // TODO: 조건 변경 화면 열기
         }
