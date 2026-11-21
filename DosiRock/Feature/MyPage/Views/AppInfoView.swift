@@ -60,7 +60,7 @@ struct AppInfoView: View {
 
     private var intro: some View {
         VStack(spacing: Spacing.s) {
-            Image("logo-stone")
+            Image(.logoStone)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 140, height: 140)

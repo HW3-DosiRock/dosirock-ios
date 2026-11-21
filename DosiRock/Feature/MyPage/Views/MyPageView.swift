@@ -181,7 +181,7 @@ struct MyPageView: View {
 
         HStack(spacing: Spacing.l) {
 
-            Image("logo-stone")
+            Image(.logoStone)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 72)
@@ -204,10 +204,8 @@ struct MyPageView: View {
             Button {
                 router.push(.profileEdit)
             } label: {
-                Image("settings")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Size.Icon.large)
+                AppIcon(.settings, size: Size.Icon.large)
+                    .foregroundStyle(Color.appTextPrimary)
             }
             .padding(.trailing, Spacing.l)
         }
@@ -261,11 +259,7 @@ struct MyPageView: View {
                             .appFont(.subbody)
                             .foregroundStyle(Color.appTextSecondary)
 
-                        Image("info")
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: Size.Icon.medium)
+                        AppIcon(.info, decorative: false)
                             .foregroundStyle(Color.appTextSecondary)
                             .appToolTip(.myMenuSavingTip)
                             .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
@@ -374,13 +368,8 @@ struct MyPageView: View {
                     )
             }
 
-            Image("chevron-right")
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .frame(width: Size.Icon.medium, height: Size.Icon.medium)
+            AppIcon(.chevronRight)
                 .foregroundStyle(Color.appDisabled)
-                .accessibilityHidden(true)
         }
     }
 

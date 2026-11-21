@@ -37,6 +37,6 @@ struct OnboardingPageView: View {
 
 #Preview {
     OnboardingPageView(
-        page: OnboardingPage(image: "desc_1", title: "냉장고 재료 등록", description: "있는 재료의 양을 기록해요.")
+        page: OnboardingPage(image: .desc1, title: "냉장고 재료 등록", description: "있는 재료의 양을 기록해요.")
     )
 }

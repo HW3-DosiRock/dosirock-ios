@@ -12,7 +12,7 @@ import SwiftUI
 struct BottomActionBar: View {
 
     let title: LocalizedStringResource
-    var icon: String? = nil
+    var icon: ImageResource? = nil
     var isEnable: Bool = true
     var isLoading: Bool = false
     let action: () -> Void

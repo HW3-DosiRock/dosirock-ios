@@ -10,73 +10,88 @@ import SwiftUI
 //상태 2 . 재료 등록은 있지만 이번주 레시피 없을 때
 struct ThisWeekRecipeEmptyView: View {
 
-    let weekRangeText: String  // 예: "11월 9일~13일"
-
-    //TODO: 임시 데이터 , api나오면 ViewModel에서 받기
-    @State private var priorityItems = PriorityItem.samples
-    @State private var soupOption: SoupOption = .include
     @Environment(\.container) private var container
-
-    //TODO: 임시 , api나오면 ViewModel로 옮기기
-    @State private var likeIngredients: [IngredientItem] = []  // 고른 순서대로
+    @Bindable var vm: ThisWeekViewModel
+    var showsWeekRange = true  // 조건 변경 화면은 제목이 따로 있어 기간을 숨김
+    var onSubmit: (() -> Void)? = nil  // 없으면 처음 제안(suggest), 조건 변경 화면은 다시 제안으로 연결
     @State private var showsLikeIngredientPicker = false
 
     var body: some View {
 
         VStack(spacing: 0) {
 
-        ScrollView {
+            ScrollView {
 
-            VStack(alignment: .leading, spacing: Spacing.xl) {
+                VStack(alignment: .leading, spacing: Spacing.xl) {
 
-                //이번주 기간
-                Text(weekRangeText)
-                    .appFont(.heading)
-                    .foregroundStyle(Color.appTextPrimary)
+                    //이번주 기간
+                    if showsWeekRange {
+                        Text(vm.weekRangeText)
+                            .appFont(.heading)
+                            .foregroundStyle(Color.appTextPrimary)
+                    }
 
-                // 툴팁은 아래로 펼쳐지므로, 위 섹션일수록 zIndex를 크게 줘서 아래 카드에 안 가려지게 함
-                // (zIndex는 같은 부모 안의 형제끼리만 비교됨)
+                    // 툴팁은 아래로 펼쳐지므로, 위 섹션일수록 zIndex를 크게 줘서 아래 카드에 안 가려지게 함
+                    // (zIndex는 같은 부모 안의 형제끼리만 비교됨)
 
-                //재료 사용 우선 순위
-                ingredientPriorityView
-                    .zIndex(3)
+                    //재료 사용 우선 순위
+                    ingredientPriorityView
+                        .zIndex(3)
 
-                // 이번주 먹고 싶은 재료 추가
-                likeIngredientView
-                    .zIndex(2)
+                    // 이번주 먹고 싶은 재료 추가
+                    likeIngredientView
+                        .zIndex(2)
 
-                // 국물 메뉴 세그먼트
-                soupMenuView
-                    .zIndex(1)
+                    // 국물 메뉴 세그먼트
+                    soupMenuView
+                        .zIndex(1)
+                }
+                // 화면 폭 전체를 쓰게 해서, 툴팁처럼 내용 밖으로 그려지는 것이 잘리지 않게 함
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, Spacing.l)
             }
-            // 화면 폭 전체를 쓰게 해서, 툴팁처럼 내용 밖으로 그려지는 것이 잘리지 않게 함
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.bottom, Spacing.l)
-        }
-        .frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity,
-            alignment: .topLeading
-        )
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
 
-        //이번 주 메뉴 제안 받기 버튼 (스크롤 밖에 둬서 하단에 고정)
-        BottomActionBar(title: .thisweekSuggestWithCondition, icon: "sparkle") {
-            //TODO: 제안 요청 api 연결
+            // 제안 실패 안내: 다시 시도하면 될 수 있는 실패에만 "다시 시도" (횟수 초과는 제외)
+            if let message = vm.errorMessage {
+                AppBanner(
+                    type: .attention,
+                    message: message,
+                    actionMessage: vm.errorIsRetryable ? .commonRetry : nil,
+                    action: submit
+                )
+                .padding(.bottom, Spacing.s)
+            }
+
+            //이번 주 메뉴 제안 받기 버튼 (스크롤 밖에 둬서 하단에 고정)
+            BottomActionBar(
+                title: .thisweekSuggestWithCondition,
+                icon: .sparkle,
+                action: submit
+            )
         }
+    }
+
+    // 제안 버튼과 "다시 시도"가 같은 동작: 조건 변경 화면이면 그쪽 동작, 아니면 처음 제안
+    private func submit() {
+        if let onSubmit {
+            onSubmit()
+        } else {
+            Task { await vm.suggest() }
         }
     }
 
     //MARK: 섹션 제목 옆 정보 아이콘
     // 누르면 툴팁이 보였다가 몇 초 뒤 저절로 사라짐 (상태 변수는 modifier 안에서 관리)
     private func infoIcon(_ message: LocalizedStringResource) -> some View {
-        Image("info")
-            .renderingMode(.template)  // 색을 입힐 수 있게 템플릿으로
-            .resizable()
-            .scaledToFit()
-            .frame(width: Size.Icon.medium)
+        AppIcon(.info, decorative: false)
             .foregroundStyle(Color.appTextSecondary)
             .appToolTip(message)
-            .accessibilityAddTraits(.isButton)  
+            .accessibilityAddTraits(.isButton)
     }
 
     //MARK: 이번 주 먹고 싶은 재료
@@ -104,7 +119,7 @@ struct ThisWeekRecipeEmptyView: View {
 
             // 고른 재료 칩들 + 재료 선택 칩 (폭이 모자라면 다음 줄로)
             FlowLayout {
-                ForEach(likeIngredients) { item in
+                ForEach(vm.likeIngredients) { item in
                     selectedIngredientChip(item)
                 }
 
@@ -112,7 +127,7 @@ struct ThisWeekRecipeEmptyView: View {
                     showsLikeIngredientPicker = true
                 } label: {
                     HStack(spacing: Spacing.s) {
-                        Image(systemName: "plus")
+                        AppIcon(.plus, size: Size.Icon.small)
                         Text(.thisweekLikeIngredientAdd)
                     }
                     .appFont(.subbody)
@@ -125,13 +140,15 @@ struct ThisWeekRecipeEmptyView: View {
                 .buttonStyle(.plain)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .animation(.easeOut(duration: 0.15), value: likeIngredients)
+            .animation(.easeOut(duration: 0.15), value: vm.likeIngredients)
             .thisWeekCard()
         }
         .sheet(isPresented: $showsLikeIngredientPicker) {
             LikeIngredientPickerSheet(
-                vm: IngredientPickerViewModel(repository: container.ingredients),
-                selected: $likeIngredients
+                vm: IngredientPickerViewModel(
+                    repository: container.ingredients
+                ),
+                selected: $vm.likeIngredients
             )
         }
     }
@@ -139,12 +156,11 @@ struct ThisWeekRecipeEmptyView: View {
     // 고른 재료 칩: 누르면 목록에서 빠짐
     private func selectedIngredientChip(_ item: IngredientItem) -> some View {
         Button {
-            likeIngredients.removeAll { $0.id == item.id }
+            vm.likeIngredients.removeAll { $0.id == item.id }
         } label: {
             HStack(spacing: Spacing.s) {
                 Text(item.name)
-                Image(systemName: "xmark")
-                    .accessibilityHidden(true)
+                AppIcon(.close, size: Size.Icon.small)
             }
             .appFont(.subbody)
             .foregroundStyle(Color.appSurface)
@@ -170,7 +186,8 @@ struct ThisWeekRecipeEmptyView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .zIndex(1)  // 툴팁이 바로 아래 카드에 가려지지 않게
 
-            SegmentControl(items: SoupOption.allCases, selected: $soupOption) {
+            SegmentControl(items: SoupOption.allCases, selected: $vm.soupOption)
+            {
                 String(localized: $0.title)
             }
             .thisWeekCard()
@@ -188,7 +205,7 @@ struct ThisWeekRecipeEmptyView: View {
 
                 infoIcon(.thisweekShowIngredientPriorityInfo)
             }
-            .frame(maxWidth: .infinity , alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .zIndex(1)  // 툴팁이 바로 아래 카드에 가려지지 않게
 
             VStack {
@@ -197,12 +214,11 @@ struct ThisWeekRecipeEmptyView: View {
                     Text(.thisweekPriorityFirstUse)
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
-                
-                
+
                 VStack {
                     //TODO: 임시 , api나오면 목록으로 교체
                     priorityListContent
-                    
+
                 }
             }
             .thisWeekCard()
@@ -211,10 +227,10 @@ struct ThisWeekRecipeEmptyView: View {
 
     }
 
-    var priorityListContent : some View {
+    var priorityListContent: some View {
 
         VStack(spacing: 0) {
-            ForEach($priorityItems) { $item in
+            ForEach($vm.priorityItems) { $item in
 
                 HStack(spacing: Spacing.l) {
 
@@ -222,7 +238,10 @@ struct ThisWeekRecipeEmptyView: View {
 
                     // 이름 · 양 / 권장 사용일
                     VStack(alignment: .leading, spacing: Spacing.s) {
-                        HStack(alignment: .firstTextBaseline, spacing: Spacing.s) {
+                        HStack(
+                            alignment: .firstTextBaseline,
+                            spacing: Spacing.s
+                        ) {
                             Text(item.name)
                                 .appFont(.heading)
                                 .foregroundStyle(Color.appTextPrimary)
@@ -241,7 +260,7 @@ struct ThisWeekRecipeEmptyView: View {
                 .padding(.vertical, Spacing.m)
 
                 // 마지막 줄 뒤에는 구분선 없음
-                if item.id != priorityItems.last?.id {
+                if item.id != vm.priorityItems.last?.id {
                     Rectangle()
                         .fill(Color.appBorder)
                         .frame(height: 1)
@@ -252,7 +271,7 @@ struct ThisWeekRecipeEmptyView: View {
 }
 
 // 이번 주 화면 섹션 카드 (흰 배경 + 테두리)
-private extension View {
+extension View {
     func thisWeekCard() -> some View {
         self
             .padding(Spacing.m)
@@ -279,29 +298,25 @@ enum SoupOption: CaseIterable {
         }
     }
 }
-
-//TODO: 임시 , api나오면 실제 모델로 교체
+ 
 struct PriorityItem: Identifiable {
-    let id = UUID()
+    let id: Int
     let code: String
     let name: String
     let amount: String
     let daysLeft: Int
     var isOn: Bool = true
 }
-
-extension PriorityItem {
-    static let samples: [PriorityItem] = [
-        PriorityItem(code: "ingredient_mushroom_king_oyster_mushroom", name: "팽이버섯", amount: "300g", daysLeft: 1),
-        PriorityItem(code: "ingredient_meat_chicken", name: "닭고기", amount: "200g", daysLeft: 1),
-        PriorityItem(code: "ingredient_etc_tofu", name: "두부", amount: "300g", daysLeft: 2),
-    ]
-}
-
+ 
+#if DEBUG
 #Preview {
     ThisWeekRecipeEmptyView(
-        weekRangeText: "11월 9일~13일 도시락",
+        vm: ThisWeekViewModel(
+            mealPlans: PreviewMealRepository(scenario: .noPlan),
+            inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
+        )
     )
     .padding()
-
 }
+#endif

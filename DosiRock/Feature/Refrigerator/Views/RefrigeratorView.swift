@@ -93,7 +93,7 @@ struct RefrigeratorContentView: View {
             if case .loaded = state {
                 TextLinkButton(
                     title: "fridge_header_add",
-                    icon: "plus",
+                    icon: .plus,
                     textColor: .appTextPrimary,
                     textStyle: .subbody
                 ) { onAdd() }
@@ -234,7 +234,7 @@ struct RefrigeratorContentView: View {
 
             Spacer()
 
-            Image("logo-stone")
+            Image(.logoStone)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 104)

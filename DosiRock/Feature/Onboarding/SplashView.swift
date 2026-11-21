@@ -18,7 +18,7 @@ struct SplashView: View {
 
             VStack {
                 
-                Image("launch-logo")  // 시스템 화면과 같은 위치·크기
+                Image(.launchLogo)  // 시스템 화면과 같은 위치·크기
                     .resizable()
                     .scaledToFit()
                     .frame(width: 300)

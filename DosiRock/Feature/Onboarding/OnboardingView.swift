@@ -66,17 +66,17 @@ struct OnboardingView: View {
     OnboardingView(
         pages: [
             OnboardingPage(
-                image: "desc_1",
+                image: .desc1,
                 title: "첫 번째 안내",
                 description: "설명 문구"
             ),
             OnboardingPage(
-                image: "desc_2",
+                image: .desc2,
                 title: "두 번째 안내",
                 description: "설명 문구"
             ),
             OnboardingPage(
-                image: "desc_3",
+                image: .desc3,
                 title: "세 번째 안내",
                 description: "설명 문구"
             ),

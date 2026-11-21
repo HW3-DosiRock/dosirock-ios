@@ -1999,6 +1999,28 @@
         }
       }
     },
+    "recipe_badge_lacking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "부족"
+          }
+        }
+      }
+    },
+    "recipe_badge_need_more" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가 재료 필요"
+          }
+        }
+      }
+    },
     "recipe_badge_next_week" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2043,6 +2065,138 @@
         }
       }
     },
+    "recipe_detail_back" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주"
+          }
+        }
+      }
+    },
+    "recipe_detail_complete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "조리 완료"
+          }
+        }
+      }
+    },
+    "recipe_detail_complete_locked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계획 확정 후 완료 가능"
+          }
+        }
+      }
+    },
+    "recipe_detail_cost" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예상 재료비"
+          }
+        }
+      }
+    },
+    "recipe_detail_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "레시피를 만들지 못했어요"
+          }
+        }
+      }
+    },
+    "recipe_detail_generating" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI가 레시피를 만들고 있어요"
+          }
+        }
+      }
+    },
+    "recipe_detail_generating_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "레시피 만드는 중…"
+          }
+        }
+      }
+    },
+    "recipe_detail_ingredients" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료"
+          }
+        }
+      }
+    },
+    "recipe_detail_minutes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld분"
+          }
+        }
+      }
+    },
+    "recipe_detail_show_shortages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가로 필요한 재료 보기"
+          }
+        }
+      }
+    },
+    "recipe_detail_steps" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "조리 순서"
+          }
+        }
+      }
+    },
+    "recipe_detail_usage_basis" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 사용량 기준"
+          }
+        }
+      }
+    },
     "recipe_subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2050,6 +2204,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$lld분 · %2$@"
+          }
+        }
+      }
+    },
+    "recipe_tile_enough" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "충분"
           }
         }
       }
@@ -2505,6 +2670,116 @@
         }
       }
     },
+    "thisweek_confirm_plan" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 계획 확정"
+          }
+        }
+      }
+    },
+    "thisweek_cook_day_complete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@(%2$@) 조리 완료"
+          }
+        }
+      }
+    },
+    "thisweek_confirm_next_week_plan" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음 주 계획 확정"
+          }
+        }
+      }
+    },
+    "thisweek_day_type_one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한그릇 도시락"
+          }
+        }
+      }
+    },
+    "thisweek_day_type_side" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "반찬 도시락"
+          }
+        }
+      }
+    },
+    "thisweek_day_type_soup" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "국물 도시락"
+          }
+        }
+      }
+    },
+    "thisweek_day_regenerated_toast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 도시락 새 구성 반영"
+          }
+        }
+      }
+    },
+    "thisweek_day_regenerating" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI가 %@ 도시락을 다시 짜고 있어요"
+          }
+        }
+      }
+    },
+    "thisweek_day_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · 한 끼 약 %2$lld분"
+          }
+        }
+      }
+    },
+    "thisweek_day_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 도시락"
+          }
+        }
+      }
+    },
     "thisweek_empty_desc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2637,6 +2912,281 @@
         }
       }
     },
+    "thisweek_replace_dialog_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "바꾸기"
+          }
+        }
+      }
+    },
+    "thisweek_replace_dialog_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료하지 않은 도시락 구성이 바뀌어요."
+          }
+        }
+      }
+    },
+    "thisweek_replace_dialog_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확정한 계획을 새 제안으로 바꿀까요?"
+          }
+        }
+      }
+    },
+    "thisweek_resuggest_day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이날 메뉴 다시 제안"
+          }
+        }
+      }
+    },
+    "thisweek_resuggest_limit_exceeded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘 다시 제안 횟수를 모두 사용했어요. 내일 다시 시도해 주세요"
+          }
+        }
+      }
+    },
+    "thisweek_rice_default" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기본 구성"
+          }
+        }
+      }
+    },
+    "thisweek_rice_included" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "밥과 함께"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_back" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_buy_link" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "쿠팡에서 보기 · 광고"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_buy_notice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아래 링크는 쿠팡 파트너스 활동의 일환으로, 구매 시 일정액의 수수료를 제공받습니다."
+          }
+        }
+      }
+    },
+    "thisweek_shortage_buy_optional" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_buy_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구매 링크"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_lack_amount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 부족"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_market_price" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "참고 시세 %1$@ %2$@원 · 조사일 %3$@"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_more" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ 외 %2$lld종"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_nav_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가로 필요한 재료"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "없음"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구매한 재료 등록"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_banner" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재료를 사셨다면 산 양을 등록해 주세요"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_bought" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "샀어요"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "산 재료를 1개 이상 입력해주세요"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_lack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "부족 %@"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "산 양"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_too_large" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보유할 수 있는 최대 수량을 넘었어요"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가로 필요한 재료 %lld종"
+          }
+        }
+      }
+    },
     "thisweek_show_ingredientPriorityInfo" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2699,6 +3249,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "국물 메뉴"
+          }
+        }
+      }
+    },
+    "thisweek_suggest_generation_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메뉴를 제안받지 못했어요"
+          }
+        }
+      }
+    },
+    "thisweek_suggest_limit_exceeded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘 메뉴 제안 횟수를 모두 사용했어요. 내일 다시 시도해 주세요"
           }
         }
       }

@@ -39,7 +39,7 @@ struct IngredientPickerContent: View {
     private var searchField: some View {
         @Bindable var vm = vm
         return HStack(spacing: Spacing.s) {
-            Image(systemName: "magnifyingglass")
+            AppIcon(.search)
                 .foregroundStyle(Color.appTextSecondary)
 
             TextField("fridge_picker_search_placeholder", text: $vm.query)
@@ -51,7 +51,7 @@ struct IngredientPickerContent: View {
                 Button {
                     vm.query = ""
                 } label: {
-                    Image(systemName: "xmark")
+                    AppIcon(.close)
                         .foregroundStyle(Color.appTextSecondary)
                 }
             }
@@ -92,7 +92,7 @@ struct IngredientPickerContent: View {
 
         if vm.isEmptyResult {
             VStack(spacing: Spacing.s) {
-                Image("logo-stone")
+                Image(.logoStone)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 104)
