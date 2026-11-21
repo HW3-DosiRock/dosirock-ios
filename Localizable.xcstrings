@@ -2208,6 +2208,17 @@
         }
       }
     },
+    "recipe_tile_enough" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "충분"
+          }
+        }
+      }
+    },
     "root_main_placeholder" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2681,6 +2692,17 @@
         }
       }
     },
+    "thisweek_day_regenerating" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI가 %@ 도시락을 다시 짜고 있어요"
+          }
+        }
+      }
+    },
     "thisweek_day_subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2754,94 +2776,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이번 주 먹고 싶은 재료"
-          }
-        }
-      }
-    },
-    "thisweek_shortage_register_too_large" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "보유할 수 있는 최대 수량을 넘었어요"
-          }
-        }
-      }
-    },
-    "thisweek_replace_dialog_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "확정한 계획을 새 제안으로 바꿀까요?"
-          }
-        }
-      }
-    },
-    "thisweek_replace_dialog_message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "완료하지 않은 도시락 구성이 바뀌어요."
-          }
-        }
-      }
-    },
-    "thisweek_replace_dialog_confirm" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "바꾸기"
-          }
-        }
-      }
-    },
-    "thisweek_resuggest_limit_exceeded" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "오늘 다시 제안 횟수를 모두 사용했어요. 내일 다시 시도해 주세요"
-          }
-        }
-      }
-    },
-    "thisweek_day_regenerating" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AI가 %@ 도시락을 다시 짜고 있어요"
-          }
-        }
-      }
-    },
-    "thisweek_suggest_generation_failed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "메뉴를 만들지 못했어요. 잠시 후 다시 시도해 주세요"
-          }
-        }
-      }
-    },
-    "thisweek_suggest_limit_exceeded" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "오늘 메뉴 제안 횟수를 모두 사용했어요. 내일 다시 시도해 주세요"
           }
         }
       }
@@ -2923,6 +2857,39 @@
         }
       }
     },
+    "thisweek_replace_dialog_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "바꾸기"
+          }
+        }
+      }
+    },
+    "thisweek_replace_dialog_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료하지 않은 도시락 구성이 바뀌어요."
+          }
+        }
+      }
+    },
+    "thisweek_replace_dialog_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확정한 계획을 새 제안으로 바꿀까요?"
+          }
+        }
+      }
+    },
     "thisweek_resuggest_day" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2930,6 +2897,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이날 메뉴 다시 제안"
+          }
+        }
+      }
+    },
+    "thisweek_resuggest_limit_exceeded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘 다시 제안 횟수를 모두 사용했어요. 내일 다시 시도해 주세요"
           }
         }
       }
@@ -3055,6 +3033,17 @@
         }
       }
     },
+    "thisweek_shortage_none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "없음"
+          }
+        }
+      }
+    },
     "thisweek_shortage_register" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3117,6 +3106,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "산 양"
+          }
+        }
+      }
+    },
+    "thisweek_shortage_register_too_large" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보유할 수 있는 최대 수량을 넘었어요"
           }
         }
       }
@@ -3198,6 +3198,28 @@
         }
       }
     },
+    "thisweek_suggest_generation_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메뉴를 만들지 못했어요. 잠시 후 다시 시도해 주세요"
+          }
+        }
+      }
+    },
+    "thisweek_suggest_limit_exceeded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘 메뉴 제안 횟수를 모두 사용했어요. 내일 다시 시도해 주세요"
+          }
+        }
+      }
+    },
     "thisweek_suggest_with_condition" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3236,17 +3258,6 @@
     },
     "권장 사용일까지 %lld일" : {
 
-    },
-    "recipe_tile_enough" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "충분"
-          }
-        }
-      }
     }
   },
   "version" : "1.3"

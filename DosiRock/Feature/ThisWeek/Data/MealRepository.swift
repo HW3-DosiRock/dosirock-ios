@@ -227,6 +227,10 @@ struct MealPlanRepositoryImpl: MealRepository {
                 unit: "g",
                 managementType: .quantity,
                 menuNames: ["팽이버섯 달걀말이", "두부조림"],
+                priceInfo: PriceInfo(
+                    price: 1620, baseQuantity: 100, unit: "g",
+                    surveyDate: "2026-11-06", status: .available
+                ),
                 purchaseUrl: nil
             )
         ]

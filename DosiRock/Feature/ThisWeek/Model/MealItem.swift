@@ -78,7 +78,24 @@ nonisolated struct Shortage: Decodable {
     let unit: String
     let managementType: IngredientItem.ManagementType
     let menuNames: [String]
+    let priceInfo: PriceInfo?  // 참고 시세, 값이 없으면 null
     let purchaseUrl: String?
+}
+
+// 부족 재료의 참고 시세 (기준 수량당 가격)
+nonisolated struct PriceInfo: Decodable {
+    let price: Double?  // 기준 수량에 대한 원 단위 가격
+    let baseQuantity: Double?  // 가격에 대응하는 기준 수량
+    let unit: String?  // 기준 수량의 단위
+    let surveyDate: String?  // 조사일 "yyyy-MM-dd"
+    let status: Status
+
+    // 오래된 자료(STALE)도 비용 계산에 포함하므로 시세 줄은 보여주고, UNAVAILABLE만 숨김
+    enum Status: String, Decodable {
+        case available = "AVAILABLE"
+        case stale = "STALE"
+        case unavailable = "UNAVAILABLE"
+    }
 }
 
 nonisolated struct MealPlanShortageResponse: Decodable {
@@ -130,6 +147,27 @@ nonisolated extension Shortage: Identifiable {
     var imageName: String { IngredientImageMap.assetName(for: name) }
 
     var isPresence: Bool { managementType == .presence }
+
+    // "참고 시세 1kg 3,580원 · 조사일 2026.11.06" (시세가 없거나 UNAVAILABLE이면 nil)
+    var priceText: String? {
+        guard let info = priceInfo, info.status != .unavailable,
+            let price = info.price, let base = info.baseQuantity,
+            let unit = info.unit, let surveyDate = info.surveyDate
+        else { return nil }
+
+        let number = FloatingPointFormatStyle<Double>.number.grouping(.never)
+            .precision(.fractionLength(0...2))
+        // shortcut: 서버가 1kg을 1000g으로 준다고 가정, 실제 응답이 다르면 이 변환만 조정
+        let isKg = unit == "g" && base >= 1000 && base.truncatingRemainder(dividingBy: 1000) == 0
+        let quantity = isKg ? (base / 1000).formatted(number) + "kg" : base.formatted(number) + unit
+
+        return String(
+            format: String(localized: "thisweek_shortage_market_price"),
+            quantity,
+            price.formatted(.number.precision(.fractionLength(0))),
+            surveyDate.replacingOccurrences(of: "-", with: ".")
+        )
+    }
 
     // 60 → "60g", 0.5 → "0.5개" (정수면 소수점 없이)
     var amountText: String {
