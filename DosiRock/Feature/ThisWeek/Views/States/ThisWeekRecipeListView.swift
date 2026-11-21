@@ -40,9 +40,39 @@ struct ThisWeekRecipeListView: View {
                 alignment: .topLeading
             )
 
-            //이번 주 계획 확정
-            BottomActionBar(title: .thisweekConfirmPlan) {
-                // TODO: 계획 확정 (20번 API 전환 후)
+            if let message = vm.errorMessage {
+                AppBanner(type: .attention, message: message)
+                    .padding(.bottom, Spacing.s)
+            }
+
+            bottomButton
+        }
+    }
+
+    // 확정 전: 계획 확정 / 확정 후: 선택한 날짜의 조리 완료 (이미 조리했으면 비활성화)
+    @ViewBuilder
+    private var bottomButton: some View {
+        if !vm.isConfirmed {
+            BottomActionBar(
+                title: .thisweekConfirmPlan,
+                isLoading: vm.isConfirming
+            ) {
+                Task { await vm.confirm() }
+            }
+        } else if let day = vm.selectedDay {
+            let cooked = vm.isCooked(day)
+            BottomActionBar(
+                title: cooked
+                    ? .recipeDetailComplete
+                    : LocalizedStringResource(
+                        stringLiteral: String(
+                            format: String(localized: "thisweek_cook_day_complete"),
+                            day.dayText, day.weekdayText
+                        )
+                    ),
+                isEnable: !cooked
+            ) {
+                // TODO: 조리 완료 API 나오면 연결
             }
         }
     }

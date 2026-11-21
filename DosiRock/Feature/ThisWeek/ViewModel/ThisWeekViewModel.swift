@@ -171,6 +171,25 @@ final class ThisWeekViewModel {
         }
     }
 
+    var isConfirming = false  // 확정 요청 중 (버튼 로딩, 중복 탭 방지)
+
+    // POST /meal-plans/{id}/confirm → 성공하면 서버 상태를 다시 읽어 확정 상태 반영
+    func confirm() async {
+        guard let id = plan?.mealPlanId, !isConfirming else { return }
+        isConfirming = true
+        errorMessage = nil
+        defer { isConfirming = false }
+        do {
+            try await mealPlans.confirm(mealPlanId: id)
+            await load()
+        } catch {
+            errorMessage = (error as? LocalizedError)?.errorDescription
+        }
+    }
+
+    // shortcut: 조리 상태를 내려주는 API가 아직 없어 항상 미완료, API가 생기면 응답 값으로 교체
+    func isCooked(_ day: MealPlanDay) -> Bool { false }
+
     // 같은 입력으로 다시 저장할 때 같은 키·같은 내용을 보내기 위해 마지막 시도를 기억 (성공하면 지움)
     private struct SaveAttempt {
         let amounts: [Int: Double]

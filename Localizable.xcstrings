@@ -2670,6 +2670,17 @@
         }
       }
     },
+    "thisweek_cook_day_complete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@(%2$@) 조리 완료"
+          }
+        }
+      }
+    },
     "thisweek_day_subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
