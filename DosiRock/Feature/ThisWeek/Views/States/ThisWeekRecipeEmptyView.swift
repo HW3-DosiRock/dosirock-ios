@@ -56,23 +56,32 @@ struct ThisWeekRecipeEmptyView: View {
                 alignment: .topLeading
             )
 
-            // 제안 실패 안내 (횟수 초과, 생성 실패 등)
+            // 제안 실패 안내: 다시 시도하면 될 수 있는 실패에만 "다시 시도" (횟수 초과는 제외)
             if let message = vm.errorMessage {
-                AppBanner(type: .attention, message: message)
-                    .padding(.bottom, Spacing.s)
+                AppBanner(
+                    type: .attention,
+                    message: message,
+                    actionMessage: vm.errorIsRetryable ? .commonRetry : nil,
+                    action: submit
+                )
+                .padding(.bottom, Spacing.s)
             }
 
             //이번 주 메뉴 제안 받기 버튼 (스크롤 밖에 둬서 하단에 고정)
             BottomActionBar(
                 title: .thisweekSuggestWithCondition,
-                icon: .sparkle
-            ) {
-                if let onSubmit {
-                    onSubmit()
-                } else {
-                    Task { await vm.suggest() }
-                }
-            }
+                icon: .sparkle,
+                action: submit
+            )
+        }
+    }
+
+    // 제안 버튼과 "다시 시도"가 같은 동작: 조건 변경 화면이면 그쪽 동작, 아니면 처음 제안
+    private func submit() {
+        if let onSubmit {
+            onSubmit()
+        } else {
+            Task { await vm.suggest() }
         }
     }
 

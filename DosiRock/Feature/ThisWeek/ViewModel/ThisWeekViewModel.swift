@@ -12,6 +12,7 @@ final class ThisWeekViewModel {
 
     var state: ThisWeekState  // 어떤 화면을 보여줄지
     var errorMessage: String?  // 불러오기 실패 문구
+    private(set) var errorIsRetryable = true  // 다시 시도하면 성공할 수 있는 실패인지 (횟수 초과는 아님)
 
     private let mealPlans: MealRepository
     private(set) var plan: MealPlan?  // 응답 받은 계획
@@ -191,6 +192,7 @@ final class ThisWeekViewModel {
 
     // 제안·다시 제안 실패 처리: 코드별 안내, 그 외는 서버 상태를 다시 읽음
     private func handleGenerationError(_ error: Error, failureState: ThisWeekState) async {
+        errorIsRetryable = true
         guard let error = error as? APIError else {
             errorMessage = error.localizedDescription
             state = failureState
@@ -199,9 +201,11 @@ final class ThisWeekViewModel {
         switch error.code {
         case "MEALPLAN_DAILY_LIMIT_EXCEEDED":
             errorMessage = String(localized: "thisweek_suggest_limit_exceeded")
+            errorIsRetryable = false
             state = failureState
         case "MEALPLAN_RESUGGESTION_LIMIT_EXCEEDED":
             errorMessage = String(localized: "thisweek_resuggest_limit_exceeded")
+            errorIsRetryable = false
             state = failureState
         case "MEALPLAN_GENERATION_FAILED", "MEALPLAN_GENERATION_UNAVAILABLE",
             "MEALPLAN_GENERATION_TIMEOUT":

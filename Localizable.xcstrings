@@ -2703,6 +2703,39 @@
         }
       }
     },
+    "thisweek_day_type_one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한그릇 도시락"
+          }
+        }
+      }
+    },
+    "thisweek_day_type_side" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "반찬 도시락"
+          }
+        }
+      }
+    },
+    "thisweek_day_type_soup" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "국물 도시락"
+          }
+        }
+      }
+    },
     "thisweek_day_regenerating" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2720,7 +2753,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "반찬 도시락 · 한 끼 약 %lld분"
+            "value" : "%1$@ · 한 끼 약 %2$lld분"
           }
         }
       }
@@ -3215,7 +3248,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "메뉴를 만들지 못했어요. 잠시 후 다시 시도해 주세요"
+            "value" : "메뉴를 제안받지 못했어요"
           }
         }
       }

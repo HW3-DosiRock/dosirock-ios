@@ -41,6 +41,17 @@ nonisolated enum MealPlanDayType: String, Decodable {
     case soup = "SOUP"
 }
 
+nonisolated extension MealPlanDayType {
+    // 요일 부제 앞부분 ("한그릇 도시락 · 한 끼 약 20분"의 앞쪽)
+    var title: String {
+        switch self {
+        case .one: String(localized: "thisweek_day_type_one")
+        case .side: String(localized: "thisweek_day_type_side")
+        case .soup: String(localized: "thisweek_day_type_soup")  // shortcut: 디자인에 없는 문구, 확정되면 교체
+        }
+    }
+}
+
 nonisolated struct MealPlanDay: Decodable {
     let dayOfWeek: String  // ENUM "MONDAY" ...
     let date: String

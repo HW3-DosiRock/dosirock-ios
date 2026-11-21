@@ -137,7 +137,7 @@ struct ThisWeekRecipeListView: View {
                     Text(String(format: String(localized: "thisweek_day_title"), day.weekdayFullText))
                         .appFont(.heading)
                         .foregroundStyle(Color.appTextPrimary)
-                    Text(String(format: String(localized: "thisweek_day_subtitle"), day.totalCookMinutes))
+                    Text(String(format: String(localized: "thisweek_day_subtitle"), day.type.title, day.totalCookMinutes))
                         .appFont(.subbody)
                         .foregroundStyle(Color.appTextSecondary)
                 }
