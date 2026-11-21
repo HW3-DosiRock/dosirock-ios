@@ -18,6 +18,16 @@ nonisolated struct ApiErrorBody: Decodable {
     let code: String
     let message: String
     let details: [String: String]?
+
+    private enum CodingKeys: String, CodingKey { case code, message, details }
+
+    // details는 스웨거에 형식이 정해져 있지 않아서, 문자열 맵이 아니면(배열, 숫자 등) 버리고 code·message는 살림
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        code = try container.decode(String.self, forKey: .code)
+        message = try container.decode(String.self, forKey: .message)
+        details = try? container.decodeIfPresent([String: String].self, forKey: .details)
+    }
 }
 
 // data가 null인 응답
