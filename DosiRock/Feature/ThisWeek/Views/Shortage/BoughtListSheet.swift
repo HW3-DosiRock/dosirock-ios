@@ -191,10 +191,10 @@ struct BoughtListSheet: View {
         Color.appBackground
             .sheet(isPresented: .constant(true)) {
                 BoughtListSheet(
-                    shortages: PreviewMealRepository.samplePlan.shortages + [
-                        Shortage(ingredientId: 35, name: "닭고기", amount: 220, unit: "g"),
-                        Shortage(ingredientId: 4, name: "애호박", amount: 0.5, unit: "개"),
-                        Shortage(ingredientId: 70, name: "깨", amount: 0, unit: "g"),
+                    shortages: PreviewMealRepository.sampleShortages + [
+                        Shortage(ingredientId: 35, name: "닭고기", amount: 220, unit: "g", managementType: .quantity, menuNames: ["닭고기 간장조림"], priceInfo: nil, purchaseUrl: nil),
+                        Shortage(ingredientId: 4, name: "애호박", amount: 0.5, unit: "개", managementType: .quantity, menuNames: [], priceInfo: nil, purchaseUrl: nil),
+                        Shortage(ingredientId: 70, name: "깨", amount: 5, unit: "g", managementType: .presence, menuNames: [], priceInfo: nil, purchaseUrl: nil),
                     ]
                 )
             }

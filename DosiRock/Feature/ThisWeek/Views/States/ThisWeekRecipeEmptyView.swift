@@ -12,6 +12,8 @@ struct ThisWeekRecipeEmptyView: View {
 
     @Environment(\.container) private var container
     @Bindable var vm: ThisWeekViewModel
+    var showsWeekRange = true  // 조건 변경 화면은 제목이 따로 있어 기간을 숨김
+    var onSubmit: (() -> Void)? = nil  // 없으면 처음 제안(suggest), 조건 변경 화면은 다시 제안으로 연결
     @State private var showsLikeIngredientPicker = false
 
     var body: some View {
@@ -23,9 +25,11 @@ struct ThisWeekRecipeEmptyView: View {
                 VStack(alignment: .leading, spacing: Spacing.xl) {
 
                     //이번주 기간
-                    Text(vm.weekRangeText)
-                        .appFont(.heading)
-                        .foregroundStyle(Color.appTextPrimary)
+                    if showsWeekRange {
+                        Text(vm.weekRangeText)
+                            .appFont(.heading)
+                            .foregroundStyle(Color.appTextPrimary)
+                    }
 
                     // 툴팁은 아래로 펼쳐지므로, 위 섹션일수록 zIndex를 크게 줘서 아래 카드에 안 가려지게 함
                     // (zIndex는 같은 부모 안의 형제끼리만 비교됨)
@@ -52,13 +56,32 @@ struct ThisWeekRecipeEmptyView: View {
                 alignment: .topLeading
             )
 
+            // 제안 실패 안내: 다시 시도하면 될 수 있는 실패에만 "다시 시도" (횟수 초과는 제외)
+            if let message = vm.errorMessage {
+                AppBanner(
+                    type: .attention,
+                    message: message,
+                    actionMessage: vm.errorIsRetryable ? .commonRetry : nil,
+                    action: submit
+                )
+                .padding(.bottom, Spacing.s)
+            }
+
             //이번 주 메뉴 제안 받기 버튼 (스크롤 밖에 둬서 하단에 고정)
             BottomActionBar(
                 title: .thisweekSuggestWithCondition,
-                icon: .sparkle
-            ) {
-                Task { await vm.suggest() }
-            }
+                icon: .sparkle,
+                action: submit
+            )
+        }
+    }
+
+    // 제안 버튼과 "다시 시도"가 같은 동작: 조건 변경 화면이면 그쪽 동작, 아니면 처음 제안
+    private func submit() {
+        if let onSubmit {
+            onSubmit()
+        } else {
+            Task { await vm.suggest() }
         }
     }
 
@@ -290,7 +313,8 @@ struct PriorityItem: Identifiable {
     ThisWeekRecipeEmptyView(
         vm: ThisWeekViewModel(
             mealPlans: PreviewMealRepository(scenario: .noPlan),
-            inventory: PreviewInventoryRepository()      
+            inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
         )
     )
     .padding()

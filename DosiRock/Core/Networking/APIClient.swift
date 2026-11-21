@@ -18,6 +18,16 @@ nonisolated struct ApiErrorBody: Decodable {
     let code: String
     let message: String
     let details: [String: String]?
+
+    private enum CodingKeys: String, CodingKey { case code, message, details }
+
+    // details는 스웨거에 형식이 정해져 있지 않아서, 문자열 맵이 아니면(배열, 숫자 등) 버리고 code·message는 살림
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        code = try container.decode(String.self, forKey: .code)
+        message = try container.decode(String.self, forKey: .message)
+        details = try? container.decodeIfPresent([String: String].self, forKey: .details)
+    }
 }
 
 // data가 null인 응답
@@ -52,6 +62,7 @@ struct APIClient {
         _ path: String,
         method: Method = .post,
         body: [String: Any]? = nil,  // GET처럼 본문이 없으면 생략
+        headers: [String: String] = [:],  // 추가 헤더 (Idempotency-Key 등)
         timeout: TimeInterval? = nil,
         authorized: Bool = false,
         as type: T.Type
@@ -61,6 +72,7 @@ struct APIClient {
                 path,
                 method: method,
                 body: body,
+                headers: headers,
                 timeout: timeout,
                 authorized: authorized,
                 as: type
@@ -73,6 +85,7 @@ struct APIClient {
                 path,
                 method: method,
                 body: body,
+                headers: headers,
                 timeout: timeout,
                 authorized: authorized,
                 as: type
@@ -121,6 +134,7 @@ struct APIClient {
         _ path: String,
         method: Method,
         body: [String: Any]?,
+        headers: [String: String] = [:],
         timeout: TimeInterval? = nil,
         authorized: Bool,
         as type: T.Type
@@ -129,6 +143,7 @@ struct APIClient {
         var request = URLRequest(url: baseURL.appending(path: path))
         request.httpMethod = method.rawValue
         if let timeout { request.timeoutInterval = timeout }
+        for (field, value) in headers { request.setValue(value, forHTTPHeaderField: field) }
         // 로그인이 필요한 API는 액세스 토큰을 헤더에 붙인다
         if authorized, let access = TokenStore.read(.access) {
             request.setValue(
@@ -173,6 +188,7 @@ struct APIClient {
         _ path: String,
         method: Method = .post,
         body: [String: Any]? = nil,
+        headers: [String: String] = [:],
         timeout: TimeInterval? = nil,
         authorized: Bool = false,
         as type: T.Type
@@ -183,6 +199,7 @@ struct APIClient {
                 path,
                 method: method,
                 body: body,
+                headers: headers,
                 timeout: timeout,
                 authorized: authorized,
                 as: type

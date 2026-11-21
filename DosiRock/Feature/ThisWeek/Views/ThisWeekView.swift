@@ -48,9 +48,11 @@ struct ThisWeekView: View {
             .navigationDestination(for: ThisWeekRoute.self) { route in
                 switch route {
                 case .shortages:
-                    ShortageListView(shortages: vm.shortages, days: vm.days) {
+                    ShortageListView(shortages: vm.shortages) {
                         try await vm.registerBought(amounts: $0, bought: $1)
                     }
+                case .editCondition:
+                    ThisWeekConditionEditView(vm: vm)
                 case .recipe(let date, let menuIndex):
                     if let day = vm.days.first(where: { $0.date == date }),
                         day.menus.indices.contains(menuIndex)
@@ -59,6 +61,7 @@ struct ThisWeekView: View {
                         RecipeDetailView(
                             day: day,
                             menu: menu,
+                            shortageIds: vm.shortageIds,
                             badges: vm.badges(for: menu),
                             isConfirmed: vm.isConfirmed
                         )
@@ -66,6 +69,7 @@ struct ThisWeekView: View {
                 }
             }
         }
+        .toast($vm.toastMessage)
         .environment(router)
         // task는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행됨)
         .task { await vm.load() }
@@ -79,7 +83,7 @@ struct ThisWeekView: View {
                 ? .thisweekChangeCondition : nil,
             actionIcon: .sliders
         ) {
-            // TODO: 조건 변경 화면 열기
+            router.push(.editCondition)
         }
     }
 }
@@ -89,7 +93,8 @@ struct ThisWeekView: View {
         ThisWeekView(
             vm: ThisWeekViewModel(
                 mealPlans: PreviewMealRepository(scenario: .hasPlan),
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
             )
         )
     }
@@ -97,7 +102,8 @@ struct ThisWeekView: View {
         ThisWeekView(
             vm: ThisWeekViewModel(
                 mealPlans: PreviewMealRepository(scenario: .noPlan),
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
             )
         )
     }
@@ -105,7 +111,8 @@ struct ThisWeekView: View {
         ThisWeekView(
             vm: ThisWeekViewModel(
                 mealPlans: PreviewMealRepository(scenario: .noInventory),
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
             )
         )
     }
@@ -113,7 +120,8 @@ struct ThisWeekView: View {
         ThisWeekView(
             vm: ThisWeekViewModel(
                 mealPlans: PreviewMealRepository(scenario: .failure),
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
             )
         )
     }

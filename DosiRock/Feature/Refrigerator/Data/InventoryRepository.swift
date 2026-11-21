@@ -6,6 +6,13 @@
 //
 import Foundation
 
+// 일괄 저장 한 줄: 수량 재료는 최종 보유량과 소비기한, 기본 재료는 둘 다 nil
+nonisolated struct InventoryUpsertEntry: Hashable {
+    let ingredient: IngredientItem
+    let quantity: Double?
+    let expirationDate: Date?
+}
+
 protocol InventoryRepository {
     func fetch() async throws -> [InventoryItem]
     func fetchPriority() async throws -> [InventoryPriorityItem]
@@ -15,6 +22,8 @@ protocol InventoryRepository {
         recommendedDate: Date?
     ) async throws  // 이미 있으면 값을 바꿈
     func remove(ingredientId: Int) async throws
+    // POST inventory: 구매 재료 일괄 저장 (하나라도 실패하면 전체 취소, 같은 요청 재전송은 같은 키)
+    func addAll(_ entries: [InventoryUpsertEntry], idempotencyKey: String) async throws
 }
 
 // 서버 응답: data { items, totalCount }
@@ -152,6 +161,36 @@ struct InventoryRepositoryImpl: InventoryRepository {
 
     }
 
+    func addAll(_ entries: [InventoryUpsertEntry], idempotencyKey: String) async throws {
+
+        let items: [[String: Any]] = try entries.map { entry in
+            switch entry.ingredient.managementType {
+            case .quantity:
+                guard let quantity = entry.quantity, let date = entry.expirationDate else {
+                    throw APIError.unknown
+                }
+                return [
+                    "ingredientId": entry.ingredient.id,
+                    "quantity": quantity,
+                    "expirationDate": date.formatted(
+                        Date.ISO8601FormatStyle(timeZone: .current).year().month().day()
+                    ),
+                ]
+            case .presence:
+                return ["ingredientId": entry.ingredient.id, "present": true]
+            }
+        }
+
+        _ = try await client.send(
+            "inventory",
+            method: .post,
+            body: ["items": items],
+            headers: ["Idempotency-Key": idempotencyKey],
+            authorized: true,
+            as: Empty.self
+        )
+    }
+
 }
 
 #if DEBUG
@@ -220,6 +259,12 @@ struct InventoryRepositoryImpl: InventoryRepository {
 
         func remove(ingredientId: Int) async throws {
             items.removeAll { $0.ingredientId == ingredientId }
+        }
+
+        func addAll(_ entries: [InventoryUpsertEntry], idempotencyKey: String) async throws {
+            for entry in entries {
+                try await add(entry.ingredient, quantity: entry.quantity, recommendedDate: entry.expirationDate)
+            }
         }
 
         // 오늘로부터 n일 뒤 (샘플 권장 사용일용)

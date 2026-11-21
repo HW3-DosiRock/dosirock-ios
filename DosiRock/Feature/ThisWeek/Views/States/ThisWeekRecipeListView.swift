@@ -21,9 +21,12 @@ struct ThisWeekRecipeListView: View {
                 VStack(alignment: .leading, spacing: Spacing.xl) {
 
                     //이번주 기간
-                    Text(vm.weekRangeText)
-                        .appFont(.heading)
-                        .foregroundStyle(Color.appTextPrimary)
+                    HStack(spacing: Spacing.s) {
+                        if vm.isNextWeek { RecipeBadge(type: .nextWeek) }  // 주말: 다음 주 계획
+                        Text(vm.weekRangeText)
+                            .appFont(.heading)
+                            .foregroundStyle(Color.appTextPrimary)
+                    }
 
                     shortageCard
                     dayTabs
@@ -40,9 +43,40 @@ struct ThisWeekRecipeListView: View {
                 alignment: .topLeading
             )
 
-            //이번 주 계획 확정
-            BottomActionBar(title: .thisweekConfirmPlan) {
-                // TODO: 계획 확정 (20번 API 전환 후)
+            if let message = vm.errorMessage {
+                AppBanner(type: .attention, message: message)
+                    .padding(.bottom, Spacing.s)
+            }
+
+            bottomButton
+        }
+    }
+
+    // 확정 전: 계획 확정 / 확정 후: 선택한 날짜의 조리 완료 (이미 조리했으면 비활성화)
+    @ViewBuilder
+    private var bottomButton: some View {
+        if !vm.isConfirmed {
+            BottomActionBar(
+                title: vm.isNextWeek ? .thisweekConfirmNextWeekPlan : .thisweekConfirmPlan,
+                isEnable: vm.regeneratingDate == nil,
+                isLoading: vm.isConfirming
+            ) {
+                Task { await vm.confirm() }
+            }
+        } else if let day = vm.selectedDay {
+            let cooked = vm.isCooked(day)
+            BottomActionBar(
+                title: cooked
+                    ? .recipeDetailComplete
+                    : LocalizedStringResource(
+                        stringLiteral: String(
+                            format: String(localized: "thisweek_cook_day_complete"),
+                            day.dayText, day.weekdayText
+                        )
+                    ),
+                isEnable: !cooked && vm.regeneratingDate == nil
+            ) {
+                // TODO: 조리 완료 API 나오면 연결
             }
         }
     }
@@ -103,40 +137,69 @@ struct ThisWeekRecipeListView: View {
                     Text(String(format: String(localized: "thisweek_day_title"), day.weekdayFullText))
                         .appFont(.heading)
                         .foregroundStyle(Color.appTextPrimary)
-                    Text(String(format: String(localized: "thisweek_day_subtitle"), day.totalCookMinutes))
+                    Text(String(format: String(localized: "thisweek_day_subtitle"), day.type.title, day.totalCookMinutes))
                         .appFont(.subbody)
                         .foregroundStyle(Color.appTextSecondary)
                 }
 
-                ForEach(Array(day.menus.enumerated()), id: \.offset) { index, menu in
-                    RecipeCard(
-                        recipe: Recipe(
-                            id: index,
-                            name: menu.name,
-                            cookTime: menu.cookMinutes,
-                            // 카드에는 주재료 2개만 (아이콘도 최대 2개)
-                            ingredients: menu.ingredients.prefix(2).map {
-                                Ingredient(code: $0.imageName, name: $0.name)
-                            },
-                            badges: vm.badges(for: menu)
-                        )
-                    ) {
-                        router.push(.recipe(date: day.date, menuIndex: index))
-                    }
+                if vm.regeneratingDate == day.date {
+                    regeneratingContent(day)  // W-05: 이 요일만 AI가 다시 짜는 중
+                } else {
+                    dayMenus(day)
                 }
-
-                riceRow
-
-                TextLinkButton(
-                    title: .thisweekResuggestDay,
-                    icon: .refresh,
-                    textColor: .appTextSecondary
-                ) {
-                    // TODO: 이날 메뉴 다시 제안 (21번 API)
-                }
-                .frame(maxWidth: .infinity)
             }
         }
+    }
+
+    private func dayMenus(_ day: MealPlanDay) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.m) {
+
+            ForEach(Array(day.menus.enumerated()), id: \.offset) { index, menu in
+                RecipeCard(
+                    recipe: Recipe(
+                        id: index,
+                        name: menu.name,
+                        cookTime: menu.cookMinutes,
+                        // 카드에는 주재료 2개만 (아이콘도 최대 2개)
+                        ingredients: menu.ingredients.prefix(2).map {
+                            Ingredient(code: $0.imageName, name: $0.name)
+                        },
+                        badges: vm.badges(for: menu)
+                    )
+                ) {
+                    router.push(.recipe(date: day.date, menuIndex: index))
+                }
+            }
+
+            // 한그릇 메뉴(덮밥 등)는 밥이 이미 들어 있어 안내 줄이 없음 (디자인 기준)
+            if day.type != .one { riceRow }
+
+            TextLinkButton(
+                title: .thisweekResuggestDay,
+                icon: .refresh,
+                textColor: .appTextSecondary,
+                isEnable: day.remainingResuggestionCount > 0 && !vm.isConfirming
+            ) {
+                Task { await vm.resuggestDay(day) }
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    private func regeneratingContent(_ day: MealPlanDay) -> some View {
+        VStack(spacing: Spacing.l) {
+            Image(.logoStone)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 104)
+                .accessibilityHidden(true)
+            Text(String(format: String(localized: "thisweek_day_regenerating"), day.weekdayFullText))
+                .appFont(.brandSubtitle)
+                .foregroundStyle(Color.appTextPrimary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, Spacing.xl * 2)
     }
 
     // 밥은 메뉴에 없지만 항상 같이 나감 (안내용 줄)
@@ -178,7 +241,8 @@ struct ThisWeekRecipeListView: View {
 #Preview {
     let vm = ThisWeekViewModel(
         mealPlans: PreviewMealRepository(scenario: .hasPlan),
-        inventory: PreviewInventoryRepository()
+        inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
     )
     ThisWeekRecipeListView(vm: vm)
         .environment(Router<ThisWeekRoute>())
