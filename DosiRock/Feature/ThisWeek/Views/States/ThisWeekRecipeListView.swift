@@ -178,7 +178,8 @@ struct ThisWeekRecipeListView: View {
 #Preview {
     let vm = ThisWeekViewModel(
         mealPlans: PreviewMealRepository(scenario: .hasPlan),
-        inventory: PreviewInventoryRepository()
+        inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
     )
     ThisWeekRecipeListView(vm: vm)
         .environment(Router<ThisWeekRoute>())

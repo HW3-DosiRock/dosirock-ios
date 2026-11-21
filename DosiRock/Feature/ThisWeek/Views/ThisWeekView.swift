@@ -90,7 +90,8 @@ struct ThisWeekView: View {
         ThisWeekView(
             vm: ThisWeekViewModel(
                 mealPlans: PreviewMealRepository(scenario: .hasPlan),
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
             )
         )
     }
@@ -98,7 +99,8 @@ struct ThisWeekView: View {
         ThisWeekView(
             vm: ThisWeekViewModel(
                 mealPlans: PreviewMealRepository(scenario: .noPlan),
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
             )
         )
     }
@@ -106,7 +108,8 @@ struct ThisWeekView: View {
         ThisWeekView(
             vm: ThisWeekViewModel(
                 mealPlans: PreviewMealRepository(scenario: .noInventory),
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
             )
         )
     }
@@ -114,7 +117,8 @@ struct ThisWeekView: View {
         ThisWeekView(
             vm: ThisWeekViewModel(
                 mealPlans: PreviewMealRepository(scenario: .failure),
-                inventory: PreviewInventoryRepository()
+                inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
             )
         )
     }

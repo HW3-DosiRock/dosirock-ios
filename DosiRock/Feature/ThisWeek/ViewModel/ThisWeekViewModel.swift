@@ -19,6 +19,7 @@ final class ThisWeekViewModel {
     var isConfirmed: Bool { planStatus == .confirmed }  // 확정된 계획만 조리 완료 가능
 
     private let inventory: InventoryRepository
+    private let ingredients: IngredientRepository  // 재료 기준 정보 (보관 일수, 소수 자릿수)
 
     // 추천 조건
     var priorityItems: [PriorityItem] = []  // 우선 순위 아이템
@@ -60,10 +61,12 @@ final class ThisWeekViewModel {
     init(
         mealPlans: MealRepository,
         inventory: InventoryRepository,
+        ingredients: IngredientRepository,
         state: ThisWeekState = .loading
     ) {
         self.mealPlans = mealPlans
         self.inventory = inventory
+        self.ingredients = ingredients
         self.state = state
     }
 
@@ -168,10 +171,73 @@ final class ThisWeekViewModel {
         }
     }
 
-    // 구매한 재료 등록 → 성공하면 이번 주 계획을 다시 불러옴 (부족 재료·뱃지 갱신). 실패는 시트에서 안내
+    // 같은 입력으로 다시 저장할 때 같은 키·같은 내용을 보내기 위해 마지막 시도를 기억 (성공하면 지움)
+    private struct SaveAttempt {
+        let amounts: [Int: Double]
+        let bought: Set<Int>
+        let entries: [InventoryUpsertEntry]
+        let key: String
+    }
+    private var saveAttempt: SaveAttempt?
+
+    // 구매한 재료 등록 (POST /inventory) → 성공하면 이번 주 계획을 다시 불러옴 (부족 재료·뱃지 갱신). 실패는 시트에서 안내
+    // 서버는 입력값으로 재고를 "대체"하므로 산 양이 아니라 (기존 보유량 + 산 양)을 보낸다
     func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws {
-        try await mealPlans.registerBought(amounts: amounts, bought: bought)
+
+        let attempt: SaveAttempt
+        if let last = saveAttempt, last.amounts == amounts, last.bought == bought {
+            attempt = last  // 재시도: 서버가 처리했는데 응답만 놓친 경우 중복 합산을 막으려고 같은 내용·키 재사용
+        } else {
+            attempt = SaveAttempt(
+                amounts: amounts,
+                bought: bought,
+                entries: try await makeEntries(amounts: amounts, bought: bought),
+                key: UUID().uuidString
+            )
+            saveAttempt = attempt
+        }
+
+        try await inventory.addAll(attempt.entries, idempotencyKey: attempt.key)
+        saveAttempt = nil
         await load()
+    }
+
+    private func makeEntries(amounts: [Int: Double], bought: Set<Int>) async throws -> [InventoryUpsertEntry] {
+
+        async let stock = inventory.fetch()
+        async let catalog = ingredients.fetchAll()
+        let owned = Dictionary(try await stock.map { ($0.ingredientId, $0) }, uniquingKeysWith: { a, _ in a })
+        let byId = Dictionary(try await catalog.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+
+        var entries: [InventoryUpsertEntry] = []
+
+        for (id, boughtAmount) in amounts.sorted(by: { $0.key < $1.key }) {
+            guard let ingredient = byId[id] else { throw APIError.unknown }
+            let current = owned[id]
+
+            let scale = pow(10, Double(ingredient.decimalPlaces))
+            let total = (((current?.quantity ?? 0) + boughtAmount) * scale).rounded() / scale
+            guard total <= 99999 else {  // 서버 최대 보유량
+                throw APIError.validation(["quantity": String(localized: "thisweek_shortage_register_too_large")])
+            }
+
+            // 소비기한: 이미 있으면 유지, 새 재료는 오늘 + 보관 일수
+            let defaultExpiration = ingredient.storageDays.flatMap {
+                Calendar.current.date(byAdding: .day, value: $0, to: .now)
+            }
+            guard let expiration = current?.recommendedDate ?? defaultExpiration else {
+                throw APIError.unknown
+            }
+
+            entries.append(InventoryUpsertEntry(ingredient: ingredient, quantity: total, expirationDate: expiration))
+        }
+
+        for id in bought.sorted() {
+            guard let ingredient = byId[id] else { throw APIError.unknown }
+            entries.append(InventoryUpsertEntry(ingredient: ingredient, quantity: nil, expirationDate: nil))
+        }
+
+        return entries
     }
 
     // 부족 재료 (실패하면 빈 목록, 뱃지·목록만 비고 계획 화면은 그대로)

@@ -296,7 +296,8 @@ struct PriorityItem: Identifiable {
     ThisWeekRecipeEmptyView(
         vm: ThisWeekViewModel(
             mealPlans: PreviewMealRepository(scenario: .noPlan),
-            inventory: PreviewInventoryRepository()      
+            inventory: PreviewInventoryRepository(),
+                ingredients: PreviewIngredientRepository()
         )
     )
     .padding()

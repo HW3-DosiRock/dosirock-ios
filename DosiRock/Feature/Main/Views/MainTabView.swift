@@ -22,7 +22,8 @@ struct MainTabView: View {
                     ThisWeekView(
                         vm: ThisWeekViewModel(
                             mealPlans: container.mealPlan,
-                            inventory: container.inventory
+                            inventory: container.inventory,
+                            ingredients: container.ingredients
                         )
                     )
                 case .fridge:

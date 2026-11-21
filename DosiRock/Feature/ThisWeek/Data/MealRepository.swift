@@ -22,9 +22,6 @@ protocol MealRepository {
     //GET  meal-plans/{mealPlanId}/shortages
     func fetchShortages(mealPlanId: Int) async throws -> MealPlanShortageResponse
 
-    // 구매한 재료 등록 (부족 재료를 샀을 때). 명세 미정
-    func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws
-
 }
 
 struct MealPlanRepositoryImpl: MealRepository {
@@ -70,11 +67,6 @@ struct MealPlanRepositoryImpl: MealRepository {
             authorized: true,
             as: MealPlanShortageResponse.self
         )
-    }
-
-    func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws {
-        // TODO: 구매한 재료 등록 API 명세 나오면 연결
-        throw APIError.unknown
     }
 
 }
@@ -172,11 +164,6 @@ struct MealPlanRepositoryImpl: MealRepository {
             return MealPlanShortageResponse(
                 items: Self.sampleShortages, totalCost: 0, costEstimationStatus: .unavailable
             )
-        }
-
-        func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws {
-            try await Task.sleep(for: .milliseconds(500))
-            if scenario == .failure { throw APIError.network }
         }
     }
 #endif

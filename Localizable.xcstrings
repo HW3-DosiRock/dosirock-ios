@@ -2747,6 +2747,17 @@
         }
       }
     },
+    "thisweek_shortage_register_too_large" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보유할 수 있는 최대 수량을 넘었어요"
+          }
+        }
+      }
+    },
     "thisweek_suggest_generation_failed" : {
       "extractionState" : "manual",
       "localizations" : {
