@@ -27,6 +27,9 @@ protocol MealRepository {
         includeSoup: Bool
     ) async throws -> MealPlanCurrent
 
+    //POST meal-plans/{mealPlanId}/days/{dayOfWeek}/regenerate (저장된 추천 조건으로 그 요일만 다시 제안)
+    func regenerateDay(mealPlanId: Int, dayOfWeek: String) async throws -> MealPlanCurrent
+
     //POST meal-plans/{mealPlanId}/confirm (이미 확정한 계획도 성공)
     func confirm(mealPlanId: Int) async throws
 
@@ -93,6 +96,17 @@ struct MealPlanRepositoryImpl: MealRepository {
             body: conditionBody(
                 priority: priorityIngredientIds, preferred: preferredIngredientIds,
                 includeSoup: includeSoup),
+            timeout: 200,
+            authorized: true,
+            as: MealPlanCurrent.self
+        )
+    }
+
+    func regenerateDay(mealPlanId: Int, dayOfWeek: String) async throws -> MealPlanCurrent {
+
+        try await client.sendRequired(
+            "meal-plans/\(mealPlanId)/days/\(dayOfWeek)/regenerate",
+            method: .post,
             timeout: 200,
             authorized: true,
             as: MealPlanCurrent.self
@@ -304,6 +318,11 @@ struct MealPlanRepositoryImpl: MealRepository {
             preferredIngredientIds: [Int],
             includeSoup: Bool
         ) async throws -> MealPlanCurrent {
+            try await Task.sleep(for: .seconds(3))  // 더미처럼 3초
+            return Self.current(.draft, plan: Self.samplePlan)
+        }
+
+        func regenerateDay(mealPlanId: Int, dayOfWeek: String) async throws -> MealPlanCurrent {
             try await Task.sleep(for: .seconds(3))  // 더미처럼 3초
             return Self.current(.draft, plan: Self.samplePlan)
         }

@@ -55,6 +55,7 @@ struct ThisWeekRecipeListView: View {
         if !vm.isConfirmed {
             BottomActionBar(
                 title: .thisweekConfirmPlan,
+                isEnable: vm.regeneratingDate == nil,
                 isLoading: vm.isConfirming
             ) {
                 Task { await vm.confirm() }
@@ -70,7 +71,7 @@ struct ThisWeekRecipeListView: View {
                             day.dayText, day.weekdayText
                         )
                     ),
-                isEnable: !cooked
+                isEnable: !cooked && vm.regeneratingDate == nil
             ) {
                 // TODO: 조리 완료 API 나오면 연결
             }
@@ -138,35 +139,63 @@ struct ThisWeekRecipeListView: View {
                         .foregroundStyle(Color.appTextSecondary)
                 }
 
-                ForEach(Array(day.menus.enumerated()), id: \.offset) { index, menu in
-                    RecipeCard(
-                        recipe: Recipe(
-                            id: index,
-                            name: menu.name,
-                            cookTime: menu.cookMinutes,
-                            // 카드에는 주재료 2개만 (아이콘도 최대 2개)
-                            ingredients: menu.ingredients.prefix(2).map {
-                                Ingredient(code: $0.imageName, name: $0.name)
-                            },
-                            badges: vm.badges(for: menu)
-                        )
-                    ) {
-                        router.push(.recipe(date: day.date, menuIndex: index))
-                    }
+                if vm.regeneratingDate == day.date {
+                    regeneratingContent(day)  // W-05: 이 요일만 AI가 다시 짜는 중
+                } else {
+                    dayMenus(day)
                 }
-
-                riceRow
-
-                TextLinkButton(
-                    title: .thisweekResuggestDay,
-                    icon: .refresh,
-                    textColor: .appTextSecondary
-                ) {
-                    // TODO: 이날 메뉴 다시 제안 (21번 API)
-                }
-                .frame(maxWidth: .infinity)
             }
         }
+    }
+
+    private func dayMenus(_ day: MealPlanDay) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.m) {
+
+            ForEach(Array(day.menus.enumerated()), id: \.offset) { index, menu in
+                RecipeCard(
+                    recipe: Recipe(
+                        id: index,
+                        name: menu.name,
+                        cookTime: menu.cookMinutes,
+                        // 카드에는 주재료 2개만 (아이콘도 최대 2개)
+                        ingredients: menu.ingredients.prefix(2).map {
+                            Ingredient(code: $0.imageName, name: $0.name)
+                        },
+                        badges: vm.badges(for: menu)
+                    )
+                ) {
+                    router.push(.recipe(date: day.date, menuIndex: index))
+                }
+            }
+
+            riceRow
+
+            TextLinkButton(
+                title: .thisweekResuggestDay,
+                icon: .refresh,
+                textColor: .appTextSecondary,
+                isEnable: day.remainingResuggestionCount > 0 && !vm.isConfirming
+            ) {
+                Task { await vm.resuggestDay(day) }
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    private func regeneratingContent(_ day: MealPlanDay) -> some View {
+        VStack(spacing: Spacing.l) {
+            Image(.logoStone)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 104)
+                .accessibilityHidden(true)
+            Text(String(format: String(localized: "thisweek_day_regenerating"), day.weekdayFullText))
+                .appFont(.brandSubtitle)
+                .foregroundStyle(Color.appTextPrimary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, Spacing.xl * 2)
     }
 
     // 밥은 메뉴에 없지만 항상 같이 나감 (안내용 줄)

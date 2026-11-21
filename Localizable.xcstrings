@@ -2813,6 +2813,17 @@
         }
       }
     },
+    "thisweek_day_regenerating" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI가 %@ 도시락을 다시 짜고 있어요"
+          }
+        }
+      }
+    },
     "thisweek_suggest_generation_failed" : {
       "extractionState" : "manual",
       "localizations" : {

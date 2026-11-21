@@ -168,32 +168,59 @@ final class ThisWeekViewModel {
             apply(try await request())
             await loadShortages()
             state = .recipeList
-        } catch let error as APIError {
-            switch error.code {
-            case "MEALPLAN_DAILY_LIMIT_EXCEEDED":
-                errorMessage = String(localized: "thisweek_suggest_limit_exceeded")
-                state = failureState
-            case "MEALPLAN_RESUGGESTION_LIMIT_EXCEEDED":
-                errorMessage = String(localized: "thisweek_resuggest_limit_exceeded")
-                state = failureState
-            case "MEALPLAN_GENERATION_FAILED", "MEALPLAN_GENERATION_UNAVAILABLE",
-                "MEALPLAN_GENERATION_TIMEOUT":
-                errorMessage = String(localized: "thisweek_suggest_generation_failed")
-                state = failureState
-            default:
-                // shortcut: 409의 code 문자열이 명세에 없어 그 외 에러는 서버 상태를 다시 불러옴(이미 계획이 있으면 목록으로), 네트워크 오류 등은 메시지만 보여줌
-                if case .network = error {
-                    errorMessage = error.errorDescription
-                    state = failureState
-                } else {
-                    await load()
-                    if state == failureState { errorMessage = error.errorDescription }
-                }
-            }
         } catch {
+            await handleGenerationError(error, failureState: failureState)
+        }
+    }
+
+    // 제안·다시 제안 실패 처리: 코드별 안내, 그 외는 서버 상태를 다시 읽음
+    private func handleGenerationError(_ error: Error, failureState: ThisWeekState) async {
+        guard let error = error as? APIError else {
             errorMessage = error.localizedDescription
             state = failureState
+            return
         }
+        switch error.code {
+        case "MEALPLAN_DAILY_LIMIT_EXCEEDED":
+            errorMessage = String(localized: "thisweek_suggest_limit_exceeded")
+            state = failureState
+        case "MEALPLAN_RESUGGESTION_LIMIT_EXCEEDED":
+            errorMessage = String(localized: "thisweek_resuggest_limit_exceeded")
+            state = failureState
+        case "MEALPLAN_GENERATION_FAILED", "MEALPLAN_GENERATION_UNAVAILABLE",
+            "MEALPLAN_GENERATION_TIMEOUT":
+            errorMessage = String(localized: "thisweek_suggest_generation_failed")
+            state = failureState
+        default:
+            // shortcut: 409의 code 문자열이 명세에 없어 그 외 에러는 서버 상태를 다시 불러옴(이미 계획이 있으면 목록으로), 네트워크 오류 등은 메시지만 보여줌
+            if case .network = error {
+                errorMessage = error.errorDescription
+                state = failureState
+            } else {
+                await load()
+                if state == failureState { errorMessage = error.errorDescription }
+            }
+        }
+    }
+
+    // 지금 다시 제안받는 중인 요일의 날짜 (그 요일 영역만 로딩으로 바꿈)
+    private(set) var regeneratingDate: String?
+
+    // POST /meal-plans/{id}/days/{dayOfWeek}/regenerate (저장된 추천 조건 그대로, 그 요일만 교체)
+    func resuggestDay(_ day: MealPlanDay) async {
+        guard let id = plan?.mealPlanId, regeneratingDate == nil else { return }
+        regeneratingDate = day.date
+        errorMessage = nil
+        defer { regeneratingDate = nil }
+
+        let keptDate = selectedDate  // apply가 선택일을 서버 기본값으로 되돌리므로 보존
+        do {
+            apply(try await mealPlans.regenerateDay(mealPlanId: id, dayOfWeek: day.dayOfWeek))
+            await loadShortages()
+        } catch {
+            await handleGenerationError(error, failureState: .recipeList)
+        }
+        selectedDate = keptDate
     }
 
     var isConfirming = false  // 확정 요청 중 (버튼 로딩, 중복 탭 방지)
