@@ -171,7 +171,8 @@ struct ThisWeekRecipeListView: View {
                 }
             }
 
-            riceRow
+            // 한그릇 메뉴(덮밥 등)는 밥이 이미 들어 있어 안내 줄이 없음 (디자인 기준)
+            if day.type != .one { riceRow }
 
             TextLinkButton(
                 title: .thisweekResuggestDay,
