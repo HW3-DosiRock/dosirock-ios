@@ -59,6 +59,7 @@ struct ThisWeekView: View {
                         RecipeDetailView(
                             day: day,
                             menu: menu,
+                            shortageIds: vm.shortageIds,
                             badges: vm.badges(for: menu),
                             isConfirmed: vm.isConfirmed
                         )

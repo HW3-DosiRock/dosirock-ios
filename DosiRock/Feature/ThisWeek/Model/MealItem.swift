@@ -7,39 +7,61 @@
  
 import Foundation
 
-// 계획 상태 (20번 실제 API 기준 + 더미용 READY)
+// 계획 상태
 nonisolated enum MealPlanStatus: String, Decodable {
     case none = "NONE"
     case draft = "DRAFT"
     case confirmed = "CONFIRMED"
-    case ready = "READY"   // 더미 전용. 20번 전환 후 삭제
 }
 
-// GET /meal-plans/current 의 data
+// GET /meal-plans/current, POST /meal-plans, POST .../regenerate 의 data
 nonisolated struct MealPlanCurrent: Decodable {
     let hasInventory: Bool
     let status: MealPlanStatus  //계획 상태
-    let plan: MealPlan?          // 계획이 없으면 null
+    let weekStartDate: String  // 대상 주 월요일 "yyyy-MM-dd"
+    let defaultSelectedDate: String  // 처음 선택할 날짜 (평일은 오늘, 주말은 월요일)
+    let plan: MealPlan?  // 계획이 없으면 null
+    let remainingDailyCount: Int  // 전체 제안 남은 일일 횟수 (0~15)
+    let remainingWeeklyResuggestionCount: Int  // 주간 다시 제안 남은 일일 횟수 (0~2)
+    let resetsAt: String  // 다음 한국 자정 (date-time)
 }
 
 nonisolated struct MealPlan: Decodable {
-    let weekStartDate: String    // "yyyy-MM-dd"
-    let days: [MealPlanDay]     // 계획 목록
-    let shortages: [Shortage]   // 부족 재료
+    let mealPlanId: Int  // 확정·다시 제안 요청에 사용
+    let priorityIngredientIds: [Int]  // 먼저 사용할 재료
+    let preferredIngredientIds: [Int]  // 먹고 싶은 재료
+    let includeSoup: Bool
+    let days: [MealPlanDay]  // 월~금 5일
+}
+
+// 한그릇 ONE, 반찬 SIDE, 국물 포함 SOUP
+nonisolated enum MealPlanDayType: String, Decodable {
+    case one = "ONE"
+    case side = "SIDE"
+    case soup = "SOUP"
 }
 
 nonisolated struct MealPlanDay: Decodable {
-    let dayOfWeek: String        // ENUM "MONDAY" ...
+    let dayOfWeek: String  // ENUM "MONDAY" ...
     let date: String
-    let totalCookMinutes: Int
-    let menus: [Menu]
+    let type: MealPlanDayType
+    let totalCookMinutes: Int  // 국+조리 요리 합계, 상비 반찬 제외
+    let soup: Menu?  // SOUP이 아니면 null
+    let dishes: [Menu]  // 국·상비 반찬 제외한 조리 요리
+    let readySides: [MenuIngredient]  // 그대로 내는 상비 반찬, 없으면 빈 배열
+    let remainingResuggestionCount: Int  // 이 요일 다시 제안 남은 횟수 (0~2)
+}
+
+nonisolated extension MealPlanDay {
+    // 기존 화면 호환용: 국 + 조리 요리
+    var menus: [Menu] { (soup.map { [$0] } ?? []) + dishes }
 }
 
 nonisolated struct Menu: Decodable {
+    let menuId: Int
     let name: String
     let cookMinutes: Int
     let ingredients: [MenuIngredient]
-    let steps: [String]
 }
 
 nonisolated struct MenuIngredient: Decodable {
@@ -47,7 +69,6 @@ nonisolated struct MenuIngredient: Decodable {
     let name: String
     let amount: Double
     let unit: String
-    let owned: Bool
 }
 
 nonisolated struct Shortage: Decodable {

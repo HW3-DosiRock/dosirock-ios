@@ -108,7 +108,7 @@ struct ShortageListView: View {
 #if DEBUG
     #Preview {
         let plan = PreviewMealRepository.samplePlan
-        ShortageListView(shortages: plan.shortages, days: plan.days)
+        ShortageListView(shortages: PreviewMealRepository.sampleShortages, days: plan.days)
             .environment(Router<ThisWeekRoute>())
     }
 #endif

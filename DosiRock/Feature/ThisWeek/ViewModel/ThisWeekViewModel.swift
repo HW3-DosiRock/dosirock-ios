@@ -28,7 +28,9 @@ final class ThisWeekViewModel {
     //계획 목록 화면
     var selectedDate: String?  // 사용자가 고른 요일의 날짜 (고르기 전이면 첫날)
     var days: [MealPlanDay] { plan?.days ?? [] }
-    var shortages: [Shortage] { plan?.shortages ?? [] }
+    // shortcut: 부족 재료 조회 API(GET /meal-plans/{id}/shortages) 연동 전까지 빈 목록
+    private(set) var shortages: [Shortage] = []
+    var shortageIds: Set<Int> { Set(shortages.map(\.ingredientId)) }  // 부족한 재료 id
     // 고른 날이 새 계획에 없으면(다시 제안 등) 첫날로
     var selectedDay: MealPlanDay? { days.first { $0.date == selectedDate } ?? days.first }
     // 메뉴 카드 뱃지: 빨리 써야 할 재료를 쓰면 "빨리 쓸 재료 사용", 없는 재료가 있으면 "추가 재료 필요"
@@ -38,7 +40,7 @@ final class ThisWeekViewModel {
         if menu.ingredients.contains(where: { priorityIds.contains($0.ingredientId) }) {
             result.append(.useSoon)
         }
-        if menu.ingredients.contains(where: { !$0.owned }) {
+        if menu.ingredients.contains(where: { shortageIds.contains($0.ingredientId) }) {
             result.append(.needMore)
         }
         return result

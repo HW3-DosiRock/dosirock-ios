@@ -15,6 +15,7 @@ struct RecipeDetailView: View {
 
     let day: MealPlanDay
     let menu: Menu
+    var shortageIds: Set<Int> = []  // 부족한 재료 id (부족 재료 조회 결과)
     var badges: [RecipeState] = []  // 이름 아래 뱃지 (빨리 쓸 재료 사용 · 추가 재료 필요)
     var isConfirmed = false  // 계획이 확정돼야 조리 완료 가능
     // shortcut: 레시피 생성 · 예상 재료비 · 조리 완료 API가 아직 없어 기본값으로 보여줌 (더미 계획에 조리 순서가 이미 옴), API 나오면 ViewModel 값으로 연결
@@ -24,7 +25,7 @@ struct RecipeDetailView: View {
     var onRetry: () -> Void = {}
     var onComplete: () -> Void = {}
 
-    private var hasShortage: Bool { menu.ingredients.contains { !$0.owned } }
+    private var hasShortage: Bool { menu.ingredients.contains { shortageIds.contains($0.ingredientId) } }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -61,7 +62,6 @@ struct RecipeDetailView: View {
                     VStack(alignment: .leading, spacing: Spacing.m) {
                         titleBlock
                         ingredientsSection
-                        stepsSection
                         if let cost { costRow(cost) }
                     }
                     .padding(.horizontal, Spacing.screenHorizontal)
@@ -136,7 +136,7 @@ struct RecipeDetailView: View {
                         imageName: item.imageName,
                         details: [item.amountText],
                         badge: tileBadge(item),
-                        type: !isCooked && !item.owned ? .shortage : .info
+                        type: !isCooked && shortageIds.contains(item.ingredientId) ? .shortage : .info
                     )
                 }
             }
@@ -168,38 +168,9 @@ struct RecipeDetailView: View {
         if isCooked {
             return RecipeBadge(type: .used)
         }
-        return item.owned
-            ? RecipeBadge(type: .useSoon, title: "recipe_tile_enough")
-            : RecipeBadge(type: .lacking)
-    }
-
-    // 조리 순서: 번호 원 + 문장
-    private var stepsSection: some View {
-        VStack(alignment: .leading, spacing: Spacing.m) {
-            Text(.recipeDetailSteps)
-                .appFont(.heading)
-                .foregroundStyle(Color.appTextPrimary)
-                .padding(.top, Spacing.s)
-
-            VStack(alignment: .leading, spacing: 10) {
-                ForEach(Array(menu.steps.enumerated()), id: \.offset) { index, step in
-                    HStack(alignment: .top, spacing: 10) {
-                        Text("\(index + 1)")
-                            .appFont(.caption)
-                            .foregroundStyle(Color.appSurface)
-                            .frame(width: Size.Icon.large, height: Size.Icon.large)
-                            .background(Circle().fill(Color.appTextPrimary))
-                        Text(step)
-                            .appFont(.body)
-                            .foregroundStyle(Color.appTextPrimary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                }
-            }
-            .padding(.vertical, 14)
-            .padding(.horizontal, Spacing.l)
-            .recipeCard()
-        }
+        return shortageIds.contains(item.ingredientId)
+            ? RecipeBadge(type: .lacking)
+            : RecipeBadge(type: .useSoon, title: "recipe_tile_enough")
     }
 
     private func costRow(_ cost: Int) -> some View {
@@ -235,7 +206,7 @@ struct RecipeDetailView: View {
     }
 }
 
-// 레시피 상세의 흰 카드 (조리 순서 · 예상 재료비)
+// 레시피 상세의 흰 카드 (예상 재료비)
 private extension View {
     func recipeCard() -> some View {
         self
@@ -253,7 +224,7 @@ private extension View {
             .environment(Router<ThisWeekRoute>())
     }
     #Preview("확정 후 · 부족 재료") {
-        RecipeDetailView(day: previewDay, menu: previewDay.menus[0], badges: [.needMore], isConfirmed: true, cost: 2729)
+        RecipeDetailView(day: previewDay, menu: previewDay.menus[0], shortageIds: [2], badges: [.needMore], isConfirmed: true, cost: 2729)
             .environment(Router<ThisWeekRoute>())
     }
     #Preview("조리 완료") {
