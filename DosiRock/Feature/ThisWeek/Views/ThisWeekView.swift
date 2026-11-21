@@ -69,6 +69,7 @@ struct ThisWeekView: View {
                 }
             }
         }
+        .toast($vm.toastMessage)
         .environment(router)
         // task는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행됨)
         .task { await vm.load() }

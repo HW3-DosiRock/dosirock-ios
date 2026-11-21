@@ -12,6 +12,7 @@ final class ThisWeekViewModel {
 
     var state: ThisWeekState  // 어떤 화면을 보여줄지
     var errorMessage: String?  // 불러오기 실패 문구
+    var toastMessage: LocalizedStringResource?  // 잠깐 보이는 완료 안내 (예: 요일 다시 제안 반영)
     private(set) var errorIsRetryable = true  // 다시 시도하면 성공할 수 있는 실패인지 (횟수 초과는 아님)
 
     private let mealPlans: MealRepository
@@ -237,6 +238,12 @@ final class ThisWeekViewModel {
         do {
             apply(try await mealPlans.regenerateDay(mealPlanId: id, dayOfWeek: day.dayOfWeek))
             await loadShortages()
+            toastMessage = LocalizedStringResource(
+                stringLiteral: String(
+                    format: String(localized: "thisweek_day_regenerated_toast"),
+                    day.weekdayFullText
+                )
+            )
         } catch {
             await handleGenerationError(error, failureState: .recipeList)
         }

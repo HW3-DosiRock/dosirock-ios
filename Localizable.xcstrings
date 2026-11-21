@@ -2736,6 +2736,17 @@
         }
       }
     },
+    "thisweek_day_regenerated_toast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 도시락 새 구성 반영"
+          }
+        }
+      }
+    },
     "thisweek_day_regenerating" : {
       "extractionState" : "manual",
       "localizations" : {
