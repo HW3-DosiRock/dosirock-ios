@@ -231,7 +231,7 @@ struct MealPlanRepositoryImpl: MealRepository {
                     price: 1620, baseQuantity: 100, unit: "g",
                     surveyDate: "2026-11-06", status: .available
                 ),
-                purchaseUrl: nil
+                purchaseUrl: "https://www.coupang.com"
             )
         ]
 
