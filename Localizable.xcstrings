@@ -2692,6 +2692,17 @@
         }
       }
     },
+    "thisweek_confirm_next_week_plan" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음 주 계획 확정"
+          }
+        }
+      }
+    },
     "thisweek_day_regenerating" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -70,6 +70,22 @@ final class ThisWeekViewModel {
         self.state = state
     }
 
+    // 토요일부터는 서버가 다음 주 계획을 주므로, 계획의 주가 이번 주(한국 시간)보다 뒤인지
+    var isNextWeek: Bool {
+        guard let weekStartDate else { return false }
+        var cal = Calendar(identifier: .iso8601)
+        cal.timeZone = TimeZone(identifier: "Asia/Seoul") ?? .current
+        guard let thisMonday = cal.dateInterval(of: .weekOfYear, for: .now)?.start else {
+            return false
+        }
+        let format = DateFormatter()
+        format.calendar = cal
+        format.timeZone = cal.timeZone
+        format.locale = Locale(identifier: "en_US_POSIX")
+        format.dateFormat = "yyyy-MM-dd"
+        return weekStartDate > format.string(from: thisMonday)  // "yyyy-MM-dd"는 문자열 비교가 곧 날짜 비교
+    }
+
     // "11월 9일~13일" (월~금). 월이 바뀌는 주는 "10월 28일~11월 1일"
     var weekRangeText: String {
         var cal = Calendar(identifier: .iso8601)  // 주가 월요일에 시작

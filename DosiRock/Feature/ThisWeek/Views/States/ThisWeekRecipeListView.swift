@@ -21,9 +21,12 @@ struct ThisWeekRecipeListView: View {
                 VStack(alignment: .leading, spacing: Spacing.xl) {
 
                     //이번주 기간
-                    Text(vm.weekRangeText)
-                        .appFont(.heading)
-                        .foregroundStyle(Color.appTextPrimary)
+                    HStack(spacing: Spacing.s) {
+                        if vm.isNextWeek { RecipeBadge(type: .nextWeek) }  // 주말: 다음 주 계획
+                        Text(vm.weekRangeText)
+                            .appFont(.heading)
+                            .foregroundStyle(Color.appTextPrimary)
+                    }
 
                     shortageCard
                     dayTabs
@@ -54,7 +57,7 @@ struct ThisWeekRecipeListView: View {
     private var bottomButton: some View {
         if !vm.isConfirmed {
             BottomActionBar(
-                title: .thisweekConfirmPlan,
+                title: vm.isNextWeek ? .thisweekConfirmNextWeekPlan : .thisweekConfirmPlan,
                 isEnable: vm.regeneratingDate == nil,
                 isLoading: vm.isConfirming
             ) {
