@@ -4,7 +4,7 @@
 //
 //  Created by Admin on 11/19/26.
 //
- 
+
 import Foundation
 
 // 계획 상태
@@ -76,14 +76,32 @@ nonisolated struct Shortage: Decodable {
     let name: String
     let amount: Double
     let unit: String
+    let managementType: IngredientItem.ManagementType
+    let menuNames: [String]
+    let purchaseUrl: String?
+}
+
+nonisolated struct MealPlanShortageResponse: Decodable {
+    let items: [Shortage]
+    let totalCost: Double
+    let costEstimationStatus: CostEstimationStatus
+
+    enum CostEstimationStatus: String, Decodable {
+        case complete = "COMPLETE"
+        case partial = "PARTIAL"
+        case unavailable = "UNAVAILABLE"
+    }
 }
 
 // 화면 표시용
 nonisolated extension MealPlanDay {
-    private static let dayFormat = Date.ISO8601FormatStyle(timeZone: .current).year().month().day()
+    private static let dayFormat = Date.ISO8601FormatStyle(timeZone: .current)
+        .year().month().day()
 
     private func formatted(_ pattern: String) -> String {
-        guard let parsed = try? Date(date, strategy: Self.dayFormat) else { return "" }
+        guard let parsed = try? Date(date, strategy: Self.dayFormat) else {
+            return ""
+        }
         let f = DateFormatter()
         f.locale = Locale(identifier: "ko_KR")
         f.dateFormat = pattern
@@ -100,7 +118,9 @@ nonisolated extension MenuIngredient {
 
     // 150 → "150g", 0.2 → "0.2포기" (정수면 소수점 없이)
     var amountText: String {
-        amount.formatted(.number.grouping(.never).precision(.fractionLength(0...2))) + unit
+        amount.formatted(
+            .number.grouping(.never).precision(.fractionLength(0...2))
+        ) + unit
     }
 }
 
@@ -109,11 +129,12 @@ nonisolated extension Shortage: Identifiable {
 
     var imageName: String { IngredientImageMap.assetName(for: name) }
 
-    // shortcut: 응답에 관리 방식이 없어 부족한 양이 0이면 기본 재료(보유 여부만 관리)로 봄, managementType 필드가 오면 교체
-    var isPresence: Bool { amount == 0 }
+    var isPresence: Bool { managementType == .presence }
 
     // 60 → "60g", 0.5 → "0.5개" (정수면 소수점 없이)
     var amountText: String {
-        amount.formatted(.number.grouping(.never).precision(.fractionLength(0...2))) + unit
+        amount.formatted(
+            .number.grouping(.never).precision(.fractionLength(0...2))
+        ) + unit
     }
 }

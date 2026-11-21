@@ -19,6 +19,9 @@ protocol MealRepository {
         includeSoup: Bool
     ) async throws -> MealPlanCurrent
 
+    //GET  meal-plans/{mealPlanId}/shortages
+    func fetchShortages(mealPlanId: Int) async throws -> MealPlanShortageResponse
+
     // 구매한 재료 등록 (부족 재료를 샀을 때). 명세 미정
     func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws
 
@@ -56,6 +59,16 @@ struct MealPlanRepositoryImpl: MealRepository {
             timeout: 200,
             authorized: true,
             as: MealPlanCurrent.self
+        )
+    }
+
+    func fetchShortages(mealPlanId: Int) async throws -> MealPlanShortageResponse {
+
+        try await client.sendRequired(
+            "meal-plans/\(mealPlanId)/shortages",
+            method: .get,
+            authorized: true,
+            as: MealPlanShortageResponse.self
         )
     }
 
@@ -99,7 +112,12 @@ struct MealPlanRepositoryImpl: MealRepository {
         )
 
         // 부족 재료 샘플 (대파 60g)
-        static let sampleShortages = [Shortage(ingredientId: 2, name: "대파", amount: 60, unit: "g")]
+        static let sampleShortages = [
+            Shortage(
+                ingredientId: 2, name: "대파", amount: 60, unit: "g",
+                managementType: .quantity, menuNames: ["팽이버섯 달걀말이", "두부조림"], purchaseUrl: nil
+            )
+        ]
 
         // 샘플을 짧게 쓰기 위한 도우미
         private static func day(_ dayOfWeek: String, _ date: String, _ menu: Menu) -> MealPlanDay {
@@ -147,6 +165,13 @@ struct MealPlanRepositoryImpl: MealRepository {
         ) async throws -> MealPlanCurrent {
             try await Task.sleep(for: .seconds(3))  // 더미처럼 3초
             return Self.current(.draft, plan: Self.samplePlan)
+        }
+
+        func fetchShortages(mealPlanId: Int) async throws -> MealPlanShortageResponse {
+            if scenario == .failure { throw APIError.network }
+            return MealPlanShortageResponse(
+                items: Self.sampleShortages, totalCost: 0, costEstimationStatus: .unavailable
+            )
         }
 
         func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws {

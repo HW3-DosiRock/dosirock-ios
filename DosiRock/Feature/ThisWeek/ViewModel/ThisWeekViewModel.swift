@@ -31,7 +31,7 @@ final class ThisWeekViewModel {
     private(set) var remainingDailyCount: Int?  // 전체 제안 남은 일일 횟수
     private(set) var remainingWeeklyResuggestionCount: Int?  // 주간 다시 제안 남은 일일 횟수
     var days: [MealPlanDay] { plan?.days ?? [] }
-    // shortcut: 부족 재료 조회 API(GET /meal-plans/{id}/shortages) 연동 전까지 빈 목록
+    // 부족 재료 (GET /meal-plans/{id}/shortages)
     private(set) var shortages: [Shortage] = []
     var shortageIds: Set<Int> { Set(shortages.map(\.ingredientId)) }  // 부족한 재료 id
     // 고른 날이 새 계획에 없으면(다시 제안 등) 첫날로
@@ -103,6 +103,7 @@ final class ThisWeekViewModel {
             apply(current)
             if current.plan != nil {
                 await loadPriorityItems()  // 메뉴의 "빨리 쓸 재료 사용" 뱃지용
+                await loadShortages()  // 메뉴의 "추가 재료 필요" 뱃지, 부족 재료 목록용
                 state = .recipeList  // 계획 있음 -> 목록
             } else if current.hasInventory {
                 await loadPriorityItems()
@@ -140,6 +141,7 @@ final class ThisWeekViewModel {
                     includeSoup: soupOption == .include
                 )
             )
+            await loadShortages()
             state = .recipeList
         } catch let error as APIError {
             switch error.code {
@@ -170,6 +172,15 @@ final class ThisWeekViewModel {
     func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws {
         try await mealPlans.registerBought(amounts: amounts, bought: bought)
         await load()
+    }
+
+    // 부족 재료 (실패하면 빈 목록, 뱃지·목록만 비고 계획 화면은 그대로)
+    private func loadShortages() async {
+        guard let id = plan?.mealPlanId else {
+            shortages = []
+            return
+        }
+        shortages = (try? await mealPlans.fetchShortages(mealPlanId: id).items) ?? []
     }
 
     // 빨리 써야 할 재료 (실패하면 빈 목록, 조건 화면은 그대로)

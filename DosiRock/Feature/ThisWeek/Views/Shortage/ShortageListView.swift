@@ -13,7 +13,6 @@ struct ShortageListView: View {
     @Environment(Router<ThisWeekRoute>.self) private var router
 
     let shortages: [Shortage]
-    let days: [MealPlanDay]  // 재료마다 "어느 메뉴에 쓰이는지"를 찾는 데 씀
     // 구매한 재료 저장 (서버 저장 + 이번 주 데이터 새로고침은 부르는 쪽 ViewModel이 함)
     var onRegisterBought: (_ amounts: [Int: Double], _ bought: Set<Int>) async throws -> Void = { _, _ in }
 
@@ -67,7 +66,7 @@ struct ShortageListView: View {
         ListRow(
             iconCodes: [item.imageName],
             title: item.name,
-            subtitle: menuNames(using: item),
+            subtitle: item.menuNames.joined(separator: " · "),
             badgePlacement: .trailing,
             showsChevron: false,
             subtitleLineLimit: 2
@@ -91,24 +90,11 @@ struct ShortageListView: View {
             RoundedRectangle(cornerRadius: Radius.large).stroke(Color.appBorder)
         )
     }
-
-    // 이 재료를 쓰는 메뉴 이름 (요일 순, 같은 메뉴는 한 번만): "닭고기 채소볶음 · 닭고기 채소덮밥"
-    private func menuNames(using item: Shortage) -> String {
-        var names: [String] = []
-        for menu in days.flatMap(\.menus)
-        where menu.ingredients.contains(where: { $0.ingredientId == item.ingredientId })
-            && !names.contains(menu.name)
-        {
-            names.append(menu.name)
-        }
-        return names.joined(separator: " · ")
-    }
 }
 
 #if DEBUG
     #Preview {
-        let plan = PreviewMealRepository.samplePlan
-        ShortageListView(shortages: PreviewMealRepository.sampleShortages, days: plan.days)
+        ShortageListView(shortages: PreviewMealRepository.sampleShortages)
             .environment(Router<ThisWeekRoute>())
     }
 #endif
