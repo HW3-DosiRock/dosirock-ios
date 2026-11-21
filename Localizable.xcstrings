@@ -2747,6 +2747,28 @@
         }
       }
     },
+    "thisweek_suggest_generation_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메뉴를 만들지 못했어요. 잠시 후 다시 시도해 주세요"
+          }
+        }
+      }
+    },
+    "thisweek_suggest_limit_exceeded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘 메뉴 제안 횟수를 모두 사용했어요. 내일 다시 시도해 주세요"
+          }
+        }
+      }
+    },
     "thisweek_load_failed" : {
       "extractionState" : "manual",
       "localizations" : {

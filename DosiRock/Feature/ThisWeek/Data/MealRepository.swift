@@ -17,7 +17,7 @@ protocol MealRepository {
         priorityIngredientIds: [Int],
         preferredIngredientIds: [Int],
         includeSoup: Bool
-    ) async throws -> MealPlan
+    ) async throws -> MealPlanCurrent
 
     // 구매한 재료 등록 (부족 재료를 샀을 때). 명세 미정
     func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws
@@ -43,7 +43,7 @@ struct MealPlanRepositoryImpl: MealRepository {
         priorityIngredientIds: [Int],
         preferredIngredientIds: [Int],
         includeSoup: Bool
-    ) async throws -> MealPlan {
+    ) async throws -> MealPlanCurrent {
 
         try await client.sendRequired(
             "meal-plans",
@@ -55,7 +55,7 @@ struct MealPlanRepositoryImpl: MealRepository {
             ],
             timeout: 200,
             authorized: true,
-            as: MealPlan.self
+            as: MealPlanCurrent.self
         )
     }
 
@@ -144,9 +144,9 @@ struct MealPlanRepositoryImpl: MealRepository {
             priorityIngredientIds: [Int],
             preferredIngredientIds: [Int],
             includeSoup: Bool
-        ) async throws -> MealPlan {
+        ) async throws -> MealPlanCurrent {
             try await Task.sleep(for: .seconds(3))  // 더미처럼 3초
-            return Self.samplePlan
+            return Self.current(.draft, plan: Self.samplePlan)
         }
 
         func registerBought(amounts: [Int: Double], bought: Set<Int>) async throws {

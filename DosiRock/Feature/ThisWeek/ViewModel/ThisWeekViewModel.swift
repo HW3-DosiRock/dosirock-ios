@@ -26,7 +26,10 @@ final class ThisWeekViewModel {
     var soupOption: SoupOption = .exclude  // 국물 기본값: 제외
     
     //계획 목록 화면
-    var selectedDate: String?  // 사용자가 고른 요일의 날짜 (고르기 전이면 첫날)
+    var selectedDate: String?  // 사용자가 고른 요일의 날짜 (고르기 전이면 서버의 기본 선택일)
+    private(set) var weekStartDate: String?  // 대상 주 월요일 "yyyy-MM-dd"
+    private(set) var remainingDailyCount: Int?  // 전체 제안 남은 일일 횟수
+    private(set) var remainingWeeklyResuggestionCount: Int?  // 주간 다시 제안 남은 일일 횟수
     var days: [MealPlanDay] { plan?.days ?? [] }
     // shortcut: 부족 재료 조회 API(GET /meal-plans/{id}/shortages) 연동 전까지 빈 목록
     private(set) var shortages: [Shortage] = []
@@ -69,11 +72,16 @@ final class ThisWeekViewModel {
         var cal = Calendar(identifier: .iso8601)  // 주가 월요일에 시작
         cal.locale = Locale(identifier: "ko_KR")
 
-        guard let week = cal.dateInterval(of: .weekOfYear, for: .now),
-            let friday = cal.date(byAdding: .day, value: 4, to: week.start)
+        // 서버는 토요일부터 다음 주 계획을 주므로 .now가 아니라 응답의 weekStartDate 기준
+        let monday =
+            weekStartDate.flatMap {
+                try? Date($0, strategy: Date.ISO8601FormatStyle(timeZone: .current).year().month().day())
+            } ?? cal.dateInterval(of: .weekOfYear, for: .now)?.start
+
+        guard let monday, let friday = cal.date(byAdding: .day, value: 4, to: monday)
         else { return "" }
 
-        let start = cal.dateComponents([.month, .day], from: week.start)
+        let start = cal.dateComponents([.month, .day], from: monday)
         let end = cal.dateComponents([.month, .day], from: friday)
 
         if start.month == end.month {
@@ -92,8 +100,7 @@ final class ThisWeekViewModel {
         do {
 
             let current = try await mealPlans.fetchCurrent()
-            plan = current.plan
-            planStatus = current.status
+            apply(current)
             if current.plan != nil {
                 await loadPriorityItems()  // 메뉴의 "빨리 쓸 재료 사용" 뱃지용
                 state = .recipeList  // 계획 있음 -> 목록
@@ -109,20 +116,52 @@ final class ThisWeekViewModel {
         }
     }
 
+    // 서버 응답(GET /meal-plans/current, POST /meal-plans)을 화면 상태에 반영
+    private func apply(_ current: MealPlanCurrent) {
+        plan = current.plan
+        planStatus = current.status
+        weekStartDate = current.weekStartDate
+        selectedDate = current.defaultSelectedDate
+        remainingDailyCount = current.remainingDailyCount
+        remainingWeeklyResuggestionCount = current.remainingWeeklyResuggestionCount
+    }
+
+    // POST /meal-plans
     func suggest() async {
 
         state = .makingRecipe
+        errorMessage = nil
 
         do {
-            planStatus = .draft  // 새로 제안받은 계획은 확정 전
-            plan = try await mealPlans.suggest(
-                priorityIngredientIds: priorityItems.filter(\.isOn).map(\.id),
-                preferredIngredientIds: likeIngredients.map(\.id),
-                includeSoup: soupOption == .include
+            apply(
+                try await mealPlans.suggest(
+                    priorityIngredientIds: priorityItems.filter(\.isOn).map(\.id),
+                    preferredIngredientIds: likeIngredients.map(\.id),
+                    includeSoup: soupOption == .include
+                )
             )
-
             state = .recipeList
+        } catch let error as APIError {
+            switch error.code {
+            case "MEALPLAN_DAILY_LIMIT_EXCEEDED":
+                errorMessage = String(localized: "thisweek_suggest_limit_exceeded")
+                state = .emptyRecipe
+            case "MEALPLAN_GENERATION_FAILED", "MEALPLAN_GENERATION_UNAVAILABLE",
+                "MEALPLAN_GENERATION_TIMEOUT":
+                errorMessage = String(localized: "thisweek_suggest_generation_failed")
+                state = .emptyRecipe
+            default:
+                // shortcut: 409의 code 문자열이 명세에 없어 그 외 에러는 서버 상태를 다시 불러옴(이미 계획이 있으면 목록으로), 네트워크 오류 등은 메시지만 보여줌
+                if case .network = error {
+                    errorMessage = error.errorDescription
+                    state = .emptyRecipe
+                } else {
+                    await load()
+                    if state == .emptyRecipe { errorMessage = error.errorDescription }
+                }
+            }
         } catch {
+            errorMessage = error.localizedDescription
             state = .emptyRecipe
         }
     }

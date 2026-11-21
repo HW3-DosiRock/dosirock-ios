@@ -52,6 +52,12 @@ struct ThisWeekRecipeEmptyView: View {
                 alignment: .topLeading
             )
 
+            // 제안 실패 안내 (횟수 초과, 생성 실패 등)
+            if let message = vm.errorMessage {
+                AppBanner(type: .attention, message: message)
+                    .padding(.bottom, Spacing.s)
+            }
+
             //이번 주 메뉴 제안 받기 버튼 (스크롤 밖에 둬서 하단에 고정)
             BottomActionBar(
                 title: .thisweekSuggestWithCondition,
