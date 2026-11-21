@@ -51,6 +51,8 @@ struct ThisWeekView: View {
                     ShortageListView(shortages: vm.shortages) {
                         try await vm.registerBought(amounts: $0, bought: $1)
                     }
+                case .editCondition:
+                    ThisWeekConditionEditView(vm: vm)
                 case .recipe(let date, let menuIndex):
                     if let day = vm.days.first(where: { $0.date == date }),
                         day.menus.indices.contains(menuIndex)
@@ -80,7 +82,7 @@ struct ThisWeekView: View {
                 ? .thisweekChangeCondition : nil,
             actionIcon: .sliders
         ) {
-            // TODO: 조건 변경 화면 열기
+            router.push(.editCondition)
         }
     }
 }

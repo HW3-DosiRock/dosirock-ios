@@ -19,6 +19,14 @@ protocol MealRepository {
         includeSoup: Bool
     ) async throws -> MealPlanCurrent
 
+    //POST meal-plans/{mealPlanId}/regenerate (주간 전체 다시 제안)
+    func regenerate(
+        mealPlanId: Int,
+        priorityIngredientIds: [Int],
+        preferredIngredientIds: [Int],
+        includeSoup: Bool
+    ) async throws -> MealPlanCurrent
+
     //POST meal-plans/{mealPlanId}/confirm (이미 확정한 계획도 성공)
     func confirm(mealPlanId: Int) async throws
 
@@ -43,6 +51,17 @@ struct MealPlanRepositoryImpl: MealRepository {
 
     }
 
+    // 제안·다시 제안이 같은 본문을 보냄
+    private func conditionBody(
+        priority: [Int], preferred: [Int], includeSoup: Bool
+    ) -> [String: Any] {
+        [
+            "priorityIngredientIds": priority,
+            "preferredIngredientIds": preferred,
+            "includeSoup": includeSoup,
+        ]
+    }
+
     func suggest(
         priorityIngredientIds: [Int],
         preferredIngredientIds: [Int],
@@ -52,14 +71,41 @@ struct MealPlanRepositoryImpl: MealRepository {
         try await client.sendRequired(
             "meal-plans",
             method: .post,
-            body: [
-                "priorityIngredientIds": priorityIngredientIds,
-                "preferredIngredientIds": preferredIngredientIds,
-                "includeSoup": includeSoup,
-            ],
+            body: conditionBody(
+                priority: priorityIngredientIds, preferred: preferredIngredientIds,
+                includeSoup: includeSoup),
             timeout: 200,
             authorized: true,
             as: MealPlanCurrent.self
+        )
+    }
+
+    func regenerate(
+        mealPlanId: Int,
+        priorityIngredientIds: [Int],
+        preferredIngredientIds: [Int],
+        includeSoup: Bool
+    ) async throws -> MealPlanCurrent {
+
+        try await client.sendRequired(
+            "meal-plans/\(mealPlanId)/regenerate",
+            method: .post,
+            body: conditionBody(
+                priority: priorityIngredientIds, preferred: preferredIngredientIds,
+                includeSoup: includeSoup),
+            timeout: 200,
+            authorized: true,
+            as: MealPlanCurrent.self
+        )
+    }
+
+    func confirm(mealPlanId: Int) async throws {
+
+        _ = try await client.send(
+            "meal-plans/\(mealPlanId)/confirm",
+            method: .post,
+            authorized: true,
+            as: Empty.self
         )
     }
 
@@ -72,16 +118,6 @@ struct MealPlanRepositoryImpl: MealRepository {
             method: .get,
             authorized: true,
             as: MealPlanShortageResponse.self
-        )
-    }
-
-    func confirm(mealPlanId: Int) async throws {
-
-        _ = try await client.send(
-            "meal-plans/\(mealPlanId)/confirm",
-            method: .post,
-            authorized: true,
-            as: Empty.self
         )
     }
 
@@ -254,6 +290,16 @@ struct MealPlanRepositoryImpl: MealRepository {
         }
 
         func suggest(
+            priorityIngredientIds: [Int],
+            preferredIngredientIds: [Int],
+            includeSoup: Bool
+        ) async throws -> MealPlanCurrent {
+            try await Task.sleep(for: .seconds(3))  // 더미처럼 3초
+            return Self.current(.draft, plan: Self.samplePlan)
+        }
+
+        func regenerate(
+            mealPlanId: Int,
             priorityIngredientIds: [Int],
             preferredIngredientIds: [Int],
             includeSoup: Bool

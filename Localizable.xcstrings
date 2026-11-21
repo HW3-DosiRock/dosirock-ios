@@ -2769,6 +2769,50 @@
         }
       }
     },
+    "thisweek_replace_dialog_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확정한 계획을 새 제안으로 바꿀까요?"
+          }
+        }
+      }
+    },
+    "thisweek_replace_dialog_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료하지 않은 도시락 구성이 바뀌어요."
+          }
+        }
+      }
+    },
+    "thisweek_replace_dialog_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "바꾸기"
+          }
+        }
+      }
+    },
+    "thisweek_resuggest_limit_exceeded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘 다시 제안 횟수를 모두 사용했어요. 내일 다시 시도해 주세요"
+          }
+        }
+      }
+    },
     "thisweek_suggest_generation_failed" : {
       "extractionState" : "manual",
       "localizations" : {

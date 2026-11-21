@@ -124,50 +124,75 @@ final class ThisWeekViewModel {
     private func apply(_ current: MealPlanCurrent) {
         plan = current.plan
         planStatus = current.status
+        if let plan = current.plan { soupOption = plan.includeSoup ? .include : .exclude }  // 조건 변경 화면의 기본값
         weekStartDate = current.weekStartDate
         selectedDate = current.defaultSelectedDate
         remainingDailyCount = current.remainingDailyCount
         remainingWeeklyResuggestionCount = current.remainingWeeklyResuggestionCount
     }
 
-    // POST /meal-plans
+    // POST /meal-plans (계획이 없을 때 처음 제안)
     func suggest() async {
+        await generate(failureState: .emptyRecipe) {
+            try await mealPlans.suggest(
+                priorityIngredientIds: priorityItems.filter(\.isOn).map(\.id),
+                preferredIngredientIds: likeIngredients.map(\.id),
+                includeSoup: soupOption == .include
+            )
+        }
+    }
+
+    // POST /meal-plans/{id}/regenerate (이미 있는 계획을 새 조건으로 전체 교체)
+    func resuggest() async {
+        guard let id = plan?.mealPlanId else { return }
+        await generate(failureState: .recipeList) {
+            try await mealPlans.regenerate(
+                mealPlanId: id,
+                priorityIngredientIds: priorityItems.filter(\.isOn).map(\.id),
+                preferredIngredientIds: likeIngredients.map(\.id),
+                includeSoup: soupOption == .include
+            )
+        }
+    }
+
+    // 제안·다시 제안 공통: 로딩 → 응답 반영 → 실패하면 failureState로 돌아가 안내
+    private func generate(
+        failureState: ThisWeekState,
+        _ request: () async throws -> MealPlanCurrent
+    ) async {
 
         state = .makingRecipe
         errorMessage = nil
 
         do {
-            apply(
-                try await mealPlans.suggest(
-                    priorityIngredientIds: priorityItems.filter(\.isOn).map(\.id),
-                    preferredIngredientIds: likeIngredients.map(\.id),
-                    includeSoup: soupOption == .include
-                )
-            )
+            apply(try await request())
             await loadShortages()
             state = .recipeList
         } catch let error as APIError {
             switch error.code {
             case "MEALPLAN_DAILY_LIMIT_EXCEEDED":
                 errorMessage = String(localized: "thisweek_suggest_limit_exceeded")
-                state = .emptyRecipe
+                state = failureState
+            case "MEALPLAN_RESUGGESTION_LIMIT_EXCEEDED":
+                errorMessage = String(localized: "thisweek_resuggest_limit_exceeded")
+                state = failureState
             case "MEALPLAN_GENERATION_FAILED", "MEALPLAN_GENERATION_UNAVAILABLE",
                 "MEALPLAN_GENERATION_TIMEOUT":
                 errorMessage = String(localized: "thisweek_suggest_generation_failed")
-                state = .emptyRecipe
+                state = failureState
             default:
                 // shortcut: 409의 code 문자열이 명세에 없어 그 외 에러는 서버 상태를 다시 불러옴(이미 계획이 있으면 목록으로), 네트워크 오류 등은 메시지만 보여줌
                 if case .network = error {
                     errorMessage = error.errorDescription
-                    state = .emptyRecipe
+                    state = failureState
                 } else {
                     await load()
-                    if state == .emptyRecipe { errorMessage = error.errorDescription }
+                    if state == failureState { errorMessage = error.errorDescription }
                 }
             }
         } catch {
             errorMessage = error.localizedDescription
-            state = .emptyRecipe
+            state = failureState
         }
     }
 

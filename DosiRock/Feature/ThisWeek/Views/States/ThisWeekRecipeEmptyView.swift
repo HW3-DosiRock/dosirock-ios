@@ -12,6 +12,8 @@ struct ThisWeekRecipeEmptyView: View {
 
     @Environment(\.container) private var container
     @Bindable var vm: ThisWeekViewModel
+    var showsWeekRange = true  // 조건 변경 화면은 제목이 따로 있어 기간을 숨김
+    var onSubmit: (() -> Void)? = nil  // 없으면 처음 제안(suggest), 조건 변경 화면은 다시 제안으로 연결
     @State private var showsLikeIngredientPicker = false
 
     var body: some View {
@@ -23,9 +25,11 @@ struct ThisWeekRecipeEmptyView: View {
                 VStack(alignment: .leading, spacing: Spacing.xl) {
 
                     //이번주 기간
-                    Text(vm.weekRangeText)
-                        .appFont(.heading)
-                        .foregroundStyle(Color.appTextPrimary)
+                    if showsWeekRange {
+                        Text(vm.weekRangeText)
+                            .appFont(.heading)
+                            .foregroundStyle(Color.appTextPrimary)
+                    }
 
                     // 툴팁은 아래로 펼쳐지므로, 위 섹션일수록 zIndex를 크게 줘서 아래 카드에 안 가려지게 함
                     // (zIndex는 같은 부모 안의 형제끼리만 비교됨)
@@ -63,7 +67,11 @@ struct ThisWeekRecipeEmptyView: View {
                 title: .thisweekSuggestWithCondition,
                 icon: .sparkle
             ) {
-                Task { await vm.suggest() }
+                if let onSubmit {
+                    onSubmit()
+                } else {
+                    Task { await vm.suggest() }
+                }
             }
         }
     }
