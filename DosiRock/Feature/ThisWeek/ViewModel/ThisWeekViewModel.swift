@@ -125,6 +125,7 @@ final class ThisWeekViewModel {
             if current.plan != nil {
                 await loadPriorityItems()  // 메뉴의 "빨리 쓸 재료 사용" 뱃지용
                 await loadShortages()  // 메뉴의 "추가 재료 필요" 뱃지, 부족 재료 목록용
+                await prefillLikeIngredients()  // 조건 변경 화면에 지난 선택 채우기
                 state = .recipeList  // 계획 있음 -> 목록
             } else if current.hasInventory {
                 await loadPriorityItems()
@@ -347,16 +348,28 @@ final class ThisWeekViewModel {
         shortages = (try? await mealPlans.fetchShortages(mealPlanId: id).items) ?? []
     }
 
+    // 계획을 만들 때 고른 "먹고 싶은 재료"를 조건 화면에 채움 (재료 목록을 못 받으면 그대로 둠)
+    private func prefillLikeIngredients() async {
+        guard let ids = plan?.preferredIngredientIds, !ids.isEmpty,
+            let catalog = try? await ingredients.fetchAll()
+        else { return }
+        let byId = Dictionary(catalog.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        likeIngredients = ids.compactMap { byId[$0] }
+    }
+
     // 빨리 써야 할 재료 (실패하면 빈 목록, 조건 화면은 그대로)
     private func loadPriorityItems() async {
         let items = (try? await inventory.fetchPriority()) ?? []
-        priorityItems = items.map {
+        let chosen = plan?.priorityIngredientIds  // 계획을 만들 때 "먼저 사용"으로 고른 재료
+        priorityItems = items.map { item in
             PriorityItem(
-                id: $0.ingredientId,
-                code: $0.imageName,
-                name: $0.name,
-                amount: $0.quantityText,
-                daysLeft: $0.remainingDays
+                id: item.ingredientId,
+                code: item.imageName,
+                name: item.name,
+                amount: item.quantityText,
+                daysLeft: item.remainingDays,
+                // 계획이 있으면 그때 고른 재료만 켬, 계획이 없으면 모두 켬
+                isOn: chosen?.contains(item.ingredientId) ?? true
             )
         }
     }
