@@ -212,6 +212,8 @@ struct ThisWeekRecipeEmptyView: View {
 
                 VStack {
                     Text(.thisweekPriorityFirstUse)
+                        .appFont(.caption)
+                        .foregroundStyle(Color.appTextSecondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
 
