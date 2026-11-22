@@ -165,6 +165,26 @@ nonisolated extension RecipeDetail {
     var costText: Int? { estimationStatus == .complete ? Int(estimatedCost.rounded()) : nil }
 }
 
+// POST .../days/{dayOfWeek}/complete 의 data
+nonisolated struct CookingCompletion: Decodable {
+    let cookingRecordId: Int
+}
+
+// 조리 완료 시트의 "사용된 재료" 한 줄 (하루 메뉴 전체의 재료별 합계)
+nonisolated struct CookUsage: Identifiable {
+    let id: Int  // 재료 ID
+    let name: String
+    let amount: Double
+    let unit: String
+
+    var imageName: String { IngredientImageMap.assetName(for: name) }
+
+    // 150 → "−150g"
+    var amountText: String {
+        "−" + amount.formatted(.number.grouping(.never).precision(.fractionLength(0...2))) + unit
+    }
+}
+
 // 화면 표시용
 nonisolated extension MealPlanDay {
     private static let dayFormat = Date.ISO8601FormatStyle(timeZone: .current)

@@ -28,7 +28,11 @@ struct ThisWeekRecipeListView: View {
                             .foregroundStyle(Color.appTextPrimary)
                     }
 
-                    shortageCard
+                    if allCooked {
+                        AppBanner(type: .success, message: String(localized: "thisweek_all_done"))
+                    } else {
+                        shortageCard
+                    }
                     dayTabs
                     selectedDaySection
 
@@ -76,10 +80,13 @@ struct ThisWeekRecipeListView: View {
                     ),
                 isEnable: !cooked && vm.regeneratingDate == nil
             ) {
-                // TODO: 조리 완료 API 나오면 연결
+                vm.completingDate = day.date  // 조리 완료 시트 (사용된 재료 확인 후 완료)
             }
         }
     }
+
+    // 월~금을 모두 조리 완료
+    private var allCooked: Bool { !vm.days.isEmpty && vm.days.allSatisfy { vm.isCooked($0) } }
 
     // 추가로 필요한 재료 요약 (부족 재료가 없으면 숨김)
     @ViewBuilder
@@ -133,13 +140,17 @@ struct ThisWeekRecipeListView: View {
         if let day = vm.selectedDay {
             VStack(alignment: .leading, spacing: Spacing.m) {
 
-                VStack(alignment: .leading, spacing: Spacing.xs) {
-                    Text(String(format: String(localized: "thisweek_day_title"), day.weekdayFullText))
-                        .appFont(.heading)
-                        .foregroundStyle(Color.appTextPrimary)
-                    Text(String(format: String(localized: "thisweek_day_subtitle"), day.type.title, day.totalCookMinutes))
-                        .appFont(.subbody)
-                        .foregroundStyle(Color.appTextSecondary)
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: Spacing.xs) {
+                        Text(String(format: String(localized: "thisweek_day_title"), day.weekdayFullText))
+                            .appFont(.heading)
+                            .foregroundStyle(Color.appTextPrimary)
+                        Text(String(format: String(localized: "thisweek_day_subtitle"), day.type.title, day.totalCookMinutes))
+                            .appFont(.subbody)
+                            .foregroundStyle(Color.appTextSecondary)
+                    }
+                    Spacer()
+                    if vm.isCooked(day) { RecipeBadge(type: .cooked) }
                 }
 
                 if vm.regeneratingDate == day.date {
@@ -174,15 +185,18 @@ struct ThisWeekRecipeListView: View {
             // 한그릇 메뉴(덮밥 등)는 밥이 이미 들어 있어 안내 줄이 없음 (디자인 기준)
             if day.type != .one { riceRow }
 
-            TextLinkButton(
-                title: .thisweekResuggestDay,
-                icon: .refresh,
-                textColor: .appTextSecondary,
-                isEnable: day.remainingResuggestionCount > 0 && !vm.isConfirming
-            ) {
-                Task { await vm.resuggestDay(day) }
+            // 조리 완료한 요일은 다시 제안할 수 없음
+            if !vm.isCooked(day) {
+                TextLinkButton(
+                    title: .thisweekResuggestDay,
+                    icon: .refresh,
+                    textColor: .appTextSecondary,
+                    isEnable: day.remainingResuggestionCount > 0 && !vm.isConfirming
+                ) {
+                    Task { await vm.resuggestDay(day) }
+                }
+                .frame(maxWidth: .infinity)
             }
-            .frame(maxWidth: .infinity)
         }
     }
 
@@ -228,6 +242,7 @@ struct ThisWeekRecipeListView: View {
                 DayTile(
                     dayOfWeek: day.weekdayText,
                     day: day.dayText,
+                    isDone: vm.isCooked(day),
                     isClicked: vm.selectedDay?.date == day.date
                 ) {
                     vm.selectedDate = day.date

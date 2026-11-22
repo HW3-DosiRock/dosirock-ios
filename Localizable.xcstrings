@@ -2758,6 +2758,61 @@
         }
       }
     },
+    "thisweek_cook_used_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용된 재료"
+          }
+        }
+      }
+    },
+    "thisweek_cook_apply_stock" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재고 반영하고 완료"
+          }
+        }
+      }
+    },
+    "thisweek_cook_done_toast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@(%2$@) 조리 완료 · 재료 %3$lld종 냉장고에 반영"
+          }
+        }
+      }
+    },
+    "thisweek_all_done" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이번 주 도시락을 모두 만들었어요"
+          }
+        }
+      }
+    },
+    "thisweek_replace_dialog_message_cooked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료하지 않은 도시락 구성이 바뀌어요.\n조리 완료한 도시락 %lld개는 변경되지 않아요."
+          }
+        }
+      }
+    },
     "thisweek_day_regenerating" : {
       "extractionState" : "manual",
       "localizations" : {

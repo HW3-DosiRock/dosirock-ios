@@ -43,7 +43,13 @@ struct ThisWeekConditionEditView: View {
                 resuggest()
             }
         } message: {
-            Text("thisweek_replace_dialog_message")
+            // 조리 완료한 요일이 있으면 그 요일은 바뀌지 않는다고 함께 안내
+            let cooked = vm.days.filter { vm.isCooked($0) }.count
+            Text(
+                cooked > 0
+                    ? String(format: String(localized: "thisweek_replace_dialog_message_cooked"), cooked)
+                    : String(localized: "thisweek_replace_dialog_message")
+            )
         }
     }
 

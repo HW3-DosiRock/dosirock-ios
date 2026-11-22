@@ -270,8 +270,66 @@ final class ThisWeekViewModel {
     // 서버가 요일별 조리 완료 여부(completed)를 주면 그 값, 아직 안 주면 미완료
     func isCooked(_ day: MealPlanDay) -> Bool { day.completed == true }
 
+    // 조리 완료 시트가 열려 있는 요일의 날짜 (목록의 하단 버튼과 레시피 상세의 조리 완료 버튼이 같이 씀)
+    var completingDate: String?
+    var completingDay: MealPlanDay? { days.first { $0.date == completingDate } }
+
+    private var catalog: [Int: IngredientItem] = [:]  // 재료 기준 정보 (기본 재료 구분용, 한 번 받아 둠)
+    private var completeKeys: [String: String] = [:]  // 날짜 → Idempotency-Key (성공할 때까지 재전송에 같은 키)
+
+    // 조리 완료 시트의 "사용된 재료": 그날 메뉴 재료의 합계, 기본 재료는 서버가 차감하지 않아 제외
+    func cookUsage(of day: MealPlanDay) async -> [CookUsage] {
+        if catalog.isEmpty, let list = try? await ingredients.fetchAll() {
+            catalog = Dictionary(list.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        }
+        var order: [Int] = []
+        var sums: [Int: CookUsage] = [:]
+        for item in day.menus.flatMap(\.ingredients) {
+            if catalog[item.ingredientId]?.managementType == .presence { continue }
+            let before = sums[item.ingredientId]
+            if before == nil { order.append(item.ingredientId) }
+            sums[item.ingredientId] = CookUsage(
+                id: item.ingredientId, name: item.name,
+                amount: (before?.amount ?? 0) + item.amount, unit: item.unit)
+        }
+        return order.compactMap { sums[$0] }
+    }
+
+    // POST /meal-plans/{id}/days/{dayOfWeek}/complete → 성공하면 계획을 다시 읽어 조리 완료 반영
+    func completeDay(_ day: MealPlanDay, usedCount: Int) async throws {
+        guard let id = plan?.mealPlanId else { throw APIError.unknown }
+        let key = completeKeys[day.date] ?? UUID().uuidString
+        completeKeys[day.date] = key
+        try await mealPlans.completeDay(mealPlanId: id, dayOfWeek: day.dayOfWeek, idempotencyKey: key)
+        completeKeys[day.date] = nil
+        // 조리는 이미 성공했으므로 갱신이 실패해도 에러로 보지 않음
+        let kept = selectedDate
+        if let current = try? await mealPlans.fetchCurrent() {
+            apply(current)
+            await loadShortages()
+        }
+        await refreshLoadedRecipes()  // 재고가 바뀌어 사용 가능량·부족량을 다시 받음
+        selectedDate = kept
+        toastMessage = LocalizedStringResource(
+            stringLiteral: String(
+                format: String(localized: "thisweek_cook_done_toast"),
+                day.dayText, day.weekdayText, usedCount
+            )
+        )
+    }
+
     // 메뉴별 상세 레시피 (메뉴 ID → 불러오는 중 / 실패 / 완료). 한 번 받으면 다시 안 부름
     private(set) var recipes: [Int: RecipeLoad] = [:]
+
+    // 이미 받은 레시피를 다시 받아 바꿈. 비우지 않아서 열려 있는 상세 화면이 "만드는 중"으로 바뀌지 않고, 실패하면 이전 것을 유지
+    private func refreshLoadedRecipes() async {
+        for (menuId, load) in recipes {
+            guard case .loaded = load else { continue }
+            if let fresh = try? await mealPlans.fetchRecipe(menuId: menuId) {
+                recipes[menuId] = .loaded(fresh)
+            }
+        }
+    }
 
     func loadRecipe(menuId: Int) async {
         switch recipes[menuId] {
@@ -314,7 +372,7 @@ final class ThisWeekViewModel {
 
         try await inventory.addAll(attempt.entries, idempotencyKey: attempt.key)
         saveAttempt = nil
-        recipes = [:]  // 재료 사용 가능량·부족량은 현재 재고 기준이라 다시 받아야 함
+        await refreshLoadedRecipes()  // 사용 가능량·부족량은 현재 재고 기준이라 다시 받음
         await load()
     }
 

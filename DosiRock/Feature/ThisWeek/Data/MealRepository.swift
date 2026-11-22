@@ -36,6 +36,9 @@ protocol MealRepository {
     //POST meal-plans/menus/{menuId}/recipe (처음엔 AI가 생성, 이후 저장본)
     func fetchRecipe(menuId: Int) async throws -> RecipeDetail
 
+    //POST meal-plans/{mealPlanId}/days/{dayOfWeek}/complete (하루 전체 조리 완료, 보유량까지 재고 차감)
+    func completeDay(mealPlanId: Int, dayOfWeek: String, idempotencyKey: String) async throws
+
     //GET  meal-plans/{mealPlanId}/shortages
     func fetchShortages(mealPlanId: Int) async throws
         -> MealPlanShortageResponse
@@ -123,6 +126,17 @@ struct MealPlanRepositoryImpl: MealRepository {
             method: .post,
             authorized: true,
             as: Empty.self
+        )
+    }
+
+    func completeDay(mealPlanId: Int, dayOfWeek: String, idempotencyKey: String) async throws {
+
+        _ = try await client.send(
+            "meal-plans/\(mealPlanId)/days/\(dayOfWeek)/complete",
+            method: .post,
+            headers: ["Idempotency-Key": idempotencyKey],
+            authorized: true,
+            as: CookingCompletion.self
         )
     }
 
@@ -367,6 +381,11 @@ struct MealPlanRepositoryImpl: MealRepository {
                 estimatedCost: 2322,
                 estimationStatus: .complete
             )
+        }
+
+        func completeDay(mealPlanId: Int, dayOfWeek: String, idempotencyKey: String) async throws {
+            try await Task.sleep(for: .milliseconds(500))
+            if scenario == .failure { throw APIError.network }
         }
 
         func fetchRecipe(menuId: Int) async throws -> RecipeDetail {

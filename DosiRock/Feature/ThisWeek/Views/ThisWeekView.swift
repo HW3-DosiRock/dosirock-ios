@@ -67,7 +67,8 @@ struct ThisWeekView: View {
                             isConfirmed: vm.isConfirmed,
                             phase: load?.phase ?? .generating,
                             isCooked: vm.isCooked(day),
-                            onRetry: { Task { await vm.loadRecipe(menuId: menu.menuId) } }
+                            onRetry: { Task { await vm.loadRecipe(menuId: menu.menuId) } },
+                            onComplete: { vm.completingDate = day.date }
                         )
                         // 처음 열 때 서버가 레시피를 만들어 저장, 다시 열면 저장본
                         .task { await vm.loadRecipe(menuId: menu.menuId) }
@@ -76,6 +77,18 @@ struct ThisWeekView: View {
             }
         }
         .toast($vm.toastMessage)
+        .sheet(
+            isPresented: Binding(
+                get: { vm.completingDay != nil },
+                set: { if !$0 { vm.completingDate = nil } }
+            )
+        ) {
+            if let day = vm.completingDay {
+                CookCompleteSheet(loadUsage: { await vm.cookUsage(of: day) }) { usage in
+                    try await vm.completeDay(day, usedCount: usage.count)
+                }
+            }
+        }
         .environment(router)
         // task는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행됨)
         .task { await vm.load() }
