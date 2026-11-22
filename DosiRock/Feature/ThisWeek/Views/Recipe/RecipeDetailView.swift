@@ -15,17 +15,15 @@ struct RecipeDetailView: View {
 
     let day: MealPlanDay
     let menu: Menu
-    var shortageIds: Set<Int> = []  // 부족한 재료 id (부족 재료 조회 결과)
+    var recipe: RecipeDetail? = nil  // 서버가 만든 상세 레시피 (재료 상태 · 조리 순서 · 예상 재료비)
     var badges: [RecipeState] = []  // 이름 아래 뱃지 (빨리 쓸 재료 사용 · 추가 재료 필요)
     var isConfirmed = false  // 계획이 확정돼야 조리 완료 가능
-    // shortcut: 레시피 생성 · 예상 재료비 · 조리 완료 API가 아직 없어 기본값으로 보여줌 (더미 계획에 조리 순서가 이미 옴), API 나오면 ViewModel 값으로 연결
     var phase: Phase = .ready
-    var cost: Int? = nil  // 예상 재료비 (없으면 줄 숨김)
     var isCooked = false
     var onRetry: () -> Void = {}
     var onComplete: () -> Void = {}
 
-    private var hasShortage: Bool { menu.ingredients.contains { shortageIds.contains($0.ingredientId) } }
+    private var hasShortage: Bool { recipe?.ingredients.contains { $0.isShort } == true }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -61,8 +59,11 @@ struct RecipeDetailView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: Spacing.m) {
                         titleBlock
-                        ingredientsSection
-                        if let cost { costRow(cost) }
+                        if let recipe {
+                            ingredientsSection(recipe)
+                            stepsSection(recipe.steps)
+                            if let cost = recipe.costText { costRow(cost) }
+                        }
                     }
                     .padding(.horizontal, Spacing.screenHorizontal)
                     .padding(.bottom, Spacing.xl)
@@ -113,7 +114,7 @@ struct RecipeDetailView: View {
     }
 
     // 재료: 3열 타일 (부족한 재료는 빨간 타일) + 추가로 필요한 재료 보기
-    private var ingredientsSection: some View {
+    private func ingredientsSection(_ recipe: RecipeDetail) -> some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
             HStack {
                 Text(.recipeDetailIngredients)
@@ -130,13 +131,13 @@ struct RecipeDetailView: View {
                 columns: Array(repeating: GridItem(.flexible(), spacing: Spacing.s), count: 3),
                 spacing: Spacing.s
             ) {
-                ForEach(menu.ingredients, id: \.ingredientId) { item in
+                ForEach(recipe.ingredients, id: \.ingredientId) { item in
                     IngredientTile(
                         label: item.name,
                         imageName: item.imageName,
                         details: [item.amountText],
                         badge: tileBadge(item),
-                        type: !isCooked && shortageIds.contains(item.ingredientId) ? .shortage : .info
+                        type: !isCooked && item.isShort ? .shortage : .info
                     )
                 }
             }
@@ -162,15 +163,47 @@ struct RecipeDetailView: View {
         }
     }
 
-    // 조리 전: 충분 / 부족, 조리 후: 사용함
-    // shortcut: 응답에 관리 방식이 없어 기본 재료의 "보유"를 구분하지 못하고 모두 "충분"으로 표시, managementType이 오면 분리
-    private func tileBadge(_ item: MenuIngredient) -> RecipeBadge {
+    // 조리 전: 충분 / 부족 (기본 재료는 보유 / 부족), 조리 후: 사용함
+    private func tileBadge(_ item: RecipeIngredient) -> RecipeBadge {
         if isCooked {
             return RecipeBadge(type: .used)
         }
-        return shortageIds.contains(item.ingredientId)
-            ? RecipeBadge(type: .lacking)
-            : RecipeBadge(type: .useSoon, title: "recipe_tile_enough")
+        if item.isShort {
+            return RecipeBadge(type: .lacking)
+        }
+        return RecipeBadge(
+            type: .useSoon,
+            title: item.managementType == .presence ? "recipe_tile_owned" : "recipe_tile_enough"
+        )
+    }
+
+    // 조리 순서: 번호 원 + 문장
+    private func stepsSection(_ steps: [RecipeStep]) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.m) {
+            Text(.recipeDetailSteps)
+                .appFont(.heading)
+                .foregroundStyle(Color.appTextPrimary)
+                .padding(.top, Spacing.s)
+
+            VStack(alignment: .leading, spacing: 10) {
+                ForEach(steps, id: \.stepNumber) { step in
+                    HStack(alignment: .top, spacing: 10) {
+                        Text("\(step.stepNumber)")
+                            .appFont(.caption)
+                            .foregroundStyle(Color.appSurface)
+                            .frame(width: Size.Icon.large, height: Size.Icon.large)
+                            .background(Circle().fill(Color.appTextPrimary))
+                        Text(step.instruction)
+                            .appFont(.body)
+                            .foregroundStyle(Color.appTextPrimary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, Spacing.l)
+            .recipeCard()
+        }
     }
 
     private func costRow(_ cost: Int) -> some View {
@@ -206,7 +239,7 @@ struct RecipeDetailView: View {
     }
 }
 
-// 레시피 상세의 흰 카드 (예상 재료비)
+// 레시피 상세의 흰 카드 (조리 순서 · 예상 재료비)
 private extension View {
     func recipeCard() -> some View {
         self
@@ -218,25 +251,28 @@ private extension View {
 
 #if DEBUG
     private let previewDay = PreviewMealRepository.samplePlan.days[1]  // 화: 대파가 없는 메뉴
+    private let previewMenu = PreviewMealRepository.samplePlan.days[1].menus[0]
+    private let previewRecipe = PreviewMealRepository.sampleRecipe(for: previewMenu)
+    private let previewShortRecipe = PreviewMealRepository.sampleRecipe(for: previewMenu, shortageIds: [2])
 
     #Preview("확정 전") {
-        RecipeDetailView(day: previewDay, menu: previewDay.menus[0], badges: [.useSoon], cost: 2322)
+        RecipeDetailView(day: previewDay, menu: previewMenu, recipe: previewRecipe, badges: [.useSoon])
             .environment(Router<ThisWeekRoute>())
     }
     #Preview("확정 후 · 부족 재료") {
-        RecipeDetailView(day: previewDay, menu: previewDay.menus[0], shortageIds: [2], badges: [.needMore], isConfirmed: true, cost: 2729)
+        RecipeDetailView(day: previewDay, menu: previewMenu, recipe: previewShortRecipe, badges: [.needMore], isConfirmed: true)
             .environment(Router<ThisWeekRoute>())
     }
     #Preview("조리 완료") {
-        RecipeDetailView(day: previewDay, menu: previewDay.menus[0], isConfirmed: true, cost: 2322, isCooked: true)
+        RecipeDetailView(day: previewDay, menu: previewMenu, recipe: previewRecipe, isConfirmed: true, isCooked: true)
             .environment(Router<ThisWeekRoute>())
     }
     #Preview("AI 생성 중") {
-        RecipeDetailView(day: previewDay, menu: previewDay.menus[0], badges: [.useSoon], phase: .generating)
+        RecipeDetailView(day: previewDay, menu: previewMenu, badges: [.useSoon], phase: .generating)
             .environment(Router<ThisWeekRoute>())
     }
     #Preview("생성 실패") {
-        RecipeDetailView(day: previewDay, menu: previewDay.menus[0], badges: [.useSoon], phase: .failed)
+        RecipeDetailView(day: previewDay, menu: previewMenu, badges: [.useSoon], phase: .failed)
             .environment(Router<ThisWeekRoute>())
     }
 #endif

@@ -267,8 +267,24 @@ final class ThisWeekViewModel {
         }
     }
 
-    // shortcut: 조리 상태를 내려주는 API가 아직 없어 항상 미완료, API가 생기면 응답 값으로 교체
-    func isCooked(_ day: MealPlanDay) -> Bool { false }
+    // 서버가 요일별 조리 완료 여부(completed)를 주면 그 값, 아직 안 주면 미완료
+    func isCooked(_ day: MealPlanDay) -> Bool { day.completed == true }
+
+    // 메뉴별 상세 레시피 (메뉴 ID → 불러오는 중 / 실패 / 완료). 한 번 받으면 다시 안 부름
+    private(set) var recipes: [Int: RecipeLoad] = [:]
+
+    func loadRecipe(menuId: Int) async {
+        switch recipes[menuId] {
+        case .loading, .loaded: return
+        default: break
+        }
+        recipes[menuId] = .loading
+        do {
+            recipes[menuId] = .loaded(try await mealPlans.fetchRecipe(menuId: menuId))
+        } catch {
+            recipes[menuId] = .failed
+        }
+    }
 
     // 같은 입력으로 다시 저장할 때 같은 키·같은 내용을 보내기 위해 마지막 시도를 기억 (성공하면 지움)
     private struct SaveAttempt {
@@ -298,6 +314,7 @@ final class ThisWeekViewModel {
 
         try await inventory.addAll(attempt.entries, idempotencyKey: attempt.key)
         saveAttempt = nil
+        recipes = [:]  // 재료 사용 가능량·부족량은 현재 재고 기준이라 다시 받아야 함
         await load()
     }
 
@@ -371,6 +388,25 @@ final class ThisWeekViewModel {
                 // 계획이 있으면 그때 고른 재료만 켬, 계획이 없으면 모두 켬
                 isOn: chosen?.contains(item.ingredientId) ?? true
             )
+        }
+    }
+}
+
+// 상세 레시피를 받는 상태
+enum RecipeLoad {
+    case loading
+    case failed
+    case loaded(RecipeDetail)
+
+    var detail: RecipeDetail? {
+        if case .loaded(let recipe) = self { recipe } else { nil }
+    }
+
+    var phase: RecipeDetailView.Phase {
+        switch self {
+        case .loading: .generating
+        case .failed: .failed
+        case .loaded: .ready
         }
     }
 }

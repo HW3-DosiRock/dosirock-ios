@@ -58,13 +58,19 @@ struct ThisWeekView: View {
                         day.menus.indices.contains(menuIndex)
                     {
                         let menu = day.menus[menuIndex]
+                        let load = vm.recipes[menu.menuId]
                         RecipeDetailView(
                             day: day,
                             menu: menu,
-                            shortageIds: vm.shortageIds,
+                            recipe: load?.detail,
                             badges: vm.badges(for: menu),
-                            isConfirmed: vm.isConfirmed
+                            isConfirmed: vm.isConfirmed,
+                            phase: load?.phase ?? .generating,
+                            isCooked: vm.isCooked(day),
+                            onRetry: { Task { await vm.loadRecipe(menuId: menu.menuId) } }
                         )
+                        // 처음 열 때 서버가 레시피를 만들어 저장, 다시 열면 저장본
+                        .task { await vm.loadRecipe(menuId: menu.menuId) }
                     }
                 }
             }

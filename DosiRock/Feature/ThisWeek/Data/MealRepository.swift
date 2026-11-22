@@ -33,6 +33,9 @@ protocol MealRepository {
     //POST meal-plans/{mealPlanId}/confirm (이미 확정한 계획도 성공)
     func confirm(mealPlanId: Int) async throws
 
+    //POST meal-plans/menus/{menuId}/recipe (처음엔 AI가 생성, 이후 저장본)
+    func fetchRecipe(menuId: Int) async throws -> RecipeDetail
+
     //GET  meal-plans/{mealPlanId}/shortages
     func fetchShortages(mealPlanId: Int) async throws
         -> MealPlanShortageResponse
@@ -120,6 +123,17 @@ struct MealPlanRepositoryImpl: MealRepository {
             method: .post,
             authorized: true,
             as: Empty.self
+        )
+    }
+
+    func fetchRecipe(menuId: Int) async throws -> RecipeDetail {
+
+        try await client.sendRequired(
+            "meal-plans/menus/\(menuId)/recipe",
+            method: .post,
+            timeout: 200,
+            authorized: true,
+            as: RecipeDetail.self
         )
     }
 
@@ -329,6 +343,38 @@ struct MealPlanRepositoryImpl: MealRepository {
         func regenerateDay(mealPlanId: Int, dayOfWeek: String) async throws -> MealPlanCurrent {
             try await Task.sleep(for: .seconds(3))  // 더미처럼 3초
             return Self.current(.draft, plan: Self.samplePlan)
+        }
+
+        // 샘플 메뉴로 레시피를 만든다 (shortageIds에 든 재료는 부족으로)
+        static func sampleRecipe(for menu: Menu, shortageIds: Set<Int> = []) -> RecipeDetail {
+            RecipeDetail(
+                menuId: menu.menuId,
+                name: menu.name,
+                ingredients: menu.ingredients.map {
+                    RecipeIngredient(
+                        ingredientId: $0.ingredientId, name: $0.name,
+                        managementType: .quantity, quantity: $0.amount, unit: $0.unit,
+                        availableQuantity: shortageIds.contains($0.ingredientId) ? 0 : $0.amount,
+                        shortageQuantity: shortageIds.contains($0.ingredientId) ? $0.amount : 0,
+                        measurementHint: nil
+                    )
+                },
+                steps: [
+                    RecipeStep(stepNumber: 1, instruction: "재료를 한 입 크기로 썰어요."),
+                    RecipeStep(stepNumber: 2, instruction: "팬에 재료를 넣고 볶아요."),
+                    RecipeStep(stepNumber: 3, instruction: "간장으로 간을 맞춰요."),
+                ],
+                estimatedCost: 2322,
+                estimationStatus: .complete
+            )
+        }
+
+        func fetchRecipe(menuId: Int) async throws -> RecipeDetail {
+            try await Task.sleep(for: .seconds(1.5))
+            if scenario == .failure { throw APIError.network }
+            guard let menu = Self.samplePlan.days.flatMap(\.menus).first(where: { $0.menuId == menuId })
+            else { throw APIError.unknown }
+            return Self.sampleRecipe(for: menu, shortageIds: Set(Self.sampleShortages.map(\.ingredientId)))
         }
 
         func confirm(mealPlanId: Int) async throws {

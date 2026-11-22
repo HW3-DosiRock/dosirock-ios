@@ -2219,6 +2219,17 @@
         }
       }
     },
+    "recipe_tile_owned" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보유"
+          }
+        }
+      }
+    },
     "root_main_placeholder" : {
       "extractionState" : "manual",
       "localizations" : {

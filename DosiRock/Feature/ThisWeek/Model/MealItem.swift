@@ -61,6 +61,7 @@ nonisolated struct MealPlanDay: Decodable {
     let dishes: [Menu]  // 국·상비 반찬 제외한 조리 요리
     let readySides: [MenuIngredient]  // 그대로 내는 상비 반찬, 없으면 빈 배열
     let remainingResuggestionCount: Int  // 이 요일 다시 제안 남은 횟수 (0~2)
+    var completed: Bool? = nil  // 이 요일 조리 완료 여부 (서버가 아직 안 주면 nil)
 }
 
 nonisolated extension MealPlanDay {
@@ -109,16 +110,59 @@ nonisolated struct PriceInfo: Decodable {
     }
 }
 
+// 예상 비용 산정 상태: 전체 산정 / 일부 가격 누락 / 산정 불가
+nonisolated enum CostEstimationStatus: String, Decodable {
+    case complete = "COMPLETE"
+    case partial = "PARTIAL"
+    case unavailable = "UNAVAILABLE"
+}
+
 nonisolated struct MealPlanShortageResponse: Decodable {
     let items: [Shortage]
     let totalCost: Double
     let costEstimationStatus: CostEstimationStatus
+}
 
-    enum CostEstimationStatus: String, Decodable {
-        case complete = "COMPLETE"
-        case partial = "PARTIAL"
-        case unavailable = "UNAVAILABLE"
+// POST /meal-plans/menus/{menuId}/recipe 의 data (처음엔 AI가 만들어 저장, 이후 저장본)
+nonisolated struct RecipeDetail: Decodable {
+    let menuId: Int
+    let name: String
+    let ingredients: [RecipeIngredient]
+    let steps: [RecipeStep]
+    let estimatedCost: Double  // 메뉴 전체 사용량 기준 예상 재료비(원)
+    let estimationStatus: CostEstimationStatus
+}
+
+nonisolated struct RecipeIngredient: Decodable {
+    let ingredientId: Int
+    let name: String
+    let managementType: IngredientItem.ManagementType
+    let quantity: Double  // 메뉴 필요량
+    let unit: String
+    let availableQuantity: Double  // 이 메뉴에 쓸 수 있는 양
+    let shortageQuantity: Double  // 부족한 양 (0이면 충분)
+    let measurementHint: String?  // 계량 안내 ("2작은술" 등), 없으면 null
+}
+
+nonisolated struct RecipeStep: Decodable {
+    let stepNumber: Int
+    let instruction: String
+}
+
+nonisolated extension RecipeIngredient {
+    var imageName: String { IngredientImageMap.assetName(for: name) }
+    var isShort: Bool { shortageQuantity > 0 }
+
+    // 계량 안내가 있으면 그것을, 없으면 "150g" (정수면 소수점 없이)
+    var amountText: String {
+        measurementHint
+            ?? quantity.formatted(.number.grouping(.never).precision(.fractionLength(0...2))) + unit
     }
+}
+
+nonisolated extension RecipeDetail {
+    // 일부 가격이 없으면 합계가 실제보다 작으므로 전체 산정일 때만 보여줌
+    var costText: Int? { estimationStatus == .complete ? Int(estimatedCost.rounded()) : nil }
 }
 
 // 화면 표시용
