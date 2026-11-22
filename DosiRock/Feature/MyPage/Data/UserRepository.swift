@@ -14,6 +14,7 @@ protocol UserRepository {
     func updateNickname(_ nickname: String) async throws
     func updateDiningOutCost(_ cost: Int) async throws
     func changePassword(current: String, new: String) async throws
+    func fetchSummary() async throws -> CookingSummary  // 이번 달 조리 완료 횟수 · 예상 절약액
 
 }
 
@@ -39,6 +40,15 @@ struct UserRepositoryImpl: UserRepository {
             body: ["nickname": nickname],
             authorized: true,
             as: Empty.self
+        )
+    }
+
+    func fetchSummary() async throws -> CookingSummary {
+        try await client.sendRequired(
+            "users/me/summary",
+            method: .get,
+            authorized: true,
+            as: CookingSummary.self
         )
     }
 
@@ -81,5 +91,11 @@ struct UserRepositoryImpl: UserRepository {
         func updateNickname(_ nickname: String) async throws {}
         func updateDiningOutCost(_ cost: Int) async throws {}
         func changePassword(current: String, new: String) async throws {}
+        func fetchSummary() async throws -> CookingSummary {
+            CookingSummary(
+                month: "2026-11", completedCount: 4, estimatedSavings: 30774,
+                partialEstimationCount: 0, unavailableEstimationCount: 0
+            )
+        }
     }
 #endif

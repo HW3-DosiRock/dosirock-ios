@@ -226,7 +226,6 @@ struct MyPageView: View {
 
     // MARK: - 예상 절약액
 
-    // 조리 완료 횟수와 예상 절약액은 API가 나오면 서버 값으로 교체 (지금은 뷰모델의 임시 값)
     var summary: some View {
 
         VStack(alignment: .leading, spacing: Spacing.s) {
@@ -241,12 +240,7 @@ struct MyPageView: View {
                     Text(.myMenuCompleteSubtitle)
                         .appFont(.subbody)
                         .foregroundStyle(Color.appTextSecondary)
-                    Text(
-                        String(
-                            format: String(localized: "my_menu_complete_count"),
-                            vm.completedCount
-                        )
-                    )
+                    Text(vm.completedText)
                     .appFont(.brandEmphasis)
                     .foregroundStyle(Color.appTextPrimary)
                 }
@@ -265,7 +259,7 @@ struct MyPageView: View {
                             .accessibilityAddTraits(.isButton)  //VoiceOver(화면 읽어주기)에게 버튼 선언
                     }
                     .zIndex(1)  // 툴팁이 바로 아래 금액 글자 위에 그려지게
-                    Text(won(vm.estimatedSaving))
+                    Text(vm.savingText)
                         .appFont(.brandEmphasis)
                         .foregroundStyle(Color.appSuccess)
                 }
