@@ -114,7 +114,19 @@ final class ThisWeekViewModel {
     }
 
     // 화면이 나타날 때 호출. 서버 응답에 따라 state를 정한다
+    // 화면이 나타날 때와 "다시 시도"에서 부름
     func load() async {
+
+        // 다른 탭에 다녀와서 화면이 다시 나타나도, 서버에서 만드는 중인 요청을 덮어쓰지 않음
+        guard state != .makingRecipe, regeneratingDate == nil else { return }
+
+        errorMessage = nil  // 지난 안내가 다시 나타나지 않게
+        recipes = [:]  // 다른 탭에서 재고가 바뀌었을 수 있어 레시피(사용 가능량)를 다시 받음
+        await reload()
+    }
+
+    // 서버에서 이번 주 상태를 다시 읽음 (제안·확정·구매 등록 뒤 내부에서 부름, 진행 중 가드 없음)
+    private func reload() async {
 
         state = .loading
 
@@ -219,7 +231,7 @@ final class ThisWeekViewModel {
                 errorMessage = error.errorDescription
                 state = failureState
             } else {
-                await load()
+                await reload()
                 if state == failureState { errorMessage = error.errorDescription }
             }
         }
@@ -261,7 +273,7 @@ final class ThisWeekViewModel {
         defer { isConfirming = false }
         do {
             try await mealPlans.confirm(mealPlanId: id)
-            await load()
+            await reload()
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription
         }
@@ -373,7 +385,7 @@ final class ThisWeekViewModel {
         try await inventory.addAll(attempt.entries, idempotencyKey: attempt.key)
         saveAttempt = nil
         await refreshLoadedRecipes()  // 사용 가능량·부족량은 현재 재고 기준이라 다시 받음
-        await load()
+        await reload()
     }
 
     private func makeEntries(amounts: [Int: Double], bought: Set<Int>) async throws -> [InventoryUpsertEntry] {
