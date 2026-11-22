@@ -1358,6 +1358,50 @@
         }
       }
     },
+    "my_withdraw_done_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탈퇴 완료"
+          }
+        }
+      }
+    },
+    "my_withdraw_done_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "그동안 도시의 돌멩이와 함께해주셔서 감사해요.\n혼자서도 도시락을 잘 챙길 수 있도록 응원할게요."
+          }
+        }
+      }
+    },
+    "my_withdraw_done_confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인"
+          }
+        }
+      }
+    },
+    "my_withdraw_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탈퇴하지 못했어요. 잠시 후 다시 시도해 주세요"
+          }
+        }
+      }
+    },
     "my_menu_saving_unavailable" : {
       "extractionState" : "manual",
       "localizations" : {

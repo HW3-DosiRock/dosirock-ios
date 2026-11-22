@@ -15,6 +15,7 @@ protocol UserRepository {
     func updateDiningOutCost(_ cost: Int) async throws
     func changePassword(current: String, new: String) async throws
     func fetchSummary() async throws -> CookingSummary  // 이번 달 조리 완료 횟수 · 예상 절약액
+    func withdraw() async throws  // 회원 탈퇴
 
 }
 
@@ -50,6 +51,11 @@ struct UserRepositoryImpl: UserRepository {
             authorized: true,
             as: CookingSummary.self
         )
+    }
+
+    func withdraw() async throws {
+        // TODO: 탈퇴 API가 나오면 여기만 연결 (경로·메서드·에러 코드 확인 후 client.send)
+        throw APIError.unknown
     }
 
     func updateDiningOutCost(_ cost: Int) async throws {
@@ -91,6 +97,7 @@ struct UserRepositoryImpl: UserRepository {
         func updateNickname(_ nickname: String) async throws {}
         func updateDiningOutCost(_ cost: Int) async throws {}
         func changePassword(current: String, new: String) async throws {}
+        func withdraw() async throws {}
         func fetchSummary() async throws -> CookingSummary {
             CookingSummary(
                 month: "2026-11", completedCount: 4, estimatedSavings: 30774,

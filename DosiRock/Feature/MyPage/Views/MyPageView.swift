@@ -87,6 +87,10 @@ struct MyPageView: View {
         }
         .environment(router)
         .toast($toast)
+        // 탈퇴 완료: 토큰은 "확인"을 누를 때 지워서, 그 전에는 로그인 화면으로 넘어가지 않음
+        .fullScreenCover(isPresented: $vm.showsWithdrawDone) {
+            WithdrawCompleteView { SessionStore.shared.expire(message: nil) }
+        }
         // task와 대화상자는 NavigationStack 바깥에 둔다 (안쪽에 두면 뒤로 돌아올 때마다 다시 실행/가려짐)
         .task { await vm.load() }
         .appDialog(
@@ -103,7 +107,15 @@ struct MyPageView: View {
             message: .dialogWithdrawMessage,
             cancelTitle: .commonCancel,
             confirmTitle: .dialogWithdrawConfirm,
-            onConfirm: {}  // TODO: 탈퇴 API가 나오면 연결
+            onConfirm: {
+                Task {
+                    if await vm.withdraw() {
+                        vm.showsWithdrawDone = true
+                    } else {
+                        toast = .myWithdrawFailed
+                    }
+                }
+            }
         )
     }
 

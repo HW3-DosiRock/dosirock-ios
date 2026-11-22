@@ -22,6 +22,7 @@ final class MyPageViewModel {
     var state: State = .loading
     var showLogoutDialog = false  //로그아웃 다이얼로그
     var showWithdrawDialog = false  //탈퇴 다이얼로그
+    var showsWithdrawDone = false  // 탈퇴 완료 화면 (A-08)
 
     // 이번 달 요약 (실패하면 nil, 프로필은 그대로 보여주고 숫자만 "-")
     private(set) var summary: CookingSummary?
@@ -83,6 +84,16 @@ final class MyPageViewModel {
     func applyDiningOutCost(_ cost: Int) {
         guard let p = profile else { return }
         state = .loaded(UserProfile(email: p.email, nickname: p.nickname, diningOutCost: cost))
+    }
+
+    // 탈퇴 요청. 성공하면 true (완료 화면은 호출한 쪽에서 띄우고, 로그인 화면 이동은 "확인"에서)
+    func withdraw() async -> Bool {
+        do {
+            try await users.withdraw()
+            return true
+        } catch {
+            return false
+        }
     }
 
     func logout() async {
