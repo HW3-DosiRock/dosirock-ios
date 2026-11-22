@@ -30,8 +30,8 @@ struct ThisWeekConditionEditView: View {
                     resuggest()
                 }
             }
+            .padding(Spacing.screenHorizontal)
         }
-        .padding(Spacing.screenHorizontal)
         .background(Color.appBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .alert(
@@ -59,3 +59,16 @@ struct ThisWeekConditionEditView: View {
         Task { await vm.resuggest() }
     }
 }
+
+#if DEBUG
+    #Preview {
+        let vm = ThisWeekViewModel(
+            mealPlans: PreviewMealRepository(scenario: .hasPlan),
+            inventory: PreviewInventoryRepository(),
+            ingredients: PreviewIngredientRepository()
+        )
+        ThisWeekConditionEditView(vm: vm)
+            .environment(Router<ThisWeekRoute>())
+            .task { await vm.load() }  // 샘플 계획과 먼저 사용 재료를 채움
+    }
+#endif
