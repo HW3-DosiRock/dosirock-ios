@@ -20,6 +20,10 @@ struct RootView: View {
                         AuthFlowView(
                             auth: container.auth,
                             onLoginSuccess: {
+                                // 키보드가 남은 채로 메인탭이 그려지면 비밀번호 저장 알림이 닫힐 때 바텀 탭바가 다시 올라옴
+                                UIApplication.shared.sendAction(
+                                    #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil
+                                )
                                 withAnimation { session.isLoggedIn = true }
                             }
                         )
