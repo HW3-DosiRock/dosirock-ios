@@ -54,8 +54,12 @@ struct UserRepositoryImpl: UserRepository {
     }
 
     func withdraw() async throws {
-        // TODO: 탈퇴 API가 나오면 여기만 연결 (경로·메서드·에러 코드 확인 후 client.send)
-        throw APIError.unknown
+        _ = try await client.send(
+            "users/me",
+            method: .delete,
+            authorized: true,
+            as: Empty.self
+        )
     }
 
     func updateDiningOutCost(_ cost: Int) async throws {
