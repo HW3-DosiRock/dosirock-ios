@@ -13,6 +13,9 @@ struct TabSkeletonView: View {
 
     var cardCount: Int = 3  // 탭마다 카드 개수만 바꿔서 사용
 
+    // 응답이 빠르면 스켈레톤이 잠깐 번쩍여 깜빡임처럼 보여서, 0.3초 넘게 걸릴 때만 보여줌
+    @State private var isVisible = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.m) {
 
@@ -26,6 +29,11 @@ struct TabSkeletonView: View {
             }
         }
         .shimmer()  // 묶음 전체에 한 번 (maxHeight frame보다 먼저)
+        .opacity(isVisible ? 1 : 0)
+        .task {
+            try? await Task.sleep(for: .milliseconds(300))
+            withAnimation(.easeIn(duration: 0.2)) { isVisible = true }
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(.commonLoading))

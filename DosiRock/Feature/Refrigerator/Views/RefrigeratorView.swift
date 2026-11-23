@@ -77,10 +77,17 @@ struct RefrigeratorContentView: View {
                     loadedContent(items)
                 }
             }
+            // 응답이 빠르면 스켈레톤이 순간 교체돼 깜빡여 보여서 페이드로 넘김 (재료만 바뀔 땐 애니메이션 안 함)
+            .animation(.easeInOut(duration: 0.25), value: isLoading)
         }
         .padding(Spacing.screenHorizontal)
         .background(Color.appBackground.ignoresSafeArea())
 
+    }
+
+    private var isLoading: Bool {
+        if case .loading = state { return true }
+        return false
     }
 
     // 제목 + (재료가 있을 때만) "+ 재료 추가"

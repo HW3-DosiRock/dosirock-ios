@@ -41,6 +41,8 @@ struct ThisWeekView: View {
                         ThisWeekRecipeListView(vm : vm)
                     }
                 }
+                // 응답이 빠르면 스켈레톤이 순간 교체돼 깜빡여 보여서 페이드로 넘김
+                .animation(.easeInOut(duration: 0.25), value: vm.state)
             }
             .padding(Spacing.screenHorizontal)
             // NavigationStack이 자기 흰 배경을 칠해서 → 여기서 직접 칠함 (마이페이지와 같음)

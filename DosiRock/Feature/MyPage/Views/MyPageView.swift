@@ -35,6 +35,8 @@ struct MyPageView: View {
                     content(profile)
                 }
             }
+            // 응답이 빠르면 스켈레톤이 순간 교체돼 깜빡여 보여서 페이드로 넘김 (프로필만 바뀔 땐 애니메이션 안 함)
+            .animation(.easeInOut(duration: 0.25), value: isLoading)
             // NavigationStack이 자기 흰 배경을 칠해서, 바깥(MainTabView)의 배경이 안 보임 → 여기서 직접 칠함
             .background(Color.appBackground.ignoresSafeArea())
             .navigationDestination(for: MyPageRoute.self) { route in
@@ -117,6 +119,11 @@ struct MyPageView: View {
                 }
             }
         )
+    }
+
+    private var isLoading: Bool {
+        if case .loading = vm.state { return true }
+        return false
     }
 
     // 현재 비밀번호를 모를 때: 이메일 인증으로 재설정 (로그인 전 '비밀번호 찾기'와 같은 화면)
