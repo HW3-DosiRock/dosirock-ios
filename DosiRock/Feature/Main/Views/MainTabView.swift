@@ -27,7 +27,8 @@ struct MainTabView: View {
                         vm: RefrigeratorViewModel(
                             inventory: container.inventory,
                             ingredientRepository: container.ingredients
-                        )
+                        ),
+                        onGoToThisWeek: { activeTab = .thisweek }
                     )
                 case .mypage:
                     MyPageView(

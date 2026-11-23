@@ -14,9 +14,11 @@ struct RefrigeratorView: View {
 
     @State private var vm: RefrigeratorViewModel
     @State private var editingItem: IngredientItem?  // 냉장고에서 누른 재료 (등록 시트용)
+    let onGoToThisWeek: () -> Void  // 탭 선택은 MainTabView가 가지고 있어서 바깥에서 받음
 
-    init(vm: RefrigeratorViewModel) {
+    init(vm: RefrigeratorViewModel, onGoToThisWeek: @escaping () -> Void = {}) {
         _vm = State(initialValue: vm)
+        self.onGoToThisWeek = onGoToThisWeek
     }
 
     var body: some View {
@@ -27,7 +29,8 @@ struct RefrigeratorView: View {
             registeredCount: vm.registeredCount,
             onRetry: { Task { await vm.load() } },
             onAdd: { vm.openAddSheet() },
-            onSelectItem: { editingItem = vm.ingredient(for: $0) }  // 재료 ID로 수정 시트 열기
+            onSelectItem: { editingItem = vm.ingredient(for: $0) },  // 재료 ID로 수정 시트 열기
+            onBannerAction: onGoToThisWeek
         )
         .task {
             await vm.load()
@@ -60,6 +63,7 @@ struct RefrigeratorContentView: View {
     var onRetry: () -> Void = {}
     var onAdd: () -> Void = {}
     var onSelectItem: (Int) -> Void = { _ in }  // 누른 재료의 ingredientId
+    var onBannerAction: () -> Void = {}  // 등록 배너의 텍스트 링크 (이번주 탭으로 이동)
 
     var body: some View {
 
@@ -123,7 +127,7 @@ struct RefrigeratorContentView: View {
                         showIcon: true,
                         actionMessage: "fridge_registered_banner_action"
                     ) {
-                        //TODO: 이번주 메뉴 제안 받기 실행
+                        onBannerAction()
                     }
                 }
                 userPriority

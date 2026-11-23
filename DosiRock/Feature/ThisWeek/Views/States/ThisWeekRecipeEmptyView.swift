@@ -68,8 +68,9 @@ struct ThisWeekRecipeEmptyView: View {
             }
 
             //이번 주 메뉴 제안 받기 버튼 (스크롤 밖에 둬서 하단에 고정)
+            // 조건 변경 화면(onSubmit 있음)에서만 "다시 제안받기", 처음 제안은 "이번 주 메뉴 제안받기"
             BottomActionBar(
-                title: .thisweekSuggestWithCondition,
+                title: onSubmit == nil ? .thisweekSuggest : .thisweekSuggestWithCondition,
                 icon: .sparkle,
                 action: submit
             )
