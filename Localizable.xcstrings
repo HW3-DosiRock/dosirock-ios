@@ -3011,6 +3011,17 @@
         }
       }
     },
+    "thisweek_priority_empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "우선 사용할 재료가 없습니다."
+          }
+        }
+      }
+    },
     "thisweek_priority_first_use" : {
       "extractionState" : "manual",
       "localizations" : {

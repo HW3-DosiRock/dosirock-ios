@@ -220,7 +220,16 @@ struct ThisWeekRecipeEmptyView: View {
 
                 VStack {
                     //TODO: 임시 , api나오면 목록으로 교체
-                    priorityListContent
+                    if vm.priorityItems.isEmpty {
+                        Text(.thisweekPriorityEmpty)
+                            .appFont(.subbody)
+                            .foregroundStyle(Color.appTextSecondary)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, Spacing.xl)
+                    } else {
+                        priorityListContent
+                    }
 
                 }
             }
