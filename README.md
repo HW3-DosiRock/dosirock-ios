@@ -2,6 +2,12 @@
 
 > 냉장고 속 재료로 준비하는 일주일 도시락, `도시의 돌멩이` iOS 레포지토리
 
+
+https://github.com/user-attachments/assets/b555bcf1-e01e-48fa-af51-6717b47d4cc2
+
+
+
+
 <br>
 
 ## 서비스 소개
